@@ -41,28 +41,52 @@ function NavBar() {
           setCloseModal={() => setOpenModaL(!openModal)}
         >
           <form className="flex flex-col gap-3 items-center">
-            <h2 className="text-red-200 font-montserrat text-4xl">LOGIN</h2>
-            <input
-              type="text"
-              placeholder="Digite usuario"
-              className="text-2xl text-white font-light  border-2  p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20"
-            />
-            <input
-              type="password"
-              placeholder="Digite a senha"
-              className="text-2xl text-white font-light  p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20 border-2 m-2"
-            />
-            <div className="flex text-sm font-medium text-red-200 gap-4">
-              <p>Esqueceu a senha?</p>
-              <p>Cadastra-se</p>
+            <div className=" flex font-montserrat text-center text-4xl">
+              <h1>LOGIN</h1>
             </div>
-            <button
-              type="submit"
-              className="w-1/3 bg-red-500 text-red-200 rounded-md cursor-pointer hover:bg-red-900 hover:text-white py-2 my-2"
-            >
-              {" "}
-              Entrar
-            </button>
+            <div className="flex flex-col">
+              <label id="usuario" className="text-2xl font-light">
+                Usuário
+              </label>
+              <input
+                type="text"
+                id="usuario"
+                placeholder="Digite usuario"
+                className="text-2xl text-white font-light  border  p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label id="senha" className="text-2xl font-light">
+                Senha
+              </label>
+              <input
+                type="password"
+                id="senha"
+                placeholder="Digite a senha"
+                className="text-2xl text-white font-light border  p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20 m-2"
+              />
+            </div>
+
+            <div className="flex text-sm font-medium gap-20">
+              <p>Esqueceu a senha?</p>
+              <NavLink
+                to="/cadastro"
+                className="font-light hover:underline hover:text-red-300"
+                onClick={()=> openModal(!setOpenModaL)}
+              >
+                {" "}
+                Cadastra-se
+              </NavLink>
+            </div>
+            <div className="flex text-center items-center">
+              <button
+                type="submit"
+                className="hover:text-white p-4 my-2  bg-red-500 text-red-200 rounded-xl hover:bg-red-900 cursor-pointer"
+              >
+                {" "}
+                Entrar
+              </button>
+            </div>
           </form>
         </ModalLogin>
       </div>

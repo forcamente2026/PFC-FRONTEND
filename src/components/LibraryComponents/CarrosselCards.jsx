@@ -66,7 +66,7 @@ function CarrosselCards({ children }) {
   }
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto">
+    <div className="relative w-full max-w-6xl mx-auto ">
       {temOverflow ? (
         <button
           type="button"

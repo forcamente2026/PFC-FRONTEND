@@ -118,6 +118,7 @@ function CardsLibrary({
       const resposta = await atualizarExercicio(exercicioEmEdicao.id, form);
       aoAtualizar(resposta?.id ? resposta : { ...exercicioEmEdicao, ...form });
       fecharEdicao();
+      alert("Alterado com sucesso!")
     } catch (err) {
       setErroAcao(err.mensagem || "Não foi possível salvar as alterações.");
     } finally {

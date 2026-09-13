@@ -4,8 +4,7 @@ import { ImageOff, Menu, Pencil, Trash2 } from "lucide-react";
 const ESTILO_ITEM_MENU =
   "flex w-full items-center gap-2 px-3 py-2 text-sm text-red-200 hover:bg-red-500 hover:text-white cursor-pointer";
 
-// Imagem e placeholder compartilham a caixa para os cards não ficarem
-// com alturas diferentes quando um gif falha ao carregar.
+
 const ESTILO_CAIXA_IMAGEM = "h-40 w-full";
 
 function ImagemExercicio({ src, alt }) {
@@ -100,7 +99,7 @@ function CardExercicio({
       <ImagemExercicio src={gifUrl} alt={nome} />
 
       <div className="flex flex-col gap-1">
-        <span className="font-montserrat text-xl text-red-200 wrap-break-word">
+        <span className="font-montserrat text-red-200 wrap-break-word">
           {nome}
         </span>
         <span className="font-semibold text-white">{equipamento}</span>

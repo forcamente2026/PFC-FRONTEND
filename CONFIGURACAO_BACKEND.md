@@ -54,17 +54,9 @@ Se o servidor já estava rodando, pare (`Ctrl+C`) e rode de novo — ou aguarde 
 
 > ⚠️ `.env` está no `.gitignore` — cada pessoa/ambiente mantém o seu próprio, apontando para sua porta local. Só o `.env.example` é versionado.
 
-### Passo 4 — Desligar o mock de alterar/excluir
+### Passo 4 — Mock da área de Progresso
 
-Listagem, enums e cadastro já batem direto na API real. O que ainda roda contra mock é **apenas `PUT` e `DELETE`**, porque esses dois endpoints não existem no back.
-
-O mock não grava nada: ele devolve sucesso para a tela seguir o fluxo, e a alteração vive só na memória da página — recarregar traz os dados do back de volta. Ao subir os dois endpoints, apague a linha do `.env`:
-
-```
-VITE_EXERCICIOS_MOCK=true
-```
-
-E remova de `src/services/exercicioService.js` o bloco `usarMock`/`responderMock` e os dois desvios `if (usarMock)` em `atualizarExercicio` e `excluirExercicio`.
+A Biblioteca de Exercícios já bate 100% na API real. O único mock restante é o de **métricas** (página de Progresso), ligado por `VITE_METRICAS_MOCK=true` no `.env`, porque os endpoints `/api/metricas/*` ainda não existem no back. Quando subirem, troque para `false` e remova `src/services/mocks/metricasMock.js` junto com os desvios `if (usarMock)` do `metricasService.js`.
 
 ---
 
