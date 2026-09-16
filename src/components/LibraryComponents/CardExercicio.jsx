@@ -48,8 +48,6 @@ function CardExercicio({
       className="box-border flex flex-col relative w-full md:w-[calc((100%_-_1.5rem)/2)] lp:w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_4.5rem)/4)] h-[26rem] rounded-xl
       p-4 snap-start border border-gray-700 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/20 gap-2 flex-none flex-nowrap overflow-hidden"
     >
-      {/* stopPropagation no mousedown: sem isso o listener de clique-fora fecha o
-          menu antes do clique chegar ao item e a ação se perde. */}
       <div
         className="absolute top-3 left-3 z-20"
         onMouseDown={(evento) => evento.stopPropagation()}

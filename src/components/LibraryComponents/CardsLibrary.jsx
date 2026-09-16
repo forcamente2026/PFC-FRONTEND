@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import CardExercicio from "./CardExercicio";
 import CarrosselCards from "./CarrosselCards";
-import ModalLibrary from "./ModalLibrary";
+import Modal from "../Modal";
 import ExercicioForm from "./ExercicioForm";
 import {
   EXERCICIO_VAZIO,
@@ -176,7 +176,7 @@ function CardsLibrary({
         ))}
       </CarrosselCards>
 
-      <ModalLibrary
+      <Modal
         isOpen={Boolean(exercicioEmEdicao)}
         setCloseModal={fecharEdicao}
       >
@@ -194,9 +194,9 @@ function CardsLibrary({
           textoBotao="Salvar alterações"
           textoBotaoEnviando="Salvando..."
         />
-      </ModalLibrary>
+      </Modal>
 
-      <ModalLibrary
+      <Modal
         isOpen={Boolean(exercicioParaExcluir)}
         setCloseModal={fecharExclusao}
       >
@@ -235,7 +235,7 @@ function CardsLibrary({
             </button>
           </div>
         </div>
-      </ModalLibrary>
+      </Modal>
     </>
   );
 }

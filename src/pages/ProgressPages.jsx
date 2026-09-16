@@ -6,7 +6,6 @@ import CalculadoraTMB from "../components/progress/CalculadoraTMB";
 import CalculadoraHidratacao from "../components/progress/CalculadoraHidratacao";
 import RodapeProgress from "../components/progress/RodapeProgress";
 
-// Religar quando /metricas/gasto-energetico e /metricas/hidratacao existirem no backend.
 const EXIBIR_CALCULADORAS_SEM_BACKEND = false;
 
 function ProgressPages() {

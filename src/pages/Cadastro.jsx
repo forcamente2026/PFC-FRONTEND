@@ -1,4 +1,4 @@
-import FormCadastro from "../components/formCadastro";
+import FormCadastro from "../components/ComponentesCadastro/FormCadastro";
 
 
 function Cadastro() {

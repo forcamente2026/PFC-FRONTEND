@@ -56,7 +56,6 @@ function LibraryPages() {
   }
 
   function adicionarExercicio(novo) {
-    // Sem id na resposta do POST não dá para editar nem excluir o card recém-criado.
     if (!novo?.id) {
       recarregarLista();
       return;

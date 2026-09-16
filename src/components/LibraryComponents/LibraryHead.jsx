@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ModalLibrary from "./ModalLibrary";
+import Modal from "../Modal";
 import ExercicioForm from "./ExercicioForm";
 import { EXERCICIO_VAZIO, validarExercicio } from "./exercicioCampos";
 import { criarExercicio } from "../../services/exercicioService";
@@ -66,7 +66,7 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar }) {
           {" "}
           Adicionar exercicio
         </button>
-        <ModalLibrary isOpen={openModal} setCloseModal={fecharModal}>
+        <Modal isOpen={openModal} setCloseModal={fecharModal}>
           <ExercicioForm
             titulo="CRIAR EXERCICIO"
             valores={form}
@@ -80,7 +80,7 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar }) {
             textoBotao="Cadastrar"
             textoBotaoEnviando="Cadastrando..."
           />
-        </ModalLibrary>
+        </Modal>
       </div>
     </div>
   );
