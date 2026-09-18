@@ -3,8 +3,23 @@ import Modal from "../Modal";
 import ForcaSenha from "./ForcaSenha";
 import TermosDeUso from "./TermosDeUso";
 import { avaliarSenha } from "./senhaRegras";
+import Cartao from "../ComponentesHome/Cartao";
+import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
+
+const FORMACOES = [
+    { valor: "BACHARELADO", rotulo: "Bacharelado em Educação Física"},
+    { valor: "LICENCIATURA", rotulo: "Licenciatura em Educação Física"},
+  ];
+
+const FORMACAO_VAZIA = {
+  cref: "",
+  formacao: "",
+  instituicao: "",
+  anoConclusao: "",
+};
 
 function FormCadastro() {
+
   const estados = [
     { uf: "AC", nome: "Acre" },
     { uf: "AL", nome: "Alagoas" },
@@ -63,6 +78,9 @@ function FormCadastro() {
   const [aceitouTermos, setAceitouTermos] = useState(false);
   const [termosAbertos, setTermosAbertos] = useState(false);
 
+  const [profissional, setProfissional] = useState(false);
+  const [formacao, setFormacao] = useState(FORMACAO_VAZIA);
+
   const formularioValido =
     aceitouTermos && avaliacaoSenha.valida && senhasCoincidem;
 
@@ -73,6 +91,11 @@ function FormCadastro() {
   function aceitarTermos() {
     setAceitouTermos(true);
     setTermosAbertos(false);
+  }
+
+  function handleFormacaoChange(evento) {
+    const {name,value} = evento.target;
+    setFormacao((anterior) => ({ ...anterior, [name]:value}));
   }
 
   function enviarCadastro(evento) {
@@ -90,11 +113,10 @@ function FormCadastro() {
 
   return (
     <>
-      <form onSubmit={enviarCadastro}>
-        <div className="font-montserrat text-5xl text-red-200 text-center p-3 ">
-          <h1>Cadastro</h1>
-        </div>
-        <div className="text-white text-2xl space-y-2">
+      <form onSubmit={enviarCadastro} className="text-white text-2xl">
+        <section className="py-6">
+          <CabecalhoSecao rotulo="Conta" titulo="Cadastro" />
+          <Cartao className="space-y-2">
           <div className="">
             <label htmlFor="nome_completo" className={styleLabel}>
               Nome completo *
@@ -213,10 +235,11 @@ function FormCadastro() {
               </p>
             </div>
           </div>
-
-          <div className="font-montserrat text-5xl text-center text-red-200 m-11">
-            <h2>Endereço</h2>
-          </div>
+            </Cartao>
+          </section>
+          <section className="py-6">
+            <CabecalhoSecao rotulo="Localização" titulo="Endereço" />
+            <Cartao className="space-y-2">
           <div className="flex gap-3">
             <div>
               <label htmlFor="cep" className={styleLabel}>
@@ -284,6 +307,92 @@ function FormCadastro() {
               </select>
             </div>
           </div>
+        </Cartao>
+      </section>
+          <div className="mt-10 flex flex-wrap items-center gap-2 text-lg text-gray-300">
+            <input
+              type="checkbox"
+              id="profissional"
+              checked={profissional}
+              onChange={(evento) => setProfissional(evento.target.checked)}
+              className="h-5 w-5 accent-red-500" />
+              <label htmlFor="profissional">Sou profissional de Educação Física</label>
+          </div>
+          
+          {profissional && (
+            <section className="py-6">
+              <CabecalhoSecao rotulo="Profissional" titulo="Formação" />
+              <Cartao className="space-y-2">
+                <div className="flex gap-3">
+                  <div>
+                    <label htmlFor="cref" className={styleLabel}>
+                      CREF *
+                    </label>
+                    <input
+                      type="text"
+                      id="cref"
+                      name="cref"
+                      value={formacao.cref}
+                      onChange={handleFormacaoChange}
+                      maxLength={11}
+                      placeholder="000000-G/UF"
+                      className={styleInput}
+                      />
+                      </div>
+                      <div>
+                        <label htmlFor="formacao" className={styleLabel}>
+                          Formação *
+                          </label>
+                          <select
+                            id="formacao"
+                            name="formacao"
+                            value={formacao.formacao}
+                            onChange={handleFormacaoChange}
+                            className={`${styleInput} bg-slate-800`}
+                            >
+                              <option value ="">Selecione uma formação:</option>
+                              {FORMACOES.map((opcao) => (
+                                <option key={opcao.valor} value={opcao.valor}>
+                                  {opcao.rotulo}
+                                  </option>
+                                ))}
+                            </select>
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      <div>
+                        <label htmlFor="instituicao" className={styleLabel}>
+                          Instituição de ensino*
+                          </label>
+                          <input
+                            type="text"
+                            id="instituicao"
+                            name="instituicao"
+                            value={formacao.instituicao}
+                            onChange={handleFormacaoChange}
+                            placeholder="Ex: Universidade de Mogi Das Cruzes"
+                            className={styleInput}
+                            />
+                        </div>
+                        <div>
+                          <label htmlFor="anoConclusao" className={styleLabel}>
+                            Ano de conclusão*
+                            </label>
+                            <input
+                              type="number"
+                              id="anoConclusao"
+                              name="anoConclusao"
+                              value={formacao.anoConclusao}
+                              onChange={handleFormacaoChange}
+                              min="1950"
+                              max={new Date().getFullYear()}
+                              placeholder = "Ex: 1950"
+                              className = {styleInput}
+                              />
+                        </div>
+                      </div>
+              </Cartao>
+            </section>)}
 
           <div className="mt-10 flex flex-wrap items-center gap-2 text-lg text-gray-300">
             <input
@@ -315,7 +424,6 @@ function FormCadastro() {
           >
             Cadastrar
           </button>
-        </div>
       </form>
 
       <Modal isOpen={termosAbertos} setCloseModal={fecharTermos}>

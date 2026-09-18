@@ -4,7 +4,7 @@ import FormCadastro from "../components/ComponentesCadastro/FormCadastro";
 function Cadastro() {
   return (
     <div className="w-full h-full my-10">
-      <main className="flex-1 fl items-center justify-center flex flex-col border bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20" >
+      <div className="w-full max-w-6xl mx-auto px-4">
         <div className=" ">
           
           <div>
@@ -12,7 +12,7 @@ function Cadastro() {
           </div>
           
         </div>
-      </main>
+      </div>
     </div>
   );
 }
