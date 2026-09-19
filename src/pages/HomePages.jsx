@@ -1,11 +1,5 @@
-import SecaoArtigos from "../components/ComponentesHome/SecaoArtigos";
-import SecaoCuriosidades from "../components/ComponentesHome/SecaoCuriosidades";
 import SecaoProposta from "../components/ComponentesHome/SecaoProposta";
-import {
-  artigos,
-  curiosidades,
-  proposta,
-} from "../components/ComponentesHome/dadosHome";
+import { proposta } from "../components/ComponentesHome/dadosHome";
 
 function HomePages() {
   return (
@@ -21,9 +15,7 @@ function HomePages() {
         </p>
       </div>
 
-      <div className="w-full max-w-6xl px-4 divide-y divide-gray-800">
-        <SecaoArtigos artigos={artigos} />
-        <SecaoCuriosidades curiosidades={curiosidades} />
+      <div className="w-full max-w-6xl px-4">
         <SecaoProposta proposta={proposta} />
       </div>
     </div>

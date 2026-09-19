@@ -40,6 +40,7 @@ function CardExercicio({
   aoAlternarMenu,
   aoEditar,
   aoExcluir,
+  podeEditar,
 }) {
   const { nome, gifUrl, equipamento } = exercicio;
 
@@ -48,6 +49,7 @@ function CardExercicio({
       className="box-border flex flex-col relative w-full md:w-[calc((100%_-_1.5rem)/2)] lp:w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_4.5rem)/4)] h-[26rem] rounded-xl
       p-4 snap-start border border-gray-700 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/20 gap-2 flex-none flex-nowrap overflow-hidden"
     >
+      {podeEditar && (
       <div
         className="absolute top-3 left-3 z-20"
         onMouseDown={(evento) => evento.stopPropagation()}
@@ -89,7 +91,7 @@ function CardExercicio({
           </div>
         )}
       </div>
-
+    )}
       <div className="rounded-md bg-red-500 px-2 py-1 text-xs font-medium text-white self-end">
         <span>{rotuloGrupo}</span>
       </div>

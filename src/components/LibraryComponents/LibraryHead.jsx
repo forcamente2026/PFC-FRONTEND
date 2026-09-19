@@ -4,7 +4,7 @@ import ExercicioForm from "./ExercicioForm";
 import { EXERCICIO_VAZIO, validarExercicio } from "./exercicioCampos";
 import { criarExercicio } from "../../services/exercicioService";
 
-function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar }) {
+function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, podeEditar }) {
   const [openModal, setOpenModaL] = useState(false);
   const [form, setForm] = useState(EXERCICIO_VAZIO);
   const [enviando, setEnviando] = useState(false);
@@ -58,8 +58,9 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar }) {
         </p>
       </div>
 
+      {podeEditar && (
       <div className="gap-2 flex px-2 py-3 font-bold">
-        <button
+        <button 
           onClick={() => setOpenModaL(true)}
           className=" bg-red-500 text-red-200 rounded-md cursor-pointer hover:bg-red-900 hover:text-white p-2"
         >
@@ -82,6 +83,7 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar }) {
           />
         </Modal>
       </div>
+    )}
     </div>
   );
 }

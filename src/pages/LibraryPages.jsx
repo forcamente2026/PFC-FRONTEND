@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import FilterLibrary from "../components/LibraryComponents/FilterLibrary";
 import CardsLibrary from "../components/LibraryComponents/CardsLibrary";
 import LibraryHead from "../components/LibraryComponents/LibraryHead";
@@ -7,6 +8,7 @@ import {
   listarGruposMusculares,
   listarNiveis,
 } from "../services/exercicioService";
+import { PAPEIS_EDITORES } from "../utils/papeis";
 
 function LibraryPages() {
   const [grupoSelecionado, setGrupoSelecionado] = useState("");
@@ -15,6 +17,8 @@ function LibraryPages() {
   const [niveis, setNiveis] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
+  const { usuario } = useOutletContext();
+  const podeEditar = PAPEIS_EDITORES.includes(usuario?.papel);
 
   useEffect(() => {
     let ativo = true;
@@ -80,6 +84,7 @@ function LibraryPages() {
         niveis={niveis}
         carregandoOpcoes={carregando}
         aoCriar={adicionarExercicio}
+        podeEditar={podeEditar}
       />
       <FilterLibrary
         grupoSelecionado={grupoSelecionado}
@@ -94,6 +99,7 @@ function LibraryPages() {
         grupoSelecionado={grupoSelecionado}
         aoAtualizar={substituirExercicio}
         aoExcluir={removerExercicio}
+        podeEditar={podeEditar}
       />
     </div>
   );

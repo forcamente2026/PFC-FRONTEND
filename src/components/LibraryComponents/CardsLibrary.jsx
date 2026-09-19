@@ -39,6 +39,7 @@ function CardsLibrary({
   grupoSelecionado,
   aoAtualizar,
   aoExcluir,
+  podeEditar,
 }) {
   const [menuAbertoId, setMenuAbertoId] = useState(null);
   const [exercicioEmEdicao, setExercicioEmEdicao] = useState(null);
@@ -172,6 +173,7 @@ function CardsLibrary({
             }
             aoEditar={() => abrirEdicao(item)}
             aoExcluir={() => abrirExclusao(item)}
+            podeEditar={podeEditar}
           />
         ))}
       </CarrosselCards>

@@ -9,6 +9,9 @@ import LibraryPages from "./pages/LibraryPages.jsx";
 import ProgressPages from "./pages/ProgressPages.jsx";
 import Layout from "./Layout/Layout.jsx";
 import Cadastro from "./pages/Cadastro.jsx";
+import RotaProtegida from "./components/RotaProtegida.jsx";
+import ArticlesPages from "./pages/ArticlesPages.jsx";
+import ArticlePages from "./pages/ArticlePages.jsx";
 
 const router = createBrowserRouter([
   {
@@ -17,8 +20,10 @@ const router = createBrowserRouter([
       { path: "/", element: <HomePages /> },
       { path: "/cadastro", element: <Cadastro /> },
       { path: "/about", element: <AboutPages /> },
-      { path: "/library", element: <LibraryPages /> },
-      { path: "/progress", element: <ProgressPages /> },
+      { path: "/articles", element: <RotaProtegida><ArticlesPages /></RotaProtegida> },
+      { path: "/articles/:id", element: <RotaProtegida><ArticlePages /></RotaProtegida> },
+      { path: "/library", element: <RotaProtegida><LibraryPages /></RotaProtegida> },
+      { path: "/progress", element: <RotaProtegida><ProgressPages /></RotaProtegida> },
     ],
   },
 ]);

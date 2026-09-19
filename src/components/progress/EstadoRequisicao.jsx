@@ -1,12 +1,13 @@
 function EstadoRequisicao({
   carregando,
+  mensagemCarregando = "Calculando...",
   erro,
   vazio,
   mensagemVazio,
   children,
 }) {
   if (carregando) {
-    return <p className="text-sm text-gray-300">Calculando...</p>;
+    return <p className="text-sm text-gray-300">{mensagemCarregando}</p>;
   }
 
   if (erro) {
