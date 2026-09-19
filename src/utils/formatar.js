@@ -10,3 +10,8 @@ export function formatarNumero(valor) {
 
   return formatador.format(numero);
 }
+
+export function somenteDigitos(valor) {
+  if (valor === null || valor === undefined) return "";
+  return String(valor).replace(/\D/g, "");
+}

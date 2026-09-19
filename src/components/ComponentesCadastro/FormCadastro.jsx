@@ -5,6 +5,8 @@ import TermosDeUso from "./TermosDeUso";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
+import { somenteDigitos } from "../../utils/formatar";
+import { criarUsuario } from "../../services/usuarioService";
 
 const FORMACOES = [
     { valor: "BACHARELADO", rotulo: "Bacharelado em Educação Física"},
@@ -16,6 +18,19 @@ const FORMACAO_VAZIA = {
   formacao: "",
   instituicao: "",
   anoConclusao: "",
+};
+
+const CADASTRO_VAZIO = {
+  nomeCompleto:"",
+  telefone:"",
+  email:"",
+  cep:"",
+  logradouro:"",
+  numero:"",
+  complemento:"",
+  bairro:"",
+  cidade:"",
+  estado:"",
 };
 
 function FormCadastro() {
@@ -80,6 +95,9 @@ function FormCadastro() {
 
   const [profissional, setProfissional] = useState(false);
   const [formacao, setFormacao] = useState(FORMACAO_VAZIA);
+  const [form, setForm] = useState(CADASTRO_VAZIO);
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState(null);
 
   const formularioValido =
     aceitouTermos && avaliacaoSenha.valida && senhasCoincidem;
@@ -98,8 +116,47 @@ function FormCadastro() {
     setFormacao((anterior) => ({ ...anterior, [name]:value}));
   }
 
-  function enviarCadastro(evento) {
+  function handleChange(evento) {
+    const { name,value } = evento.target;
+    setForm((anterior) => ({ ...anterior, [name]: value }));
+  }
+
+  function limparFormulario() {
+    setForm(CADASTRO_VAZIO);
+    setFormacao(FORMACAO_VAZIA);
+    setCpf("");
+    setDataNascimento("");
+    setSenha("");
+    setConfirmaSenha("");
+    setProfissional(false);
+    setAceitouTermos(false);
+  }
+
+  async function enviarCadastro(evento) {
     evento.preventDefault();
+
+    const usuario = {
+      ...form,
+      cpf: somenteDigitos(cpf),
+      cep: somenteDigitos(form.cep),
+      telefone: somenteDigitos(form.telefone),
+      senha,
+      dataNascimento,
+      papel: profissional ? "PROFESSOR" : "ALUNO",
+    };
+
+    setEnviando(true);
+    setErro(null);
+
+    try {
+      await criarUsuario(usuario);
+      alert("Cadastro realizado com sucesso");
+      limparFormulario();
+    } catch (err) {
+      setErro(err.mensagem || "Erro ao realizar cadastro. Tente novamente mais tarde.");
+    } finally {
+      setEnviando(false);
+    }
   }
 
   const formatCpf = (value) => {
@@ -124,6 +181,10 @@ function FormCadastro() {
             <input
               type="text"
               id="nome_completo"
+              name="nomeCompleto"
+              value={form.nomeCompleto}
+              onChange={handleChange}
+              required
               placeholder="Ex: Alexander Turian"
               className={styleInput}
             />
@@ -150,6 +211,10 @@ function FormCadastro() {
               <input
                 type="tel"
                 id="tel_celular"
+                name="telefone"
+                value={form.telefone}
+                onChange={handleChange}
+                required
                 className={styleInput}
                 placeholder="(00) 0 0000-0000"
               />
@@ -162,6 +227,10 @@ function FormCadastro() {
               <input
                 type="email"
                 id="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
                 className={styleInput}
                 placeholder="nome@example.com"
               />
@@ -184,17 +253,6 @@ function FormCadastro() {
             </div>
           </div>
           <div className="flex gap-3">
-            <div>
-              <label htmlFor="username" className={styleLabel}>
-                Nome de usuario*
-              </label>
-              <input
-                type="text"
-                id="username"
-                className={styleInput}
-                placeholder="Nome do usuário"
-              />
-            </div>
             <div>
               <label htmlFor="senha" className={styleLabel}>
                 Senha*
@@ -250,6 +308,10 @@ function FormCadastro() {
                 id="cep"
                 className={styleInput}
                 maxLength={9}
+                name="cep"
+                value={form.cep}
+                onChange={handleChange}
+                required
                 placeholder="Ex: 00000-000"
               />
             </div>
@@ -260,6 +322,10 @@ function FormCadastro() {
               <input
                 type="text"
                 id="logradouro"
+                name="logradouro"
+                value={form.logradouro}
+                onChange={handleChange}
+                required
                 className={styleInput}
                 placeholder="Ex: Rua nome da rua"
               />
@@ -272,6 +338,10 @@ function FormCadastro() {
               <input
                 type="text"
                 id="bairro"
+                name="bairro"
+                value={form.bairro}
+                onChange={handleChange}
+                required
                 className={styleInput}
                 placeholder="Ex: Bairro"
               />
@@ -285,20 +355,57 @@ function FormCadastro() {
               <input
                 type="text"
                 id="cidade"
+                name="cidade"
+                value={form.cidade}
+                onChange={handleChange}
+                required
                 className={styleInput}
                 placeholder="Ex: Cidade"
               />
             </div>
+            <div>
+              <label htmlFor="numero" className={styleLabel}>
+                Número *
+              </label>
+              <input
+                type="text"
+                id="numero"
+                name="numero"
+                value={form.numero}
+                onChange={handleChange}
+                required
+                className={styleInput}
+                placeholder="Ex: 123"
+              />
+            </div>
 
             <div>
+              <label htmlFor="complemento" className={styleLabel}>
+                Complemento
+              </label>
+              <input
+                type="text"
+                id="complemento"
+                name="complemento"
+                value={form.complemento}
+                onChange={handleChange}
+                className={styleInput}
+                placeholder="Ex: Apto 123"
+              />
+            </div>
+            <div>
               <label htmlFor="estado" className={styleLabel}>
-                Estado
+                Estado *
               </label>
               <select
                 name="estado"
                 id="estado"
+                value={form.estado}
+                onChange={handleChange} 
+                required
                 className={`${styleInput} bg-slate-800`}
               >
+                <option value="">Selecione um estado</option>
                 {estados.map((estado) => (
                   <option key={estado.uf} value={estado.uf}>
                     {estado.nome}
@@ -416,13 +523,15 @@ function FormCadastro() {
               Termos de Uso
             </button>
           </div>
-
+          {erro && (
+            <p className="mt-4 text-sm text-center text-red-500">{erro}</p>
+          )}
           <button
             type="submit"
-            disabled={!formularioValido}
+            disabled={!formularioValido || enviando}
             className={`mt-6 w-full rounded-md bg-red-500 py-2 px-2 text-white transition-shadow duration-200 hover:bg-red-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${formularioValido ? "neon-red-500" : ""}`}
           >
-            Cadastrar
+            {enviando ? "Cadastrando..." : "Cadastrar"}
           </button>
       </form>
 
