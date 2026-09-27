@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import ForcaSenha from "./ForcaSenha";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
-import { somenteDigitos } from "../../utils/formatar";
+import { formatarCep, formatarCref, somenteDigitos } from "../../utils/formatar";
+import { ESTADOS } from "../../utils/estados";
 import { criarUsuario } from "../../services/usuarioService";
+import { buscarEnderecoPorCep } from "../../services/enderecoService";
 import { listarDocumentos } from "../../services/documentoLegalService";
 
 const FORMACOES = [
@@ -42,41 +44,12 @@ const IDADE_MINIMA = 18;
 
 function FormCadastro() {
 
-  const estados = [
-    { uf: "AC", nome: "Acre" },
-    { uf: "AL", nome: "Alagoas" },
-    { uf: "AP", nome: "Amapá" },
-    { uf: "AM", nome: "Amazonas" },
-    { uf: "BA", nome: "Bahia" },
-    { uf: "CE", nome: "Ceará" },
-    { uf: "DF", nome: "Distrito Federal" },
-    { uf: "ES", nome: "Espírito Santo" },
-    { uf: "GO", nome: "Goiás" },
-    { uf: "MA", nome: "Maranhão" },
-    { uf: "MT", nome: "Mato Grosso" },
-    { uf: "MS", nome: "Mato Grosso do Sul" },
-    { uf: "MG", nome: "Minas Gerais" },
-    { uf: "PA", nome: "Pará" },
-    { uf: "PB", nome: "Paraíba" },
-    { uf: "PR", nome: "Paraná" },
-    { uf: "PE", nome: "Pernambuco" },
-    { uf: "PI", nome: "Piauí" },
-    { uf: "RJ", nome: "Rio de Janeiro" },
-    { uf: "RN", nome: "Rio Grande do Norte" },
-    { uf: "RS", nome: "Rio Grande do Sul" },
-    { uf: "RO", nome: "Rondônia" },
-    { uf: "RR", nome: "Roraima" },
-    { uf: "SC", nome: "Santa Catarina" },
-    { uf: "SP", nome: "São Paulo" },
-    { uf: "SE", nome: "Sergipe" },
-    { uf: "TO", nome: "Tocantins" },
-  ];
   const styleLabel = "text-2xl text-slate-500 flex flex-col m-1";
   const styleInputBase =
     "rounded-xl border p-1 transition-shadow duration-200 focus:outline-none";
   const styleInput = `${styleInputBase} border-gray-600 neon-suave-red-500 focus:border-red-500 focus:neon-red-500`;
+  const styleInputBloqueado = `${styleInputBase} border-gray-700 text-gray-500 opacity-60 cursor-not-allowed`;
 
-  const [cpf, setCpf] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaFocada, setSenhaFocada] = useState(false);
@@ -104,10 +77,16 @@ function FormCadastro() {
   const [formacao, setFormacao] = useState(FORMACAO_VAZIA);
   const [form, setForm] = useState(CADASTRO_VAZIO);
   const [endereco, setEndereco] = useState(ENDERECO_VAZIO);
+  const [buscandoCep, setBuscandoCep] = useState(false);
+  const [erroCep, setErroCep] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
   const [camposComErro, setCamposComErro] = useState([]);
   const [versoes, setVersoes] = useState(null);
+
+  const ultimoCepBuscado = useRef("");
+
+  const campoNumero = useRef(null);
 
   useEffect(() => {
     let ativo = true;
@@ -132,6 +111,11 @@ function FormCadastro() {
   }, []);
 
   
+  const enderecoLiberado = somenteDigitos(endereco.cep).length === 8;
+
+  const enderecoEncontrado =
+    enderecoLiberado && !buscandoCep && !erroCep && endereco.logradouro !== "";
+
   const formularioValido =
     aceitouTermos &&
     aceitouPolitica &&
@@ -149,6 +133,47 @@ function FormCadastro() {
     setForm((anterior) => ({ ...anterior, [name]: value }));
   }
 
+  async function buscarCep(cepLimpo) {
+    if (ultimoCepBuscado.current === cepLimpo) return;
+    ultimoCepBuscado.current = cepLimpo;
+
+    setBuscandoCep(true);
+    setErroCep(null);
+
+    try {
+      const dados = await buscarEnderecoPorCep(cepLimpo);
+
+      setEndereco((anterior) => ({
+        ...anterior,
+        logradouro: dados.logradouro ?? "",
+        bairro: dados.bairro ?? "",
+        cidade: dados.cidade ?? "",
+        estado: dados.estado ?? "",
+      }));
+
+      campoNumero.current?.focus();
+    } catch (err) {
+      setErroCep(err.mensagem || "Não foi possível buscar este CEP. Preencha o endereço à mão.");
+    } finally {
+      setBuscandoCep(false);
+    }
+  }
+
+  function handleCepChange(evento) {
+    const mascarado = formatarCep(evento.target.value);
+    setEndereco((anterior) => ({ ...anterior, cep: mascarado }));
+
+    const limpo = somenteDigitos(mascarado);
+
+    if (limpo.length === 8) {
+      buscarCep(limpo);
+      return;
+    }
+
+    ultimoCepBuscado.current = "";
+    setErroCep(null);
+  }
+
   function handleEnderecoChange(evento) {
     const { name, value } = evento.target;
     setEndereco((anterior) => ({ ...anterior, [name]: value }));
@@ -158,7 +183,8 @@ function FormCadastro() {
     setForm(CADASTRO_VAZIO);
     setEndereco(ENDERECO_VAZIO);
     setFormacao(FORMACAO_VAZIA);
-    setCpf("");
+    setErroCep(null);
+    ultimoCepBuscado.current = "";
     setDataNascimento("");
     setSenha("");
     setConfirmaSenha("");
@@ -172,7 +198,6 @@ function FormCadastro() {
 
     const dadosProfissionais = profissional
       ? {
-        cpf: somenteDigitos(cpf),
         cref: formacao.cref,
         formacao: formacao.formacao,
         cep: somenteDigitos(endereco.cep),
@@ -213,32 +238,6 @@ function FormCadastro() {
       setEnviando(false);
     }
   }
-
-  const formatCpf = (value) => {
-    return value
-      .replace(/\D/g, "")
-      .slice(0, 11)
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-  };
-
-  const formatCref = (value) => {
-    const limpo = value
-    .toUpperCase()
-    .replace(/[^0-9A-Z]/g, "")
-    .slice(0, 9);
-    
-    const numeros = limpo.slice(0, 6);
-    const categoria = limpo.slice(6, 7);
-    const uf = limpo.slice(7, 9);
-
-    let saida = numeros;
-    if (categoria) saida += `-${categoria}`;
-    if (uf) saida += `/${uf}`;
-
-    return saida;
-  };
 
   return (
     <>
@@ -364,7 +363,7 @@ function FormCadastro() {
                       value={formacao.cref}
                       onChange={(evento) => setFormacao((anterior) => ({
                         ...anterior,
-                        cref: formatCref(evento.target.value),
+                        cref: formatarCref(evento.target.value),
                       }))
                     }
                       maxLength={11}
@@ -391,146 +390,155 @@ function FormCadastro() {
                                 ))}
                             </select>
                       </div>
-                      <div>
-                        <label htmlFor="cpf" className={styleLabel}>
-                          CPF *
-                      </label>
-                        <input
-                          type="text"
-                          maxLength={14}
-                          id="cpf"
-                          name="cpf"  
-                          value={cpf}
-                          className={styleInput}
-                          onChange={(e) => setCpf(formatCpf(e.target.value))}
-                          placeholder="000.000.000-00"
-                          required
-                        />
-                    </div>
                     </div>
                     </Cartao>
                     </section>
-                    <section className="py-6">
-            <CabecalhoSecao rotulo="Localização" titulo="Endereço profissional" />
-            <Cartao className="space-y-2">
-          <div className="flex gap-3">
-            <div>
-              <label htmlFor="cep" className={styleLabel}>
-                CEP *
-              </label>
-              <input
-                type="text"
-                id="cep"
-                className={styleInput}
-                maxLength={9}
-                name="cep"
-                value={endereco.cep}
-                onChange={handleEnderecoChange}
-                required
-                placeholder="Ex: 00000-000"
-              />
-            </div>
-            <div>
-              <label htmlFor="logradouro" className={styleLabel}>
-                Logradouro *
-              </label>
-              <input
-                type="text"
-                id="logradouro"
-                name="logradouro"
-                value={endereco.logradouro}
-                onChange={handleEnderecoChange}
-                required
-                className={styleInput}
-                placeholder="Ex: Rua nome da rua"
-              />
-            </div>
+            <section className="py-6">
+              <CabecalhoSecao rotulo="Localização" titulo="Endereço profissional" />
+              <Cartao className="space-y-4">
+                <p className="text-lg text-gray-300">
+                  Comece pelo <strong className="text-red-200">CEP</strong>: o
+                  restante do endereço é preenchido sozinho.
+                </p>
 
-            <div>
-              <label htmlFor="bairro" className={styleLabel}>
-                Bairro *
-              </label>
-              <input
-                type="text"
-                id="bairro"
-                name="bairro"
-                value={endereco.bairro}
-                onChange={handleEnderecoChange}
-                required
-                className={styleInput}
-                placeholder="Ex: Bairro"
-              />
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <div>
-              <label htmlFor="cidade" className={styleLabel}>
-                Cidade *
-              </label>
-              <input
-                type="text"
-                id="cidade"
-                name="cidade"
-                value={endereco.cidade}
-                onChange={handleEnderecoChange}
-                required
-                className={styleInput}
-                placeholder="Ex: Cidade"
-              />
-            </div>
-            <div>
-              <label htmlFor="numero" className={styleLabel}>
-                Número *
-              </label>
-              <input
-                type="text"
-                id="numero"
-                name="numero"
-                value={endereco.numero}
-                onChange={handleEnderecoChange}
-                required
-                className={styleInput}
-                placeholder="Ex: 123"
-              />
-            </div>
+                <div className="max-w-xs">
+                  <label htmlFor="cep" className={styleLabel}>
+                    CEP *
+                  </label>
+                  <input
+                    type="text"
+                    id="cep"
+                    className={`${styleInput} w-full`}
+                    maxLength={9}
+                    name="cep"
+                    value={endereco.cep}
+                    onChange={handleCepChange}
+                    required
+                    autoComplete="postal-code"
+                    inputMode="numeric"
+                    placeholder="00000-000"
+                    aria-describedby="cep-mensagem"
+                  />
+                  <p
+                    id="cep-mensagem"
+                    aria-live="polite"
+                    className={`mt-2 text-sm ${
+                      erroCep ? "text-red-400" : enderecoEncontrado ? "text-green-400" : "text-gray-400"
+                    }`}
+                  >
+                    {buscandoCep && "Buscando endereço..."}
+                    {erroCep && `${erroCep} Preencha o endereço à mão.`}
+                    {enderecoEncontrado && "Endereço encontrado. Confira e informe o número."}
+                    {!buscandoCep && !erroCep && !enderecoEncontrado && "Digite os 8 dígitos do CEP."}
+                  </p>
+                </div>
 
-            <div>
-              <label htmlFor="complemento" className={styleLabel}>
-                Complemento
-              </label>
-              <input
-                type="text"
-                id="complemento"
-                name="complemento"
-                value={endereco.complemento}
-                onChange={handleEnderecoChange}
-                className={styleInput}
-                placeholder="Ex: Apto 123"
-              />
-            </div>
-            <div>
-              <label htmlFor="estado" className={styleLabel}>
-                Estado *
-              </label>
-              <select
-                name="estado"
-                id="estado"
-                value={endereco.estado}
-                onChange={handleEnderecoChange} 
-                required
-                className={`${styleInput} bg-slate-800`}
-              >
-                <option value="">Selecione um estado</option>
-                {estados.map((estado) => (
-                  <option key={estado.uf} value={estado.uf}>
-                    {estado.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </Cartao>
-      </section>
+                <fieldset disabled={!enderecoLiberado} className="contents">
+                  <div className="grid gap-3 md:grid-cols-2 lp:grid-cols-3">
+                    <div>
+                      <label htmlFor="logradouro" className={styleLabel}>
+                        Logradouro *
+                      </label>
+                      <input
+                        type="text"
+                        id="logradouro"
+                        name="logradouro"
+                        value={endereco.logradouro}
+                        onChange={handleEnderecoChange}
+                        required
+                        className={enderecoLiberado ? `${styleInput} w-full` : `${styleInputBloqueado} w-full`}
+                        placeholder="Ex: Rua nome da rua"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="numero" className={styleLabel}>
+                        Número *
+                      </label>
+                      <input
+                        type="text"
+                        id="numero"
+                        ref={campoNumero}
+                        name="numero"
+                        value={endereco.numero}
+                        onChange={handleEnderecoChange}
+                        required
+                        className={enderecoLiberado ? `${styleInput} w-full` : `${styleInputBloqueado} w-full`}
+                        placeholder="Ex: 123"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="complemento" className={styleLabel}>
+                        Complemento
+                      </label>
+                      <input
+                        type="text"
+                        id="complemento"
+                        name="complemento"
+                        value={endereco.complemento}
+                        onChange={handleEnderecoChange}
+                        className={enderecoLiberado ? `${styleInput} w-full` : `${styleInputBloqueado} w-full`}
+                        placeholder="Ex: Apto 123"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="bairro" className={styleLabel}>
+                        Bairro *
+                      </label>
+                      <input
+                        type="text"
+                        id="bairro"
+                        name="bairro"
+                        value={endereco.bairro}
+                        onChange={handleEnderecoChange}
+                        required
+                        className={enderecoLiberado ? `${styleInput} w-full` : `${styleInputBloqueado} w-full`}
+                        placeholder="Ex: Bairro"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="cidade" className={styleLabel}>
+                        Cidade *
+                      </label>
+                      <input
+                        type="text"
+                        id="cidade"
+                        name="cidade"
+                        value={endereco.cidade}
+                        onChange={handleEnderecoChange}
+                        required
+                        className={enderecoLiberado ? `${styleInput} w-full` : `${styleInputBloqueado} w-full`}
+                        placeholder="Ex: Cidade"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="estado" className={styleLabel}>
+                        Estado *
+                      </label>
+                      <select
+                        name="estado"
+                        id="estado"
+                        value={endereco.estado}
+                        onChange={handleEnderecoChange}
+                        required
+                        className={`${enderecoLiberado ? styleInput : styleInputBloqueado} w-full bg-slate-800`}
+                      >
+                        <option value="">Selecione um estado</option>
+                        {ESTADOS.map((estado) => (
+                          <option key={estado.uf} value={estado.uf}>
+                            {estado.nome}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </fieldset>
+              </Cartao>
+            </section>
               </>
       )}
           
@@ -577,7 +585,7 @@ function FormCadastro() {
             <p className="mt-4 text-sm text-center text-red-500">{erro}</p>
           )}
           {camposComErro.length > 0 && (
-            <ul className="mt-2 list-disc pl-6 yexy-sm text-red-500">
+            <ul className="mt-2 list-disc pl-6 text-sm text-red-500">
               {camposComErro.map((campo) => (
                 <li key={campo.campo}>{campo.mensagem}</li>
               ))}

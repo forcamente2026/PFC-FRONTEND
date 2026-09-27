@@ -10,7 +10,7 @@ function Layout () {
 
   function entrar(resposta) {
     gravarSessao(resposta);
-    setUsuario({ nomeCompleto: resposta.nomeCompleto, papel:resposta.papel});
+    setUsuario({ id: resposta.id, nomeCompleto: resposta.nomeCompleto, papel: resposta.papel });
   }
 
   function sair () {

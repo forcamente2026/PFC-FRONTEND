@@ -15,6 +15,7 @@ import ArticlePages from "./pages/ArticlePages.jsx";
 import TermosPages from "./pages/TermosPages.jsx";
 import PoliticaPages from "./pages/PoliticaPages.jsx";
 import AuditoriaPages from "./pages/AuditoriaPages.jsx";
+import UsuariosPages from "./pages/UsuariosPages.jsx";
 import RotaPorPapel from "./components/RotaPorPapel.jsx";
 import { PAPEIS_VALIDADORES } from "./utils/papeis.js";
 
@@ -36,6 +37,14 @@ const router = createBrowserRouter([
         element: (
           <RotaPorPapel papeis={PAPEIS_VALIDADORES}>
             <AuditoriaPages />
+          </RotaPorPapel>
+        ),
+      },
+      {
+        path: "/admin/usuarios",
+        element: (
+          <RotaPorPapel papeis={PAPEIS_VALIDADORES}>
+            <UsuariosPages />
           </RotaPorPapel>
         ),
       },

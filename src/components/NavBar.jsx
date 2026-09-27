@@ -14,6 +14,12 @@ const LINKS = [
   { para: "/progress", rotulo: "PROGRESSO", protegida: true },
   { para: "/about", rotulo: "QUEM SOMOS" },
   {
+    para: "/admin/usuarios",
+    rotulo: "USUÁRIOS",
+    protegida: true,
+    papeis: PAPEIS_VALIDADORES,
+  },
+  {
     para: "/admin/auditoria",
     rotulo: "AUDITORIA",
     protegida: true,

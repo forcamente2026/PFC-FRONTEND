@@ -11,10 +11,10 @@ export function lerSessao() {
     }
 }
 
-export function gravarSessao({ token, nomeCompleto, papel }) {
+export function gravarSessao({ id, token, nomeCompleto, papel }) {
     try {
         localStorage.setItem(CHAVE_TOKEN, token);
-        localStorage.setItem(CHAVE_USUARIO, JSON.stringify ({ nomeCompleto, papel }));
+        localStorage.setItem(CHAVE_USUARIO, JSON.stringify({ id, nomeCompleto, papel }));
         return true;
     } catch {
         return false;

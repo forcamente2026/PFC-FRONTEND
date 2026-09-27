@@ -12,8 +12,6 @@ import {
 } from "../services/auditoriaService";
 import { baixarArquivo } from "../utils/csv";
 
-// O contrato define 50 como padrao do back; o front pede o mesmo para a tela
-// e o servidor casarem no que e uma pagina.
 const TAMANHO_PAGINA = 50;
 
 const FILTROS_VAZIOS = { de: "", ate: "", acao: "" };

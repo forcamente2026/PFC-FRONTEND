@@ -1,6 +1,3 @@
-// O CSV da auditoria e gerado pelo back (GET /api/auditoria/csv) e chega como
-// blob. Aqui so mora o disparo do download: um <a href> comum nao serve porque
-// o navegador nao anexa o header Authorization na navegacao.
 export function baixarArquivo(nomeArquivo, conteudo) {
   const blob =
     conteudo instanceof Blob

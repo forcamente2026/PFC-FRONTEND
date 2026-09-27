@@ -22,12 +22,6 @@ function SecaoProposta({ proposta }) {
           >
             Começar agora
           </Link>
-          <Link
-            to="/articles"
-            className="rounded-full border border-gray-600 px-8 py-3 text-lg font-bold text-white hover:bg-white/10"
-          >
-            Conhecer o acervo
-          </Link>
         </div>
       </Cartao>
     </section>
