@@ -1,5 +1,5 @@
 export const proposta = {
   titulo: "O que a plataforma oferece",
   texto:
-    "A ForçaMente conecta estudantes, professores e praticantes a um acervo gratuito de conteúdos e evidências aplicadas ao treinamento de força. Tenha acesso a artigos comentados, calculadoras de métricas e materiais de apoio para o estudo da fisiologia do exercício, tudo em um só lugar.",
+    "A ForçaMente reúne artigos revisados por profissionais de Educação Física, uma biblioteca de exercícios com orientação de execução e calculadoras de métricas de treino, para estudantes, professores e praticantes. O uso é inteiramente gratuito: não há cobrança, assinatura nem conteúdo pago.",
 };
