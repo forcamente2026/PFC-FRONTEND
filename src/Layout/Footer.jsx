@@ -1,3 +1,7 @@
+import { NavLink } from "react-router-dom";
+
+const ESTILO_LINK = "hover:text-white hover:underline";
+
 function Footer() {
   return (
     <footer className="relative bg-slate-950 text-rose-200">
@@ -7,8 +11,16 @@ function Footer() {
         <p className="text-2xl lg:text-3xl">FORÇAMENTE</p>
 
         <ul className="flex flex-col items-center gap-3 text-xl md:flex-row md:justify-center md:gap-8 md:text-2xl">
-          <li>Termos de Uso</li>
-          <li>Metodologia</li>
+          <li>
+            <NavLink to="/termos-de-uso" className={ESTILO_LINK}>
+              Termos de Uso
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/politica-de-privacidade" className={ESTILO_LINK}>
+              Política de Privacidade
+            </NavLink>
+          </li>
           <li>Contato</li>
         </ul>
       </div>

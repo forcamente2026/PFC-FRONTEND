@@ -7,8 +7,8 @@ const ESTILO_CAMPO =
 
 const LOGIN_VAZIO = { email: "", senha: ""};
 
-function FormLogin({ aoFechar, aoEntrar }) {
-  const [form, setForm] = useState(LOGIN_VAZIO);
+function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) {
+  const [form, setForm] = useState({ ...LOGIN_VAZIO, email: emailInicial ?? "" });
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
 
@@ -24,8 +24,7 @@ function FormLogin({ aoFechar, aoEntrar }) {
 
     try {
       const resposta = await login(form.email, form.senha);
-      aoEntrar(resposta);
-      aoFechar();
+      aoCodigoEnviado(form.email, resposta.expiraEmSegundos);
     } catch (error) {
       setErro(error.mensagem || "Não foi possivel entrar. Tente novamente");
     } finally {
@@ -69,7 +68,13 @@ function FormLogin({ aoFechar, aoEntrar }) {
       </div>
 
       <div className="flex text-sm font-medium gap-20">
-        <p>Esqueceu a senha?</p>
+        <button
+          type="button"
+          onClick={aoEsqueciSenha}
+          className="hover:underline hover:text-red-300 cursor-pointer"
+        >
+          Esqueceu a senha?
+        </button>
         <NavLink
           to="/cadastro"
           className="font-light hover:underline hover:text-red-300"

@@ -2,15 +2,23 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { LogOut, Menu, UserKey, X } from "lucide-react";
 import ModalLogin from "./ModalLogin";
-import FormLogin from "./FormLogin";
+import Autenticacao from "./Autenticacao";
 import AvisoLogin from "./AvisoLogin";
+import { PAPEIS_VALIDADORES } from "../utils/papeis";
 
+// `papeis` restringe o link a quem tem o papel; sem ele, o link vale para todos.
 const LINKS = [
   { para: "/", rotulo: "HOME", exato: true },
   { para: "/articles", rotulo: "ARTIGOS", protegida: true },
   { para: "/library", rotulo: "BIBLIOTECA", protegida: true },
   { para: "/progress", rotulo: "PROGRESSO", protegida: true },
   { para: "/about", rotulo: "QUEM SOMOS" },
+  {
+    para: "/admin/auditoria",
+    rotulo: "AUDITORIA",
+    protegida: true,
+    papeis: PAPEIS_VALIDADORES,
+  },
 ];
 
 const linkClass = ({ isActive }) =>
@@ -100,7 +108,9 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
           className={`${menuAberto ? "flex" : "hidden"} w-full flex-col gap-4 pt-4 lp:flex lp:w-auto lp:flex-1 lp:flex-row lp:items-center lp:pt-0`}
         >
           <div className="flex flex-col gap-4 font-bold lp:flex-1 lp:flex-row lp:justify-center lp:gap-6">
-            {LINKS.map(({ para, rotulo, exato, protegida }) => (
+            {LINKS.filter(
+              ({ papeis }) => !papeis || papeis.includes(usuario?.papel),
+            ).map(({ para, rotulo, exato, protegida }) => (
               <NavLink
                 key={para}
                 to={para}
@@ -141,7 +151,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
       </div>
 
       <ModalLogin isOpen={modalAberto} setCloseModal={fecharLogin}>
-        <FormLogin aoFechar={fecharLogin} aoEntrar={aoEntrar} />
+        <Autenticacao aoFechar={fecharLogin} aoEntrar={aoEntrar} />
       </ModalLogin>
 
       <ModalLogin isOpen={avisoAberto} setCloseModal={fecharAviso}>

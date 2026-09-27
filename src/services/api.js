@@ -10,6 +10,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  const caminho = config.url ?? "";
+  if (caminho.startsWith("/auth/")) {
+    return config;
+  }
+
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -21,16 +26,20 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
+    const caminho = error.config?.url ?? "";
+    const ehAutenticacao = caminho.startsWith("/auth/");
 
-    if (status === 401) {
+    if (status === 401 && !ehAutenticacao) {
       localStorage.removeItem("token");
-    }
+  }
 
     const mensagem =
       error.response?.data?.message ||
       "Não foi possível concluir a operação. Tente novamente.";
 
-    return Promise.reject({ status, mensagem, original: error });
+      const campos = error.response?.data?.campos ?? [];
+
+    return Promise.reject({ status, mensagem, campos, original: error });
   }
 );
 

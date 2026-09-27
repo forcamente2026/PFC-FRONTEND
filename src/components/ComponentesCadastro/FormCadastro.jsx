@@ -1,12 +1,12 @@
-import { useState } from "react";
-import Modal from "../Modal";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import ForcaSenha from "./ForcaSenha";
-import TermosDeUso from "./TermosDeUso";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
 import { somenteDigitos } from "../../utils/formatar";
 import { criarUsuario } from "../../services/usuarioService";
+import { listarDocumentos } from "../../services/documentoLegalService";
 
 const FORMACOES = [
     { valor: "BACHARELADO", rotulo: "Bacharelado em Educação Física"},
@@ -16,22 +16,30 @@ const FORMACOES = [
 const FORMACAO_VAZIA = {
   cref: "",
   formacao: "",
-  instituicao: "",
-  anoConclusao: "",
 };
 
 const CADASTRO_VAZIO = {
   nomeCompleto:"",
   telefone:"",
   email:"",
-  cep:"",
-  logradouro:"",
-  numero:"",
-  complemento:"",
-  bairro:"",
-  cidade:"",
-  estado:"",
 };
+
+const ENDERECO_VAZIO = {
+  cep: "",
+  logradouro: "",
+  numero: "",
+  complemento: "",
+  bairro: "",
+  cidade: "",
+  estado: "",
+};
+
+const IDADE_MINIMA = 18;
+  function dataMaximunNascimento() {
+    const hoje = new Date();
+    hoje.setFullYear(hoje.getFullYear() - IDADE_MINIMA);
+    return hoje.toISOString().slice(0, 10);
+  }
 
 function FormCadastro() {
 
@@ -91,25 +99,46 @@ function FormCadastro() {
       : styleInput;
 
   const [aceitouTermos, setAceitouTermos] = useState(false);
-  const [termosAbertos, setTermosAbertos] = useState(false);
+  const [aceitouPolitica, setAceitouPolitica] = useState(false);
 
   const [profissional, setProfissional] = useState(false);
   const [formacao, setFormacao] = useState(FORMACAO_VAZIA);
   const [form, setForm] = useState(CADASTRO_VAZIO);
+  const [endereco, setEndereco] = useState(ENDERECO_VAZIO);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
+  const [camposComErro, setCamposComErro] = useState([]);
+  const [versoes, setVersoes] = useState(null);
 
+  useEffect(() => {
+    let ativo = true;
+  
+  listarDocumentos()
+    .then((lista) => {
+      if (!ativo) return;
+      setVersoes({
+        termos: lista.find((doc) => doc.tipo === "TERMOS_USO")?.versao ?? "",
+        politicas: lista.find((doc) => doc.tipo === "POLITICA_PRIVACIDADE")?.versao ?? "",
+      });
+    })
+    .catch(() => {
+      if (ativo) {
+        setErro("Não foi possivel carregar os termos. Recarregue a página.")
+      }
+    });
+
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  
   const formularioValido =
-    aceitouTermos && avaliacaoSenha.valida && senhasCoincidem;
-
-  function fecharTermos() {
-    setTermosAbertos(false);
-  }
-
-  function aceitarTermos() {
-    setAceitouTermos(true);
-    setTermosAbertos(false);
-  }
+    aceitouTermos &&
+    aceitouPolitica &&
+    avaliacaoSenha.valida &&
+    senhasCoincidem &&
+    versoes !== null;
 
   function handleFormacaoChange(evento) {
     const {name,value} = evento.target;
@@ -121,8 +150,14 @@ function FormCadastro() {
     setForm((anterior) => ({ ...anterior, [name]: value }));
   }
 
+  function handleEnderecoChange(evento) {
+    const { name, value } = evento.target;
+    setEndereco((anterior) => ({ ...anterior, [name]: value }));
+  }
+
   function limparFormulario() {
     setForm(CADASTRO_VAZIO);
+    setEndereco(ENDERECO_VAZIO);
     setFormacao(FORMACAO_VAZIA);
     setCpf("");
     setDataNascimento("");
@@ -130,23 +165,44 @@ function FormCadastro() {
     setConfirmaSenha("");
     setProfissional(false);
     setAceitouTermos(false);
+    setAceitouPolitica(false);
   }
 
   async function enviarCadastro(evento) {
     evento.preventDefault();
 
+    const dadosProfissionais = profissional
+      ? {
+        cpf: somenteDigitos(cpf),
+        cref: formacao.cref,
+        formacao: formacao.formacao,
+        cep: somenteDigitos(endereco.cep),
+        logradouro: endereco.logradouro,
+        numero: endereco.numero,
+        complemento: endereco.complemento,
+        bairro: endereco.bairro,
+        cidade: endereco.cidade,
+        estado: endereco.estado
+      }
+      : {};
+
     const usuario = {
-      ...form,
-      cpf: somenteDigitos(cpf),
-      cep: somenteDigitos(form.cep),
+      nomeCompleto: form.nomeCompleto,
+      email: form.email,
       telefone: somenteDigitos(form.telefone),
       senha,
       dataNascimento,
       papel: profissional ? "PROFESSOR" : "ALUNO",
+      aceitouTermosUso: aceitouTermos,
+      aceitouPoliticaPrivacidade: aceitouPolitica,
+      versaoTermosUso: versoes.termos,
+      versaoPoliticaPrivacidade: versoes.politicas,
+      ...dadosProfissionais,
     };
 
     setEnviando(true);
     setErro(null);
+    setCamposComErro([]);
 
     try {
       await criarUsuario(usuario);
@@ -154,6 +210,7 @@ function FormCadastro() {
       limparFormulario();
     } catch (err) {
       setErro(err.mensagem || "Erro ao realizar cadastro. Tente novamente mais tarde.");
+      setCamposComErro(err.campos ?? []);
     } finally {
       setEnviando(false);
     }
@@ -166,6 +223,23 @@ function FormCadastro() {
       .replace(/(\d{3})(\d)/, "$1.$2")
       .replace(/(\d{3})(\d)/, "$1.$2")
       .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  };
+
+  const formatCref = (value) => {
+    const limpo = value
+    .toUpperCase()
+    .replace(/[^0-9A-Z]/g, "")
+    .slice(0, 9);
+    
+    const numeros = limpo.slice(0, 6);
+    const categoria = limpo.slice(6, 7);
+    const uf = limpo.slice(7, 9);
+
+    let saida = numeros;
+    if (categoria) saida += `-${categoria}`;
+    if (uf) saida += `/${uf}`;
+
+    return saida;
   };
 
   return (
@@ -198,6 +272,7 @@ function FormCadastro() {
                 type="date"
                 id="dataNasc"
                 name="dataNasc"
+                max={dataMaximunNascimento()}
                 value={dataNascimento}
                 onChange={(e) => setDataNascimento(e.target.value)}
                 required
@@ -233,22 +308,6 @@ function FormCadastro() {
                 required
                 className={styleInput}
                 placeholder="nome@example.com"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="cpf" className={styleLabel}>
-                CPF *
-              </label>
-              <input
-                type="text"
-                maxLength={14}
-                id="cpf"
-                value={cpf}
-                className={styleInput}
-                onChange={(e) => setCpf(formatCpf(e.target.value))}
-                placeholder="000.000.000-00"
-                required
               />
             </div>
           </div>
@@ -295,127 +354,7 @@ function FormCadastro() {
           </div>
             </Cartao>
           </section>
-          <section className="py-6">
-            <CabecalhoSecao rotulo="Localização" titulo="Endereço" />
-            <Cartao className="space-y-2">
-          <div className="flex gap-3">
-            <div>
-              <label htmlFor="cep" className={styleLabel}>
-                CEP *
-              </label>
-              <input
-                type="text"
-                id="cep"
-                className={styleInput}
-                maxLength={9}
-                name="cep"
-                value={form.cep}
-                onChange={handleChange}
-                required
-                placeholder="Ex: 00000-000"
-              />
-            </div>
-            <div>
-              <label htmlFor="logradouro" className={styleLabel}>
-                Logradouro *
-              </label>
-              <input
-                type="text"
-                id="logradouro"
-                name="logradouro"
-                value={form.logradouro}
-                onChange={handleChange}
-                required
-                className={styleInput}
-                placeholder="Ex: Rua nome da rua"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bairro" className={styleLabel}>
-                Bairro *
-              </label>
-              <input
-                type="text"
-                id="bairro"
-                name="bairro"
-                value={form.bairro}
-                onChange={handleChange}
-                required
-                className={styleInput}
-                placeholder="Ex: Bairro"
-              />
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <div>
-              <label htmlFor="cidade" className={styleLabel}>
-                Cidade *
-              </label>
-              <input
-                type="text"
-                id="cidade"
-                name="cidade"
-                value={form.cidade}
-                onChange={handleChange}
-                required
-                className={styleInput}
-                placeholder="Ex: Cidade"
-              />
-            </div>
-            <div>
-              <label htmlFor="numero" className={styleLabel}>
-                Número *
-              </label>
-              <input
-                type="text"
-                id="numero"
-                name="numero"
-                value={form.numero}
-                onChange={handleChange}
-                required
-                className={styleInput}
-                placeholder="Ex: 123"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="complemento" className={styleLabel}>
-                Complemento
-              </label>
-              <input
-                type="text"
-                id="complemento"
-                name="complemento"
-                value={form.complemento}
-                onChange={handleChange}
-                className={styleInput}
-                placeholder="Ex: Apto 123"
-              />
-            </div>
-            <div>
-              <label htmlFor="estado" className={styleLabel}>
-                Estado *
-              </label>
-              <select
-                name="estado"
-                id="estado"
-                value={form.estado}
-                onChange={handleChange} 
-                required
-                className={`${styleInput} bg-slate-800`}
-              >
-                <option value="">Selecione um estado</option>
-                {estados.map((estado) => (
-                  <option key={estado.uf} value={estado.uf}>
-                    {estado.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </Cartao>
-      </section>
+          
           <div className="mt-10 flex flex-wrap items-center gap-2 text-lg text-gray-300">
             <input
               type="checkbox"
@@ -427,6 +366,7 @@ function FormCadastro() {
           </div>
           
           {profissional && (
+            <>
             <section className="py-6">
               <CabecalhoSecao rotulo="Profissional" titulo="Formação" />
               <Cartao className="space-y-2">
@@ -440,7 +380,11 @@ function FormCadastro() {
                       id="cref"
                       name="cref"
                       value={formacao.cref}
-                      onChange={handleFormacaoChange}
+                      onChange={(evento) => setFormacao((anterior) => ({
+                        ...anterior,
+                        cref: formatCref(evento.target.value),
+                      }))
+                    }
                       maxLength={11}
                       placeholder="000000-G/UF"
                       className={styleInput}
@@ -465,66 +409,197 @@ function FormCadastro() {
                                 ))}
                             </select>
                       </div>
-                    </div>
-                    <div className="flex gap-3">
                       <div>
-                        <label htmlFor="instituicao" className={styleLabel}>
-                          Instituição de ensino*
-                          </label>
-                          <input
-                            type="text"
-                            id="instituicao"
-                            name="instituicao"
-                            value={formacao.instituicao}
-                            onChange={handleFormacaoChange}
-                            placeholder="Ex: Universidade de Mogi Das Cruzes"
-                            className={styleInput}
-                            />
-                        </div>
-                        <div>
-                          <label htmlFor="anoConclusao" className={styleLabel}>
-                            Ano de conclusão*
-                            </label>
-                            <input
-                              type="number"
-                              id="anoConclusao"
-                              name="anoConclusao"
-                              value={formacao.anoConclusao}
-                              onChange={handleFormacaoChange}
-                              min="1950"
-                              max={new Date().getFullYear()}
-                              placeholder = "Ex: 1950"
-                              className = {styleInput}
-                              />
-                        </div>
-                      </div>
-              </Cartao>
-            </section>)}
+                        <label htmlFor="cpf" className={styleLabel}>
+                          CPF *
+                      </label>
+                        <input
+                          type="text"
+                          maxLength={14}
+                          id="cpf"
+                          name="cpf"  
+                          value={cpf}
+                          className={styleInput}
+                          onChange={(e) => setCpf(formatCpf(e.target.value))}
+                          placeholder="000.000.000-00"
+                          required
+                        />
+                    </div>
+                    </div>
+                    </Cartao>
+                    </section>
+                    <section className="py-6">
+            <CabecalhoSecao rotulo="Localização" titulo="Endereço profissional" />
+            <Cartao className="space-y-2">
+          <div className="flex gap-3">
+            <div>
+              <label htmlFor="cep" className={styleLabel}>
+                CEP *
+              </label>
+              <input
+                type="text"
+                id="cep"
+                className={styleInput}
+                maxLength={9}
+                name="cep"
+                value={endereco.cep}
+                onChange={handleEnderecoChange}
+                required
+                placeholder="Ex: 00000-000"
+              />
+            </div>
+            <div>
+              <label htmlFor="logradouro" className={styleLabel}>
+                Logradouro *
+              </label>
+              <input
+                type="text"
+                id="logradouro"
+                name="logradouro"
+                value={endereco.logradouro}
+                onChange={handleEnderecoChange}
+                required
+                className={styleInput}
+                placeholder="Ex: Rua nome da rua"
+              />
+            </div>
 
+            <div>
+              <label htmlFor="bairro" className={styleLabel}>
+                Bairro *
+              </label>
+              <input
+                type="text"
+                id="bairro"
+                name="bairro"
+                value={endereco.bairro}
+                onChange={handleEnderecoChange}
+                required
+                className={styleInput}
+                placeholder="Ex: Bairro"
+              />
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <div>
+              <label htmlFor="cidade" className={styleLabel}>
+                Cidade *
+              </label>
+              <input
+                type="text"
+                id="cidade"
+                name="cidade"
+                value={endereco.cidade}
+                onChange={handleEnderecoChange}
+                required
+                className={styleInput}
+                placeholder="Ex: Cidade"
+              />
+            </div>
+            <div>
+              <label htmlFor="numero" className={styleLabel}>
+                Número *
+              </label>
+              <input
+                type="text"
+                id="numero"
+                name="numero"
+                value={endereco.numero}
+                onChange={handleEnderecoChange}
+                required
+                className={styleInput}
+                placeholder="Ex: 123"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="complemento" className={styleLabel}>
+                Complemento
+              </label>
+              <input
+                type="text"
+                id="complemento"
+                name="complemento"
+                value={endereco.complemento}
+                onChange={handleEnderecoChange}
+                className={styleInput}
+                placeholder="Ex: Apto 123"
+              />
+            </div>
+            <div>
+              <label htmlFor="estado" className={styleLabel}>
+                Estado *
+              </label>
+              <select
+                name="estado"
+                id="estado"
+                value={endereco.estado}
+                onChange={handleEnderecoChange} 
+                required
+                className={`${styleInput} bg-slate-800`}
+              >
+                <option value="">Selecione um estado</option>
+                {estados.map((estado) => (
+                  <option key={estado.uf} value={estado.uf}>
+                    {estado.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </Cartao>
+      </section>
+              </>
+      )}
+          
           <div className="mt-10 flex flex-wrap items-center gap-2 text-lg text-gray-300">
             <input
               type="checkbox"
               id="aceitouTermos"
               checked={aceitouTermos}
-              onChange={(e) => setAceitouTermos(e.target.checked)}
-              aria-labelledby="aceitouTermos-rotulo aceitouTermos-link"
+              onChange={(evento) => setAceitouTermos(evento.target.checked)}
               required
               className="h-5 w-5 accent-red-500"
             />
-            <label id="aceitouTermos-rotulo" htmlFor="aceitouTermos">
-              Li e aceito os
-            </label>
-            <button
-              type="button"
-              id="aceitouTermos-link"
-              onClick={() => setTermosAbertos(true)}
-              className="text-red-200 underline hover:text-white cursor-pointer"
+            <label htmlFor="aceitouTermos">Li e aceito os</label>
+            <Link
+              to="/termos-de-uso"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-red-200 underline hover:text-white"
             >
               Termos de Uso
-            </button>
+            </Link>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-lg text-gray-300">
+            <input
+              type="checkbox"
+              id="aceitouPolitica"
+              checked={aceitouPolitica}
+              onChange={(evento) => setAceitouPolitica(evento.target.checked)}
+              required
+              className="h-5 w-5 accent-red-500"
+            />
+            <label htmlFor="aceitouPolitica">Li e aceito a</label>
+            <Link
+              to="/politica-de-privacidade"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-red-200 underline hover:text-white"
+            >
+              Política de Privacidade
+            </Link>
           </div>
           {erro && (
             <p className="mt-4 text-sm text-center text-red-500">{erro}</p>
+          )}
+          {camposComErro.length > 0 && (
+            <ul className="mt-2 list-disc pl-6 yexy-sm text-red-500">
+              {camposComErro.map((campo) => (
+                <li key={campo.campo}>{campo.mensagem}</li>
+              ))}
+            </ul> 
           )}
           <button
             type="submit"
@@ -534,10 +609,6 @@ function FormCadastro() {
             {enviando ? "Cadastrando..." : "Cadastrar"}
           </button>
       </form>
-
-      <Modal isOpen={termosAbertos} setCloseModal={fecharTermos}>
-        <TermosDeUso aoFechar={fecharTermos} aoAceitar={aceitarTermos} />
-      </Modal>
     </>
   );
 }
