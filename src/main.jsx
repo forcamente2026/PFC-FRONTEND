@@ -12,6 +12,11 @@ import Cadastro from "./pages/Cadastro.jsx";
 import RotaProtegida from "./components/RotaProtegida.jsx";
 import ArticlesPages from "./pages/ArticlesPages.jsx";
 import ArticlePages from "./pages/ArticlePages.jsx";
+import TermosPages from "./pages/TermosPages.jsx";
+import PoliticaPages from "./pages/PoliticaPages.jsx";
+import AuditoriaPages from "./pages/AuditoriaPages.jsx";
+import RotaPorPapel from "./components/RotaPorPapel.jsx";
+import { PAPEIS_VALIDADORES } from "./utils/papeis.js";
 
 const router = createBrowserRouter([
   {
@@ -19,11 +24,21 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePages /> },
       { path: "/cadastro", element: <Cadastro /> },
+      { path: "/termos-de-uso", element: <TermosPages /> },
+      { path: "/politica-de-privacidade", element: <PoliticaPages /> },
       { path: "/about", element: <AboutPages /> },
       { path: "/articles", element: <RotaProtegida><ArticlesPages /></RotaProtegida> },
       { path: "/articles/:id", element: <RotaProtegida><ArticlePages /></RotaProtegida> },
       { path: "/library", element: <RotaProtegida><LibraryPages /></RotaProtegida> },
       { path: "/progress", element: <RotaProtegida><ProgressPages /></RotaProtegida> },
+      {
+        path: "/admin/auditoria",
+        element: (
+          <RotaPorPapel papeis={PAPEIS_VALIDADORES}>
+            <AuditoriaPages />
+          </RotaPorPapel>
+        ),
+      },
     ],
   },
 ]);
