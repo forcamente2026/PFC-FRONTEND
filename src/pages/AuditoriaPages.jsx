@@ -4,35 +4,19 @@ import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroAuditoria from "../components/AdminComponents/FiltroAuditoria";
 import TabelaAuditoria from "../components/AdminComponents/TabelaAuditoria";
 import Paginacao from "../components/AdminComponents/Paginacao";
-import { buscarAuditoria, listarAcoes } from "../services/auditoriaService";
-import { gerarCsv, baixarArquivo } from "../utils/csv";
+import {
+  EXPORTACAO_DISPONIVEL,
+  buscarAuditoria,
+  exportarCsv,
+  listarAcoes,
+} from "../services/auditoriaService";
+import { baixarArquivo } from "../utils/csv";
 
-const TAMANHO_PAGINA = 20;
-const TAMANHO_EXPORTACAO = 1000;
+// O contrato define 50 como padrao do back; o front pede o mesmo para a tela
+// e o servidor casarem no que e uma pagina.
+const TAMANHO_PAGINA = 50;
 
-const FILTROS_VAZIOS = { de: "", ate: "", acao: "", usuario: "" };
-
-const CABECALHO_CSV = [
-  "Quando",
-  "Acao",
-  "Usuario",
-  "E-mail",
-  "Detalhe",
-  "Recurso",
-  "IP",
-];
-
-function paraLinhaCsv(registro) {
-  return [
-    registro.quando,
-    registro.acao?.descricao ?? registro.acao?.codigo ?? "",
-    registro.usuario?.nomeCompleto ?? "",
-    registro.usuario?.email ?? "",
-    registro.detalhe ?? "",
-    registro.recurso ?? "",
-    registro.enderecoIp ?? "",
-  ];
-}
+const FILTROS_VAZIOS = { de: "", ate: "", acao: "" };
 
 function AuditoriaPages() {
   const [filtros, setFiltros] = useState(FILTROS_VAZIOS);
@@ -61,7 +45,6 @@ function AuditoriaPages() {
 
   useEffect(() => {
     let ativo = true;
-    setCarregando(true);
 
     buscarAuditoria({ pagina, tamanho: TAMANHO_PAGINA, ...filtros })
       .then((dados) => {
@@ -97,21 +80,9 @@ function AuditoriaPages() {
     setExportando(true);
 
     try {
-      const tudo = await buscarAuditoria({
-        pagina: 0,
-        tamanho: TAMANHO_EXPORTACAO,
-        ...filtros,
-      });
-
-      const csv = gerarCsv(CABECALHO_CSV, tudo.conteudo.map(paraLinhaCsv));
+      const arquivo = await exportarCsv(filtros);
       const dia = new Date().toISOString().slice(0, 10);
-      baixarArquivo(`auditoria-${dia}.csv`, csv);
-
-      if (tudo.totalElementos > TAMANHO_EXPORTACAO) {
-        alert(
-          `Foram exportados os ${TAMANHO_EXPORTACAO} registros mais recentes de ${tudo.totalElementos}. Use os filtros para reduzir o período.`,
-        );
-      }
+      baixarArquivo(`auditoria-${dia}.csv`, arquivo);
     } catch (err) {
       setErro(err.mensagem || "Não foi possível exportar os registros.");
     } finally {
@@ -136,11 +107,16 @@ function AuditoriaPages() {
         aoLimpar={limparFiltros}
       />
 
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex items-center justify-end gap-3">
+        {!EXPORTACAO_DISPONIVEL && (
+          <span className="text-sm text-gray-400">
+            Exportação disponível quando a API de auditoria estiver no ar.
+          </span>
+        )}
         <button
           type="button"
           onClick={exportar}
-          disabled={exportando || registros.length === 0}
+          disabled={!EXPORTACAO_DISPONIVEL || exportando || registros.length === 0}
           className="rounded-md bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {exportando ? "Exportando..." : "Exportar CSV"}
@@ -157,8 +133,8 @@ function AuditoriaPages() {
         <TabelaAuditoria registros={registros} />
         <Paginacao
           pagina={resultado?.pagina ?? 0}
-          totalPaginas={resultado?.totalPaginas ?? 1}
-          totalElementos={resultado?.totalElementos ?? 0}
+          totalDePaginas={resultado?.totalDePaginas ?? 1}
+          totalDeItens={resultado?.totalDeItens ?? 0}
           aoMudarPagina={setPagina}
         />
       </EstadoRequisicao>

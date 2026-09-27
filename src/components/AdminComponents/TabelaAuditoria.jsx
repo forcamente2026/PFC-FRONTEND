@@ -1,3 +1,5 @@
+import { fraseDoEvento } from "./eventoAuditoria";
+
 const ESTILO_CABECALHO = "py-2 pr-4 font-semibold text-red-200 whitespace-nowrap";
 const ESTILO_CELULA = "py-2 pr-4 text-gray-300 align-top";
 
@@ -19,48 +21,36 @@ function formatarMomento(valor) {
 function TabelaAuditoria({ registros }) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-3xl border-collapse text-left text-sm">
+      <table className="w-full min-w-2xl border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-gray-700">
             <th className={ESTILO_CABECALHO}>Quando</th>
-            <th className={ESTILO_CABECALHO}>Ação</th>
+            <th className={ESTILO_CABECALHO}>Evento</th>
             <th className={ESTILO_CABECALHO}>Usuário</th>
-            <th className={ESTILO_CABECALHO}>Detalhe</th>
-            <th className={ESTILO_CABECALHO}>Recurso</th>
-            <th className={ESTILO_CABECALHO}>IP</th>
           </tr>
         </thead>
         <tbody>
           {registros.map((registro) => (
             <tr key={registro.id} className="border-b border-gray-700">
               <td className={`${ESTILO_CELULA} whitespace-nowrap`}>
-                {formatarMomento(registro.quando)}
+                {formatarMomento(registro.ocorridoEm)}
               </td>
               <td className={ESTILO_CELULA}>
                 <span className="rounded-md bg-red-500 px-2 py-1 text-xs font-medium text-white">
-                  {registro.acao?.descricao ?? registro.acao?.codigo}
+                  {fraseDoEvento(registro)}
                 </span>
               </td>
               <td className={ESTILO_CELULA}>
-                {registro.usuario ? (
+                {registro.usuarioNome ? (
                   <>
-                    <span className="block text-white">
-                      {registro.usuario.nomeCompleto}
-                    </span>
+                    <span className="block text-white">{registro.usuarioNome}</span>
                     <span className="block text-xs text-gray-400">
-                      {registro.usuario.email}
+                      {registro.usuarioEmail}
                     </span>
                   </>
                 ) : (
-                  <span className="text-gray-500">não identificado</span>
+                  <span className="text-gray-500">—</span>
                 )}
-              </td>
-              <td className={ESTILO_CELULA}>{registro.detalhe}</td>
-              <td className={`${ESTILO_CELULA} text-xs`}>
-                {registro.recurso ?? "--"}
-              </td>
-              <td className={`${ESTILO_CELULA} text-xs whitespace-nowrap`}>
-                {registro.enderecoIp ?? "--"}
               </td>
             </tr>
           ))}

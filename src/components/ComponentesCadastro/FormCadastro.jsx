@@ -20,7 +20,6 @@ const FORMACAO_VAZIA = {
 
 const CADASTRO_VAZIO = {
   nomeCompleto:"",
-  telefone:"",
   email:"",
 };
 
@@ -189,7 +188,6 @@ function FormCadastro() {
     const usuario = {
       nomeCompleto: form.nomeCompleto,
       email: form.email,
-      telefone: somenteDigitos(form.telefone),
       senha,
       dataNascimento,
       papel: profissional ? "PROFESSOR" : "ALUNO",
@@ -279,22 +277,6 @@ function FormCadastro() {
                 className={styleInput}
               />
             </div>
-            <div>
-              <label htmlFor="tel_celular" className={styleLabel}>
-                Telefone *
-              </label>
-              <input
-                type="tel"
-                id="tel_celular"
-                name="telefone"
-                value={form.telefone}
-                onChange={handleChange}
-                required
-                className={styleInput}
-                placeholder="(00) 0 0000-0000"
-              />
-            </div>
-
             <div>
               <label htmlFor="email" className={styleLabel}>
                 Email *

@@ -58,21 +58,6 @@ function FiltroAuditoria({ filtros, acoes, aoAlterar, aoLimpar }) {
         </select>
       </div>
 
-      <div className="flex flex-1 flex-col gap-1">
-        <label htmlFor="usuario" className={ESTILO_ROTULO}>
-          Usuário
-        </label>
-        <input
-          type="search"
-          id="usuario"
-          name="usuario"
-          value={filtros.usuario}
-          onChange={handleChange}
-          placeholder="Nome ou e-mail"
-          className={`${ESTILO_CAMPO} min-w-48`}
-        />
-      </div>
-
       <button
         type="button"
         onClick={aoLimpar}
