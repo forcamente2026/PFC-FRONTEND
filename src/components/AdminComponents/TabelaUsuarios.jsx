@@ -8,6 +8,9 @@ const ESTILO_ETIQUETA = "rounded-md px-2 py-1 text-xs font-medium whitespace-now
 const ESTILO_ACAO =
   "rounded-md border border-gray-600 px-3 py-1 text-xs text-red-200 hover:bg-white/10 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 
+const ESTILO_ACAO_GRAVE =
+  "rounded-md border border-red-500 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300 hover:bg-red-500/25 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
+
 function descricaoDaFormacao(codigo, formacoes) {
   if (!codigo) return null;
   return formacoes.find((opcao) => opcao.codigo === codigo)?.descricao ?? codigo;
@@ -18,6 +21,7 @@ function TabelaUsuarios({
   formacoes,
   aoEditar,
   aoAlternarAtivo,
+  aoAnonimizar,
   idEmOperacao,
   idDoLogado,
 }) {
@@ -41,6 +45,7 @@ function TabelaUsuarios({
 
             const ehAPropriaConta = usuario.id === idDoLogado;
             const naoPodeInativar = anonimizada || (ehAPropriaConta && usuario.ativo);
+            const pediuExclusao = Boolean(usuario.anonimizacaoSolicitadaEm) && !anonimizada;
 
             return (
               <tr key={usuario.id} className="border-b border-gray-700">
@@ -120,6 +125,16 @@ function TabelaUsuarios({
                     >
                       {ocupada ? "Salvando..." : usuario.ativo ? "Inativar" : "Reativar"}
                     </button>
+                    {pediuExclusao && (
+                      <button
+                        type="button"
+                        onClick={() => aoAnonimizar(usuario)}
+                        disabled={ocupada}
+                        className={ESTILO_ACAO_GRAVE}
+                      >
+                        Anonimizar
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

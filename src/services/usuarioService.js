@@ -32,3 +32,7 @@ export async function alterarAtivo(id, ativo) {
   const { data } = await api.patch(`/usuarios/${id}/ativo`, { ativo });
   return data;
 }
+
+export async function anonimizarUsuario(id) {
+  await api.post(`/usuarios/${id}/anonimizar`);
+}

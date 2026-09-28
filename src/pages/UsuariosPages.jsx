@@ -6,9 +6,11 @@ import Modal from "../components/Modal";
 import FiltroUsuarios from "../components/AdminComponents/FiltroUsuarios";
 import TabelaUsuarios from "../components/AdminComponents/TabelaUsuarios";
 import FormEdicaoUsuario from "../components/AdminComponents/FormEdicaoUsuario";
+import ConfirmarAnonimizacao from "../components/AdminComponents/ConfirmarAnonimizacao";
 import Paginacao from "../components/AdminComponents/Paginacao";
 import {
   alterarAtivo,
+  anonimizarUsuario,
   atualizarUsuario,
   buscarUsuarios,
   listarFormacoes,
@@ -31,6 +33,7 @@ function UsuariosPages() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [usuarioEmEdicao, setUsuarioEmEdicao] = useState(null);
+  const [usuarioEmAnonimizacao, setUsuarioEmAnonimizacao] = useState(null);
   const [idEmOperacao, setIdEmOperacao] = useState(null);
 
   const [versao, setVersao] = useState(0);
@@ -106,6 +109,12 @@ function UsuariosPages() {
     setVersao((atual) => atual + 1);
   }
 
+  async function anonimizar() {
+    await anonimizarUsuario(usuarioEmAnonimizacao.id);
+    setUsuarioEmAnonimizacao(null);
+    setVersao((atual) => atual + 1);
+  }
+
   async function alternarAtivo(usuario) {
     const confirmado = window.confirm(
       usuario.ativo
@@ -162,6 +171,7 @@ function UsuariosPages() {
           formacoes={formacoes}
           aoEditar={setUsuarioEmEdicao}
           aoAlternarAtivo={alternarAtivo}
+          aoAnonimizar={setUsuarioEmAnonimizacao}
           idEmOperacao={idEmOperacao}
           idDoLogado={usuario?.id}
         />
@@ -184,6 +194,20 @@ function UsuariosPages() {
             formacoes={formacoes}
             aoSalvar={salvar}
             aoCancelar={() => setUsuarioEmEdicao(null)}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={usuarioEmAnonimizacao !== null}
+        setCloseModal={() => setUsuarioEmAnonimizacao(null)}
+      >
+        {usuarioEmAnonimizacao && (
+          <ConfirmarAnonimizacao
+            key={usuarioEmAnonimizacao.id}
+            usuario={usuarioEmAnonimizacao}
+            aoConfirmar={anonimizar}
+            aoCancelar={() => setUsuarioEmAnonimizacao(null)}
           />
         )}
       </Modal>
