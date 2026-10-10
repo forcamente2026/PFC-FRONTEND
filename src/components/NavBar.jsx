@@ -133,7 +133,13 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
 
           {usuario ? (
             <div className="flex items-center gap-3">
-              <span className="font-bold">{usuario.nomeCompleto}</span>
+              <NavLink
+                to="/minha-conta"
+                onClick={fecharMenu}
+                className="font-bold underline-offset-4 hover:text-red-200 hover:underline"
+              >
+                {usuario.nomeCompleto}
+              </NavLink>
               <button
                 type="button"
                 onClick={aoSair}

@@ -36,3 +36,16 @@ export async function alterarAtivo(id, ativo) {
 export async function anonimizarUsuario(id) {
   await api.post(`/usuarios/${id}/anonimizar`);
 }
+
+export async function buscarMinhaConta() {
+  const { data } = await api.get("/usuarios/me");
+  return data;
+}
+
+export async function solicitarExclusaoDaMinhaConta() {
+  await api.post("/usuarios/me/anonimizacao");
+}
+
+export async function cancelarExclusaoDaMinhaConta() {
+  await api.delete("/usuarios/me/anonimizacao");
+}
