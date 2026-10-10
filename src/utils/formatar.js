@@ -39,10 +39,20 @@ export function formatarCref(valor) {
   return saida;
 }
 
+function paraData(valor) {
+  const apenasData =
+    typeof valor === "string" &&
+    valor.length === 10 &&
+    valor[4] === "-" &&
+    valor[7] === "-";
+
+  return apenasData ? new Date(`${valor}T00:00:00`) : new Date(valor);
+}
+
 export function formatarDataCurta(valor) {
   if (!valor) return "—";
 
-  const data = new Date(valor);
+  const data = paraData(valor);
   if (Number.isNaN(data.getTime())) return "—";
 
   return data.toLocaleDateString("pt-BR", {
@@ -55,7 +65,7 @@ export function formatarDataCurta(valor) {
 export function formatarDataExtenso(valor) {
   if (!valor) return "";
 
-  const data = new Date(valor);
+  const data = paraData(valor);
   if (Number.isNaN(data.getTime())) return "";
 
   return data.toLocaleDateString("pt-BR", {
