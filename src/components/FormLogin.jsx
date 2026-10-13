@@ -6,11 +6,14 @@ const ESTILO_CAMPO =
   "text-2xl text-white font-light border p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20";
 
 const LOGIN_VAZIO = { email: "", senha: ""};
+const FALHAS_PARA_DICA = 3;
+const STATUS_DE_CREDENCIAL = [401, 429];
 
 function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) {
   const [form, setForm] = useState({ ...LOGIN_VAZIO, email: emailInicial ?? "" });
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
+  const [falhas, setFalhas] = useState(0);
 
   function handleChange(evento) {
     const { name, value } = evento.target;
@@ -27,6 +30,9 @@ function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) 
       aoCodigoEnviado(form.email, resposta.expiraEmSegundos);
     } catch (error) {
       setErro(error.mensagem || "Não foi possivel entrar. Tente novamente");
+      if (STATUS_DE_CREDENCIAL.includes(error.status)) {
+        setFalhas((anterior) => anterior + 1);
+      }
     } finally {
       setEnviando(false);
     }
@@ -85,6 +91,18 @@ function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) 
       </div>
 
       {erro && <p className="text-sm text-center text-red-500">{erro}</p>}
+            {falhas >= FALHAS_PARA_DICA && (
+        <div className="flex flex-col items-center gap-1 text-sm text-center text-red-200">
+          <p>Muitas tentativas? Aguarde alguns minutos ou redefina a senha.</p>
+          <button
+            type="button"
+            onClick={aoEsqueciSenha}
+            className="text-base p-4 my-2 rounded-xl border border-red-500 text-red-200 hover:bg-red-500 hover:text-white cursor-pointer"
+          >
+            Redefinir senha
+          </button>
+        </div>
+      )}
 
       <button
         type="submit"
