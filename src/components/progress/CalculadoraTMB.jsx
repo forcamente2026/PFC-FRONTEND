@@ -14,7 +14,7 @@ import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import { EXPLICACAO_TMB } from "./explicacoesCalculo";
 
-function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
+function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
   const [alturaCm, setAlturaCm] = useState("");
   const [idade, setIdade] = useState("");
   const [sexos, setSexos] = useState([]);
@@ -57,7 +57,7 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
   }, []);
 
   const formularioValido =
-    pesoKg && alturaCm && idade && sexoBiologico && nivelAtividade;
+    consentiu && pesoKg && alturaCm && idade && sexoBiologico && nivelAtividade;
 
   function aoEnviar(evento) {
     evento.preventDefault();

@@ -11,8 +11,10 @@ import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import TrackerAgua from "./TrackerAgua";
 import { EXPLICACAO_HIDRATACAO } from "./explicacoesCalculo";
+const EXIBIR_REGISTRO_DE_AGUA = false;
 
-function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
+function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
+  
   const [minutosTreinoPorDia, setMinutosTreinoPorDia] = useState("");
 
   const { resultado, carregando, erro, executar } =
@@ -26,7 +28,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
     registrar,
   } = useConsumoAgua();
 
-  const formularioValido = pesoKg && minutosTreinoPorDia !== "";
+  const formularioValido = consentiu && pesoKg && minutosTreinoPorDia !== "";
 
   function dadosDoDia() {
     return {
@@ -40,7 +42,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
     if (!formularioValido) return;
 
     await executar(dadosDoDia());
-    carregar(dadosDoDia());
+    if (EXIBIR_REGISTRO_DE_AGUA) carregar(dadosDoDia());
   }
 
   function aoRegistrarConsumo(quantidadeMl) {
@@ -88,7 +90,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
         ) : null}
       </EstadoRequisicao>
 
-      {resumo ? (
+      {EXIBIR_REGISTRO_DE_AGUA && resumo ? (
         <CardResultado
           rotulo="ÁGUA CONSUMIDA HOJE"
           valor={resumo.totalConsumidoMl}
@@ -166,7 +168,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
             {carregando ? "CALCULANDO..." : "CALCULAR"}
           </button>
         </form>
-
+      {EXIBIR_REGISTRO_DE_AGUA && (
         <TrackerAgua
           habilitado={Boolean(formularioValido && resultado)}
           resumo={resumo}
@@ -174,6 +176,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
           erro={erroConsumo}
           aoRegistrar={aoRegistrarConsumo}
         />
+      )}
       </div>
     </SecaoCalculadora>
   );
