@@ -12,6 +12,7 @@ import CampoNumero from "./CampoNumero";
 import MemoriaCalculo from "./MemoriaCalculo";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
+import { EXPLICACAO_TMB } from "./explicacoesCalculo";
 
 function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
   const [alturaCm, setAlturaCm] = useState("");
@@ -106,7 +107,7 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
             ]}
           />
 
-          <BlocoExplicacao texto={resultado.explicacao} />
+          <BlocoExplicacao texto={EXPLICACAO_TMB} />
         </div>
       ) : null}
     </EstadoRequisicao>

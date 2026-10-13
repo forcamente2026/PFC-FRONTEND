@@ -10,6 +10,7 @@ import BarraComposicao from "./BarraComposicao";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import TrackerAgua from "./TrackerAgua";
+import { EXPLICACAO_HIDRATACAO } from "./explicacoesCalculo";
 
 function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
   const [minutosTreinoPorDia, setMinutosTreinoPorDia] = useState("");
@@ -82,7 +83,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
               ]}
             />
 
-            <BlocoExplicacao texto={resultado.explicacao} />
+            <BlocoExplicacao texto={EXPLICACAO_HIDRATACAO} />
           </div>
         ) : null}
       </EstadoRequisicao>
