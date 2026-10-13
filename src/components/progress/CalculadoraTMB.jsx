@@ -11,8 +11,11 @@ import CampoNumero from "./CampoNumero";
 import MemoriaCalculo from "./MemoriaCalculo";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
-import { EXPLICACAO_TMB } from "./explicacoesCalculo";
+import { EXPLICACAO_TMB, COMO_CALCULAMOS_TMB } from "./explicacoesCalculo";
 import { formatarNumero, paraNumero } from "../../utils/formatar";
+import ComoCalculamos from "./ComoCalculamos";
+
+const CONSTANTE_POR_SEXO = { MASCULINO: "+ 5", FEMININO: "− 161" };
 
 function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
   const [alturaCm, setAlturaCm] = useState("");
@@ -23,6 +26,7 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
   const [nivelAtividade, setNivelAtividade] = useState("");
   const [carregandoOpcoes, setCarregandoOpcoes] = useState(true);
   const [erroListas, setErroListas] = useState(null);
+  const [dadosCalculados, setDadosCalculados] = useState(null);
 
   const { resultado, carregando, erro, executar } =
     useCalculo(calcularGastoEnergetico);
@@ -59,18 +63,28 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
   const formularioValido =
     consentiu && pesoKg && alturaCm && idade && sexoBiologico && nivelAtividade;
 
-  function aoEnviar(evento) {
+  async function aoEnviar(evento) {
     evento.preventDefault();
     if (!formularioValido) return;
 
-    executar({
+    const dados = {
       pesoKg: paraNumero(pesoKg),
       alturaCm: paraNumero(alturaCm),
       idade: paraNumero(idade),
       sexoBiologico,
       nivelAtividade,
-    });
+    };
+    const resposta = await executar(dados);
+    if (resposta) setDadosCalculados(dados);
   }
+
+  const seuCalculo =
+    resultado && dadosCalculados
+      ? [
+          `TMB = 10 × ${formatarNumero(dadosCalculados.pesoKg)} + 6,25 × ${formatarNumero(dadosCalculados.alturaCm)} − 5 × ${formatarNumero(dadosCalculados.idade)} ${CONSTANTE_POR_SEXO[dadosCalculados.sexoBiologico]} = ${formatarNumero(resultado.tmb)} kcal`,
+          `GET = ${formatarNumero(resultado.tmb)} × ${formatarNumero(resultado.fatorAtividadeAplicado)} = ${formatarNumero(resultado.gastoEnergeticoTotal)} kcal`,
+        ]
+      : null;
 
   const blocoResultado = (
     <EstadoRequisicao
@@ -126,6 +140,9 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
         </>
       }
       resultado={blocoResultado}
+      comoCalculamos={
+        <ComoCalculamos {...COMO_CALCULAMOS_TMB} seuCalculo={seuCalculo} />
+      }
     >
       <form
         onSubmit={aoEnviar}

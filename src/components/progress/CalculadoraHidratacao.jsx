@@ -9,13 +9,14 @@ import BarraComposicao from "./BarraComposicao";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import TrackerAgua from "./TrackerAgua";
-import { EXPLICACAO_HIDRATACAO } from "./explicacoesCalculo";
+import { EXPLICACAO_HIDRATACAO, COMO_CALCULAMOS_HIDRATACAO } from "./explicacoesCalculo";
 import { formatarNumero, paraNumero } from "../../utils/formatar";
+import ComoCalculamos from "./ComoCalculamos";
 
 const EXIBIR_REGISTRO_DE_AGUA = false;
 
 function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
-  
+  const [dadosCalculados, setDadosCalculados] = useState(null); 
   const [minutosTreinoPorDia, setMinutosTreinoPorDia] = useState("");
 
   const { resultado, carregando, erro, executar } =
@@ -42,9 +43,20 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
     evento.preventDefault();
     if (!formularioValido) return;
 
-    await executar(dadosDoDia());
-    if (EXIBIR_REGISTRO_DE_AGUA) carregar(dadosDoDia());
+    const dados = dadosDoDia();
+    const resposta = await executar(dados);
+    if (resposta) setDadosCalculados(dados);
+    if (EXIBIR_REGISTRO_DE_AGUA) carregar(dados);
   }
+
+  const seuCalculo =
+    resultado && dadosCalculados
+      ? [
+          `Base = 35 × ${formatarNumero(dadosCalculados.pesoKg)} = ${formatarNumero(resultado.baseCorporalMl)} ml`,
+          `Adicional = (${formatarNumero(dadosCalculados.minutosTreinoPorDia)} ÷ 60) × 500 = ${formatarNumero(resultado.adicionalTreinoMl)} ml`,
+          `Meta = ${formatarNumero(resultado.baseCorporalMl)} + ${formatarNumero(resultado.adicionalTreinoMl)} = ${formatarNumero(resultado.mlPorDia)} ml (${formatarNumero(resultado.litrosPorDia)} litros)`,
+        ]
+      : null;
 
   function aoRegistrarConsumo(quantidadeMl) {
     registrar({ ...dadosDoDia(), quantidadeMl });
@@ -117,6 +129,9 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
         </>
       }
       resultado={blocoResultado}
+      comoCalculamos={
+        <ComoCalculamos {...COMO_CALCULAMOS_HIDRATACAO} seuCalculo={seuCalculo} />
+      }
     >
       <div className="flex flex-col gap-6">
         <form

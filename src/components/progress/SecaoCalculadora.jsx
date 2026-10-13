@@ -1,4 +1,4 @@
-function SecaoCalculadora({ numero, titulo, conceito, resultado, children }) {
+function SecaoCalculadora({ numero, titulo, conceito, resultado, comoCalculamos, children }) {
   return (
     <section className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
       <div className="flex flex-col gap-8 lp:flex-row lp:gap-12">
@@ -11,6 +11,7 @@ function SecaoCalculadora({ numero, titulo, conceito, resultado, children }) {
           </h2>
           <p className="text-gray-300 wrap-break-word">{conceito}</p>
           {resultado}
+          {comoCalculamos}
         </div>
 
         <div className="lp:w-3/5">{children}</div>

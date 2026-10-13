@@ -10,8 +10,9 @@ import LinhaSerie from "./LinhaSerie";
 import GraficoGrupoMuscular from "./GraficoGrupoMuscular";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
-import { EXPLICACAO_VOLUME } from "./explicacoesCalculo";
+import { EXPLICACAO_VOLUME, COMO_CALCULAMOS_VOLUME } from "./explicacoesCalculo";
 import { formatarNumero, paraNumero } from "../../utils/formatar";
+import ComoCalculamos from "./ComoCalculamos";
 
 
 const GRADE = "grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_1fr_1fr_auto]";
@@ -96,6 +97,14 @@ function VolumeTreino() {
     });
   }
 
+  const seuCalculo =
+    resultado && resultado.totalRepeticoes !== undefined
+      ? [
+          `Volume total = soma dos V = ${formatarNumero(resultado.volumeTotalKg)} kg`,
+          `IM = ${formatarNumero(resultado.volumeTotalKg)} ÷ ${formatarNumero(resultado.totalRepeticoes)} = ${formatarNumero(resultado.intensidadeMediaKgPorRep)} kg/rep`,
+        ]
+      : null;
+
   const blocoResultado = (
     <EstadoRequisicao
       carregando={carregando}
@@ -151,6 +160,9 @@ function VolumeTreino() {
         </>
       }
       resultado={blocoResultado}
+      comoCalculamos={
+        <ComoCalculamos {...COMO_CALCULAMOS_VOLUME} seuCalculo={seuCalculo} />
+      }
     >
       <form
         onSubmit={aoEnviar}
