@@ -52,7 +52,6 @@ function TrackerAgua({ habilitado, resumo, processando, erro, aoRegistrar }) {
             rotulo="OUTRA QUANTIDADE (ML)"
             valor={quantidadeMl}
             aoAlterar={setQuantidadeMl}
-            min="1"
             placeholder="350"
           />
         </div>

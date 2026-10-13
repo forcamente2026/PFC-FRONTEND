@@ -2,7 +2,6 @@ import { useState } from "react";
 import { calcularHidratacao } from "../../services/metricasService";
 import useCalculo from "../../hooks/useCalculo";
 import useConsumoAgua from "../../hooks/useConsumoAgua";
-import { formatarNumero } from "../../utils/formatar";
 import SecaoCalculadora from "./SecaoCalculadora";
 import CardResultado from "./CardResultado";
 import CampoNumero from "./CampoNumero";
@@ -11,6 +10,8 @@ import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import TrackerAgua from "./TrackerAgua";
 import { EXPLICACAO_HIDRATACAO } from "./explicacoesCalculo";
+import { formatarNumero, paraNumero } from "../../utils/formatar";
+
 const EXIBIR_REGISTRO_DE_AGUA = false;
 
 function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
@@ -32,8 +33,8 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
 
   function dadosDoDia() {
     return {
-      pesoKg: Number(pesoKg),
-      minutosTreinoPorDia: Number(minutosTreinoPorDia),
+      pesoKg: paraNumero(pesoKg),
+      minutosTreinoPorDia: paraNumero(minutosTreinoPorDia),
     };
   }
 
@@ -136,9 +137,8 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
                 rotulo="PESO (KG)"
                 valor={pesoKg}
                 aoAlterar={aoAlterarPeso}
-                min="1"
-                step="0.1"
-                placeholder="82.5"
+                decimal
+                placeholder="82,5"
               />
               <span className="text-xs text-gray-300">
                 É o mesmo peso da calculadora de TMB.
@@ -151,7 +151,6 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
                 rotulo="TREINO POR DIA (MIN)"
                 valor={minutosTreinoPorDia}
                 aoAlterar={setMinutosTreinoPorDia}
-                min="0"
                 placeholder="60"
               />
               <span className="text-xs text-gray-300">

@@ -5,7 +5,6 @@ import {
   listarSexos,
 } from "../../services/metricasService";
 import useCalculo from "../../hooks/useCalculo";
-import { formatarNumero } from "../../utils/formatar";
 import SecaoCalculadora from "./SecaoCalculadora";
 import CardResultado from "./CardResultado";
 import CampoNumero from "./CampoNumero";
@@ -13,6 +12,7 @@ import MemoriaCalculo from "./MemoriaCalculo";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import { EXPLICACAO_TMB } from "./explicacoesCalculo";
+import { formatarNumero, paraNumero } from "../../utils/formatar";
 
 function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
   const [alturaCm, setAlturaCm] = useState("");
@@ -64,9 +64,9 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
     if (!formularioValido) return;
 
     executar({
-      pesoKg: Number(pesoKg),
-      alturaCm: Number(alturaCm),
-      idade: Number(idade),
+      pesoKg: paraNumero(pesoKg),
+      alturaCm: paraNumero(alturaCm),
+      idade: paraNumero(idade),
       sexoBiologico,
       nivelAtividade,
     });
@@ -144,16 +144,14 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
             rotulo="PESO (KG)"
             valor={pesoKg}
             aoAlterar={aoAlterarPeso}
-            min="1"
-            step="0.1"
-            placeholder="82.5"
+            decimal
+            placeholder="82,5"
           />
           <CampoNumero
             id="altura"
             rotulo="ALTURA (CM)"
             valor={alturaCm}
             aoAlterar={setAlturaCm}
-            min="1"
             placeholder="178"
           />
           <CampoNumero
@@ -161,7 +159,6 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
             rotulo="IDADE"
             valor={idade}
             aoAlterar={setIdade}
-            min="1"
             placeholder="27"
           />
 

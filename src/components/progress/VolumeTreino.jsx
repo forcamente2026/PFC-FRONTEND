@@ -4,7 +4,6 @@ import {
   listarExerciciosParaVolume,
 } from "../../services/metricasService";
 import useCalculo from "../../hooks/useCalculo";
-import { formatarNumero } from "../../utils/formatar";
 import SecaoCalculadora from "./SecaoCalculadora";
 import CardResultado from "./CardResultado";
 import LinhaSerie from "./LinhaSerie";
@@ -12,6 +11,7 @@ import GraficoGrupoMuscular from "./GraficoGrupoMuscular";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import { EXPLICACAO_VOLUME } from "./explicacoesCalculo";
+import { formatarNumero, paraNumero } from "../../utils/formatar";
 
 
 const GRADE = "grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_1fr_1fr_auto]";
@@ -89,9 +89,9 @@ function VolumeTreino() {
     executar({
       series: linhasPreenchidas.map((linha) => ({
         exercicioId: linha.exercicioId,
-        series: Number(linha.series),
-        repeticoes: Number(linha.repeticoes),
-        cargaKg: Number(linha.cargaKg),
+        series: paraNumero(linha.series),
+        repeticoes: paraNumero(linha.repeticoes),
+        cargaKg: paraNumero(linha.cargaKg),
       })),
     });
   }

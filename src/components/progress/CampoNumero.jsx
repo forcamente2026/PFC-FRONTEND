@@ -1,13 +1,19 @@
+import { somenteDigitos, somenteNumeroDecimal } from "../../utils/formatar";
+
 function CampoNumero({
   id,
   rotulo,
   valor,
   aoAlterar,
-  min,
-  step,
+  decimal,
   placeholder,
   classeRotulo,
 }) {
+  function aoDigitar(evento) {
+    const texto = evento.target.value;
+    aoAlterar(decimal ? somenteNumeroDecimal(texto) : somenteDigitos(texto));
+  }
+
   return (
     <div className="flex min-w-0 flex-col gap-1">
       <label
@@ -18,12 +24,12 @@ function CampoNumero({
       </label>
       <input
         id={id}
-        type="number"
-        min={min}
-        step={step}
+        type="text"
+        inputMode={decimal ? "decimal" : "numeric"}
+        autoComplete="off"
         value={valor}
         placeholder={placeholder}
-        onChange={(evento) => aoAlterar(evento.target.value)}
+        onChange={aoDigitar}
         className="w-full min-w-0 bg-transparent border-b border-gray-500 py-2 text-lg text-white outline-none focus:border-red-500"
       />
     </div>
