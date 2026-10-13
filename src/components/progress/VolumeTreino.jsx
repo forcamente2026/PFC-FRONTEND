@@ -4,13 +4,16 @@ import {
   listarExerciciosParaVolume,
 } from "../../services/metricasService";
 import useCalculo from "../../hooks/useCalculo";
-import { formatarNumero } from "../../utils/formatar";
 import SecaoCalculadora from "./SecaoCalculadora";
 import CardResultado from "./CardResultado";
 import LinhaSerie from "./LinhaSerie";
 import GraficoGrupoMuscular from "./GraficoGrupoMuscular";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
+import { EXPLICACAO_VOLUME, COMO_CALCULAMOS_VOLUME } from "./explicacoesCalculo";
+import { formatarNumero, paraNumero } from "../../utils/formatar";
+import ComoCalculamos from "./ComoCalculamos";
+
 
 const GRADE = "grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_1fr_1fr_auto]";
 
@@ -87,12 +90,20 @@ function VolumeTreino() {
     executar({
       series: linhasPreenchidas.map((linha) => ({
         exercicioId: linha.exercicioId,
-        series: Number(linha.series),
-        repeticoes: Number(linha.repeticoes),
-        cargaKg: Number(linha.cargaKg),
+        series: paraNumero(linha.series),
+        repeticoes: paraNumero(linha.repeticoes),
+        cargaKg: paraNumero(linha.cargaKg),
       })),
     });
   }
+
+  const seuCalculo =
+    resultado && resultado.totalRepeticoes !== undefined
+      ? [
+          `Volume total = soma dos V = ${formatarNumero(resultado.volumeTotalKg)} kg`,
+          `IM = ${formatarNumero(resultado.volumeTotalKg)} ÷ ${formatarNumero(resultado.totalRepeticoes)} = ${formatarNumero(resultado.intensidadeMediaKgPorRep)} kg/rep`,
+        ]
+      : null;
 
   const blocoResultado = (
     <EstadoRequisicao
@@ -130,7 +141,7 @@ function VolumeTreino() {
 
           <GraficoGrupoMuscular grupos={resultado.volumePorGrupoMuscular} />
 
-          <BlocoExplicacao texto={resultado.explicacao} />
+          <BlocoExplicacao texto={EXPLICACAO_VOLUME} />
         </div>
       ) : null}
     </EstadoRequisicao>
@@ -149,6 +160,9 @@ function VolumeTreino() {
         </>
       }
       resultado={blocoResultado}
+      comoCalculamos={
+        <ComoCalculamos {...COMO_CALCULAMOS_VOLUME} seuCalculo={seuCalculo} />
+      }
     >
       <form
         onSubmit={aoEnviar}

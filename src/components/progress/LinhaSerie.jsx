@@ -46,7 +46,6 @@ function LinhaSerie({
         rotulo="SÉRIES"
         valor={linha.series}
         aoAlterar={(valor) => aoAlterar("series", valor)}
-        min="1"
         placeholder="4"
         classeRotulo="md:sr-only"
       />
@@ -56,7 +55,6 @@ function LinhaSerie({
         rotulo="REPS"
         valor={linha.repeticoes}
         aoAlterar={(valor) => aoAlterar("repeticoes", valor)}
-        min="1"
         placeholder="10"
         classeRotulo="md:sr-only"
       />
@@ -66,8 +64,7 @@ function LinhaSerie({
         rotulo="CARGA (KG)"
         valor={linha.cargaKg}
         aoAlterar={(valor) => aoAlterar("cargaKg", valor)}
-        min="0"
-        step="0.5"
+        decimal
         placeholder="60"
         classeRotulo="md:sr-only"
       />

@@ -67,9 +67,7 @@ export function gastoEnergeticoMock({
     tmb: Math.round(tmb),
     gastoEnergeticoTotal: Math.round(tmb * fator),
     fatorAtividadeAplicado: fator,
-    formulaUtilizada: "Mifflin-St Jeor",
-    explicacao:
-      "A taxa metabólica basal é a energia que seu corpo consome em repouso absoluto, apenas para manter funções vitais como respiração, circulação e temperatura. O gasto energético total é essa base multiplicada pelo fator do seu nível de atividade: é o número que representa quanto você realmente queima em um dia comum. Para ganhar massa, come-se acima dele; para perder gordura, abaixo dele.",
+    formulaUtilizada: "Mifflin-St Jeor"
   };
 }
 
@@ -82,9 +80,7 @@ export function hidratacaoMock({ pesoKg, minutosTreinoPorDia }) {
     mlPorDia,
     litrosPorDia: Number((mlPorDia / 1000).toFixed(2)),
     baseCorporalMl,
-    adicionalTreinoMl,
-    explicacao:
-      "A referência parte de 35 ml de água por quilo de peso corporal e soma 500 ml para cada hora de treino, já que a perda por suor aumenta com o esforço. A água regula a temperatura corporal, transporta nutrientes e sustenta a contração muscular. Treinar desidratado reduz força e resistência antes mesmo de você sentir sede.",
+    adicionalTreinoMl
   };
 }
 
@@ -187,8 +183,6 @@ export function volumeTreinoMock({ series }) {
     totalRepeticoes,
     intensidadeMediaKgPorRep: totalRepeticoes
       ? Math.round(volumeTotalKg / totalRepeticoes)
-      : 0,
-    explicacao:
-      "Volume-carga é o peso total deslocado na sessão: séries multiplicadas por repetições e pela carga de cada exercício. É a principal métrica de sobrecarga progressiva, porque mostra se o estímulo cresceu de uma semana para a outra. A divisão por grupo muscular revela se o treino está equilibrado ou concentrado demais em uma região.",
+      : 0
   };
 }

@@ -5,23 +5,20 @@ import VolumeTreino from "../components/progress/VolumeTreino";
 import CalculadoraTMB from "../components/progress/CalculadoraTMB";
 import CalculadoraHidratacao from "../components/progress/CalculadoraHidratacao";
 import RodapeProgress from "../components/progress/RodapeProgress";
-
-const EXIBIR_CALCULADORAS_SEM_BACKEND = false;
+import ConsentimentoSaude from "../components/progress/ConsentimentoSaude";
 
 function ProgressPages() {
   const [pesoKg, setPesoKg] = useState("");
+  const [consentiu, setConsentiu] = useState(false);
 
   return (
     <div className="my-10 flex flex-col">
       <HeadProgress />
       <AvisoLegal />
       <VolumeTreino />
-      {EXIBIR_CALCULADORAS_SEM_BACKEND && (
-        <CalculadoraTMB pesoKg={pesoKg} aoAlterarPeso={setPesoKg} />
-      )}
-      {EXIBIR_CALCULADORAS_SEM_BACKEND && (
-        <CalculadoraHidratacao pesoKg={pesoKg} aoAlterarPeso={setPesoKg} />
-      )}
+      <ConsentimentoSaude consentiu={consentiu} aoAlterar={setConsentiu} />
+      <CalculadoraTMB pesoKg={pesoKg} aoAlterarPeso={setPesoKg} consentiu={consentiu} />
+      <CalculadoraHidratacao pesoKg={pesoKg} aoAlterarPeso={setPesoKg} consentiu={consentiu} />
       <RodapeProgress />
     </div>
   );
