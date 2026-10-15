@@ -37,7 +37,11 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
       const novo = await criarArtigo(form, usuario);
       aoCriar(novo);
       fecharModal();
-      alert("Artigo enviado para validação!");
+      alert(
+        novo.status === "PENDENTE"
+          ? "Artigo enviado! Ele aparece no site depois de aprovado."
+          : "Artigo publicado!",
+      );
     } catch (err) {
       setErro(err.mensagem || "Não foi possível enviar o artigo.");
     } finally {
@@ -65,7 +69,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
           carregandoOpcoes={carregandoOpcoes}
           enviando={enviando}
           erro={erro}
-          textoBotao="Enviar para validação"
+          textoBotao="Enviar artigo"
           textoBotaoEnviando="Enviando..."
         />
       </Modal>

@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { LIMITE_RESUMO } from "./artigoCampos";
 
 const ESTILO_CAMPO = "bg-gray-500 rounded-xl p-1 text-white";
 const ESTILO_SELECT =
@@ -70,25 +71,41 @@ function ArtigoForm({
 
       <div className="flex flex-col text-red-200 gap-2 mb-6">
         <label htmlFor={campoId("resumo")}>Resumo</label>
-        <input
-          type="text"
+        <textarea
           id={campoId("resumo")}
           name="resumo"
           value={valores.resumo}
           onChange={aoAlterar}
-          placeholder="Uma ou duas frases"
+          rows={3}
+          maxLength={LIMITE_RESUMO}
+          placeholder="Uma síntese curta, escrita por você"
+          className={`${ESTILO_CAMPO} text-lg`}
+        />
+        <span className="self-end text-sm text-gray-300">
+          {valores.resumo.length}/{LIMITE_RESUMO}
+        </span>
+
+        <label htmlFor={campoId("fonte")}>Link do artigo</label>
+        <input
+          type="text"
+          inputMode="url"
+          id={campoId("fonte")}
+          name="fonte"
+          value={valores.fonte}
+          onChange={aoAlterar}
+          placeholder="https://..."
           className={ESTILO_CAMPO}
         />
 
-        <label htmlFor={campoId("conteudo")}>Conteúdo</label>
-        <textarea
-          id={campoId("conteudo")}
-          name="conteudo"
-          value={valores.conteudo}
+        <label htmlFor={campoId("autoria")}>Autoria do estudo (opcional)</label>
+        <input
+          type="text"
+          id={campoId("autoria")}
+          name="autoria"
+          value={valores.autoria}
           onChange={aoAlterar}
-          rows={8}
-          placeholder="Texto completo. Separe os parágrafos com uma linha em branco."
-          className={`${ESTILO_CAMPO} text-lg`}
+          placeholder="Deixe em branco se o artigo é seu"
+          className={ESTILO_CAMPO}
         />
 
         <label htmlFor={campoId("tipoEstudo")}>Tipo de estudo</label>

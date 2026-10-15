@@ -5,11 +5,13 @@ export const STATUS_ARTIGO = {
   REJEITADO: { descricao: "Rejeitado", etiqueta: "Rejeitado" },
 };
 
+export const LIMITE_RESUMO = 250;
 export const ARTIGO_VAZIO = {
   titulo: "",
   categoria: "",
   resumo: "",
-  conteudo: "",
+  fonte: "",
+  autoria:"",
   tipoEstudo: "",
   ano: "",
   minutosLeitura: "",
@@ -20,9 +22,9 @@ export function validarArtigo(form) {
     !form.titulo.trim() ||
     !form.categoria ||
     !form.resumo.trim() ||
-    !form.conteudo.trim()
+    !form.fonte.trim()
   ) {
-    return "Preencha título, categoria, resumo e conteúdo.";
+    return "Preencha título, categoria, resumo e link do artigo.";
   }
 
   const anoAtual = new Date().getFullYear();
