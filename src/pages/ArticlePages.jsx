@@ -1,27 +1,32 @@
 import { useEffect, useState } from "react";
-import { Link, useOutletContext, useParams } from "react-router-dom";
+import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import ValidacaoArtigo from "../components/ArticlesComponents/ValidacaoArtigo";
+import EditarArtigo from "../components/ArticlesComponents/EditarArtigo";
+import ExcluirArtigo from "../components/ArticlesComponents/ExcluirArtigo";
 import { etiquetaDoArtigo } from "../components/ArticlesComponents/artigoCampos";
-import { buscarArtigoPorId } from "../services/artigoService";
+import { buscarArtigoPorId, listarCategorias } from "../services/artigoService";
 import { podeValidar } from "../utils/papeis";
 
 function ArticlePages() {
   const { id } = useParams();
   const { usuario } = useOutletContext();
+  const navigate = useNavigate();
   const [artigo, setArtigo] = useState(null);
+  const [categorias, setCategorias] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
 
   useEffect(() => {
     let ativo = true;
 
-    buscarArtigoPorId(id, usuario)
-      .then((dados) => {
+    Promise.all([buscarArtigoPorId(id, usuario), listarCategorias()])
+      .then(([dados, listaCategorias]) => {
         if (!ativo) return;
         setArtigo(dados);
+        setCategorias(listaCategorias);
         setErro(null);
       })
       .catch((err) => {
@@ -31,7 +36,7 @@ function ArticlePages() {
       })
       .finally(() => {
         if (ativo) setCarregando(false);
-      });
+    });
 
     return () => {
       ativo = false;
@@ -121,6 +126,24 @@ function ArticlePages() {
                     Motivo da rejeição
                   </p>
                   <p className="mt-1 text-sm text-gray-300">{artigo.motivoRejeicao}</p>
+                </div>
+              )}
+
+              
+              {artigo.podeEditar && (
+                <div className="flex flex-wrap gap-3">
+                  <EditarArtigo
+                    artigo={artigo}
+                    categorias={categorias}
+                    carregandoOpcoes={carregando}
+                    usuario={usuario}
+                    aoEditar={setArtigo}
+                  />
+                  <ExcluirArtigo
+                    artigo={artigo}
+                    usuario={usuario}
+                    aoExcluir={() => navigate("/articles")}
+                  />
                 </div>
               )}
 
