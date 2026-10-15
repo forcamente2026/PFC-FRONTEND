@@ -7,9 +7,7 @@ const ACOES = [
   { status: "REJEITADO", rotulo: "Rejeitar", estilo: "bg-red-500 hover:bg-red-900" },
 ];
 
-// Ponte da rodada C: bloco que o administrador vê na leitura do artigo.
-// A futura página de fila de pendentes pode reaproveitar este componente por card.
-function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
+function ValidacaoArtigo({ artigo, aoAlterarStatus,usuario }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
 
@@ -18,7 +16,7 @@ function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
     setErro(null);
 
     try {
-      const atualizado = await alterarStatusArtigo(artigo.id, status);
+      const atualizado = await alterarStatusArtigo(artigo.id, status, undefined, usuario);
       aoAlterarStatus(atualizado);
     } catch (err) {
       setErro(err.mensagem || "Não foi possível alterar o status.");

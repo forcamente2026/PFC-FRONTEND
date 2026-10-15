@@ -17,7 +17,7 @@ function ArticlePages() {
   useEffect(() => {
     let ativo = true;
 
-    buscarArtigoPorId(id, usuario?.papel)
+    buscarArtigoPorId(id, usuario)
       .then((dados) => {
         if (!ativo) return;
         setArtigo(dados);
@@ -35,9 +35,9 @@ function ArticlePages() {
     return () => {
       ativo = false;
     };
-  }, [id, usuario?.papel]);
+  }, [id, usuario]);
 
-  const paragrafos = artigo ? artigo.conteudo.split("\n\n") : [];
+  
   const etiquetaStatus = artigo ? STATUS_ARTIGO[artigo.status]?.etiqueta : null;
   const mostrarValidacao = Boolean(artigo) && podeValidar(usuario);
 
@@ -78,7 +78,7 @@ function ArticlePages() {
               <p className="text-sm text-gray-400">
                 por{" "}
                 <span className="font-semibold text-red-200">
-                  {artigo.autor.nomeCompleto}
+                  {artigo.autorNome}
                 </span>
               </p>
 
@@ -92,15 +92,8 @@ function ArticlePages() {
               <div className="h-px bg-gray-700"></div>
 
               <p className="text-lg leading-relaxed text-gray-300">{artigo.resumo}</p>
-
-              {paragrafos.map((paragrafo, indice) => (
-                <p key={indice} className="text-base leading-relaxed text-gray-300">
-                  {paragrafo}
-                </p>
-              ))}
-
               {mostrarValidacao && (
-                <ValidacaoArtigo artigo={artigo} aoAlterarStatus={setArtigo} />
+                <ValidacaoArtigo artigo={artigo} usuario={usuario} aoAlterarStatus={setArtigo} />
               )}
             </Cartao>
           )}
