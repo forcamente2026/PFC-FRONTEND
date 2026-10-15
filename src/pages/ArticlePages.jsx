@@ -6,6 +6,7 @@ import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import ValidacaoArtigo from "../components/ArticlesComponents/ValidacaoArtigo";
 import EditarArtigo from "../components/ArticlesComponents/EditarArtigo";
 import ExcluirArtigo from "../components/ArticlesComponents/ExcluirArtigo";
+import AprovarArtigo from "../components/ArticlesComponents/AprovarArtigo";
 import { etiquetaDoArtigo } from "../components/ArticlesComponents/artigoCampos";
 import { buscarArtigoPorId, listarCategorias } from "../services/artigoService";
 import { podeValidar } from "../utils/papeis";
@@ -145,6 +146,10 @@ function ArticlePages() {
                     aoExcluir={() => navigate("/articles")}
                   />
                 </div>
+              )}
+
+              {artigo.podeAprovar && (
+                <AprovarArtigo artigo={artigo} usuario={usuario} aoAprovar={setArtigo} />
               )}
 
               {mostrarValidacao && (
