@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import Cartao from "../ComponentesHome/Cartao";
-import { STATUS_ARTIGO } from "./artigoCampos";
+import { etiquetaDoArtigo } from "./artigoCampos";
 
 function CardArtigo({ artigo }) {
-  const { id, categoria, titulo, resumo, tipoEstudo, ano, minutosLeitura, status } = artigo;
-  const etiquetaStatus = STATUS_ARTIGO[status]?.etiqueta;
+  const { id, categoria, titulo, resumo, tipoEstudo, ano, minutosLeitura } = artigo;
+  const etiquetaStatus = etiquetaDoArtigo(artigo);
 
   return (
    <Link to={`/articles/${id}`} className="block h-full">

@@ -3,7 +3,7 @@ import { Link, useOutletContext, useParams } from "react-router-dom";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import ValidacaoArtigo from "../components/ArticlesComponents/ValidacaoArtigo";
-import { STATUS_ARTIGO } from "../components/ArticlesComponents/artigoCampos";
+import { etiquetaDoArtigo } from "../components/ArticlesComponents/artigoCampos";
 import { buscarArtigoPorId } from "../services/artigoService";
 import { podeValidar } from "../utils/papeis";
 
@@ -38,7 +38,7 @@ function ArticlePages() {
   }, [id, usuario]);
 
   
-  const etiquetaStatus = artigo ? STATUS_ARTIGO[artigo.status]?.etiqueta : null;
+  const etiquetaStatus = artigo ? etiquetaDoArtigo(artigo) : null;
   const mostrarValidacao = Boolean(artigo) && podeValidar(usuario);
 
   return (

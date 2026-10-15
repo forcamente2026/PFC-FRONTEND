@@ -152,6 +152,7 @@ function paraResposta(artigo, usuario) {
     status: artigo.status,
     motivoRejeicao: autorOuAdministrador ? artigo.motivoRejeicao : null,
     aprovacoesDeProfessores: artigo.aprovacoes.length,
+    aprovacoesNecessarias: APROVACOES_PARA_PUBLICAR,
     podeEditar: autorOuAdministrador,
     podeAprovar: podeAprovar(artigo, usuario),
     professoresQueAprovaram: ehAdministrador(usuario)

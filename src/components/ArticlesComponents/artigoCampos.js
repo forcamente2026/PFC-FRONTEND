@@ -1,9 +1,19 @@
 // Etiqueta nula = não mostra nada no card (artigo aprovado é o caso normal).
 export const STATUS_ARTIGO = {
-  PENDENTE: { descricao: "Pendente", etiqueta: "Aguardando validação" },
+  PENDENTE: { descricao: "Pendente", etiqueta: "Aguardando aprovação" },
+  APROVADO_PELOS_PROFESSORES: {
+  descricao: "Aprovado pelos professores",
+  etiqueta: null,
+},
   APROVADO: { descricao: "Aprovado", etiqueta: null },
   REJEITADO: { descricao: "Rejeitado", etiqueta: "Rejeitado" },
 };
+
+export function etiquetaDoArtigo(artigo) {
+  const etiqueta = STATUS_ARTIGO[artigo.status]?.etiqueta;
+  if (artigo.status !== "PENDENTE") return etiqueta;
+  return `${etiqueta} · ${artigo.aprovacoesDeProfessores} de ${artigo.aprovacoesNecessarias}`;
+}
 
 export const LIMITE_RESUMO = 250;
 export const ARTIGO_VAZIO = {
