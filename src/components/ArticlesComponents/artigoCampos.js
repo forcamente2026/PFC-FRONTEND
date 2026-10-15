@@ -16,6 +16,7 @@ export function etiquetaDoArtigo(artigo) {
 }
 
 export const LIMITE_RESUMO = 250;
+export const LIMITE_MOTIVO = 500;
 export const ARTIGO_VAZIO = {
   titulo: "",
   categoria: "",
