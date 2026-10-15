@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useOutletContext, useParams } from "react-router-dom";
+import { ExternalLink } from "lucide-react";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import ValidacaoArtigo from "../components/ArticlesComponents/ValidacaoArtigo";
@@ -67,7 +68,7 @@ function ArticlePages() {
                 {etiquetaStatus && (
                   <span className="rounded-md bg-gray-700 px-2 py-1 text-xs font-medium text-gray-200">
                     {etiquetaStatus}
-                  </span>
+                </span>
                 )}
               </div>
 
@@ -75,12 +76,23 @@ function ArticlePages() {
                 {artigo.titulo}
               </h1>
 
-              <p className="text-sm text-gray-400">
-                por{" "}
-                <span className="font-semibold text-red-200">
-                  {artigo.autorNome}
-                </span>
-              </p>
+              {artigo.autoria ? (
+                <div className="flex flex-col gap-1 text-sm text-gray-400">
+                  <p>
+                    Autoria:{" "}
+                    <span className="font-semibold text-red-200">{artigo.autoria}</span>
+                  </p>
+                  <p>
+                    Indicado por{" "}
+                    <span className="font-semibold text-red-200">{artigo.autorNome}</span>
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400">
+                  por{" "}
+                  <span className="font-semibold text-red-200">{artigo.autorNome}</span>
+                </p>
+              )}
 
               <div className="flex justify-between text-xs uppercase tracking-[0.2em] text-gray-400">
                 <span>
@@ -92,6 +104,26 @@ function ArticlePages() {
               <div className="h-px bg-gray-700"></div>
 
               <p className="text-lg leading-relaxed text-gray-300">{artigo.resumo}</p>
+              <a
+                href={artigo.fonte}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="self-start inline-flex items-center gap-2 bg-red-500 rounded-md py-2 px-4 font-bold text-white hover:bg-red-900"
+              >
+                Ler o artigo completo
+                <ExternalLink size={16} aria-hidden="true" />
+                <span className="sr-only">(abre em nova aba)</span>
+              </a>
+
+              {artigo.motivoRejeicao && (
+                <div className="rounded-xl border border-red-500 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-500">
+                    Motivo da rejeição
+                  </p>
+                  <p className="mt-1 text-sm text-gray-300">{artigo.motivoRejeicao}</p>
+                </div>
+              )}
+
               {mostrarValidacao && (
                 <ValidacaoArtigo artigo={artigo} usuario={usuario} aoAlterarStatus={setArtigo} />
               )}
