@@ -37,6 +37,11 @@ export async function anonimizarUsuario(id) {
   await api.post(`/usuarios/${id}/anonimizar`);
 }
 
+export async function listarAnonimizacoesPendentes() {
+  const { data } = await api.get("/usuarios/anonimizacoes-pendentes");
+  return data;
+}
+
 export async function buscarMinhaConta() {
   const { data } = await api.get("/usuarios/me");
   return data;

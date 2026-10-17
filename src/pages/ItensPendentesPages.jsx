@@ -1,5 +1,6 @@
 import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
+import PedidosDeExclusao from "../components/AdminComponents/PedidosDeExclusao";
 
 function ItensPendentesPages() {
   return (
@@ -11,6 +12,10 @@ function ItensPendentesPages() {
       />
 
       <AbasAdministracao />
+      
+    <div className="flex flex-col gap-12">
+      <PedidosDeExclusao />
+    </div>
     </div>
   );
 }
