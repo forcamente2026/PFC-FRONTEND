@@ -17,8 +17,7 @@ const LINKS = [
 
 const linkClass = ({ isActive }) =>
   isActive ? "text-2xl px-2 underline transition-all" : "transition-all";
-
-const ESTILO_DIVISOR = "hidden lp:block w-px h-8 bg-gray-300 mx-4";
+const ESTILO_DIVISOR = "hidden lg:block w-px h-8 bg-gray-300 mx-2";
 
 function NavBar({ usuario, aoEntrar, aoSair }) {
   const [menuAberto, setMenuAberto] = useState(false);
@@ -79,7 +78,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
   return (
     <nav className="font-montserrat text-rose-200 w-full">
       <div
-        className="flex flex-wrap items-center px-6 py-4 lp:flex-nowrap"
+        className="flex flex-wrap items-center px-6 py-4 lg:flex-nowrap"
         onMouseDown={(evento) => evento.stopPropagation()}
       >
         <h1 className="text-3xl p-4">FORÇAMENTE</h1>
@@ -90,7 +89,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
           aria-controls="menu-principal"
           aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
           onClick={() => setMenuAberto((atual) => !atual)}
-          className="ml-auto rounded-md p-2 hover:bg-red-500 hover:text-white cursor-pointer lp:hidden"
+          className="ml-auto rounded-md p-2 hover:bg-red-500 hover:text-white cursor-pointer lg:hidden"
         >
           {menuAberto ? <X /> : <Menu />}
         </button>
@@ -99,9 +98,9 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
 
         <div
           id="menu-principal"
-          className={`${menuAberto ? "flex" : "hidden"} w-full flex-col gap-4 pt-4 lp:flex lp:w-auto lp:flex-1 lp:flex-row lp:items-center lp:pt-0`}
+          className={`${menuAberto ? "flex" : "hidden"} w-full flex-col gap-4 pt-4 lg:flex lg:w-auto lg:flex-1 lg:flex-row lg:items-center lg:pt-0`}
         >
-          <div className="flex flex-col gap-4 font-bold lp:flex-1 lp:flex-row lp:justify-center lp:gap-6">
+          <div className="flex flex-col gap-4 font-bold lg:flex-1 lg:flex-row lg:justify-center">
             {LINKS.filter(
               ({ papeis }) => !papeis || papeis.includes(usuario?.papel),
             ).map(({ para, rotulo, exato, protegida }) => (
