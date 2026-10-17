@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { LIMITE_RESUMO } from "./artigoCampos";
+import { LIMITE_RESUMO, MINIMO_RESUMO } from "./artigoCampos";
 
 const ESTILO_CAMPO = "bg-gray-500 rounded-xl p-1 text-white";
 const ESTILO_SELECT =
@@ -14,6 +14,7 @@ function ArtigoForm({
   carregandoOpcoes,
   enviando,
   erro,
+  camposComErro = [],
   textoBotao,
   textoBotaoEnviando,
 }) {
@@ -31,6 +32,14 @@ function ArtigoForm({
         <p role="alert" className="text-red-500 text-sm font-normal text-center">
           {erro}
         </p>
+      )}
+
+      {camposComErro.length > 0 && (
+        <ul className="list-disc pl-6 text-sm font-normal text-red-500">
+          {camposComErro.map((campo) => (
+            <li key={`${campo.campo}-${campo.mensagem}`}>{campo.mensagem}</li>
+          ))}
+        </ul>
       )}
 
       <div className="flex flex-col text-red-200 gap-2 mb-6">
@@ -76,13 +85,13 @@ function ArtigoForm({
           name="resumo"
           value={valores.resumo}
           onChange={aoAlterar}
-          rows={3}
+          rows={6}
           maxLength={LIMITE_RESUMO}
-          placeholder="Uma síntese curta, escrita por você"
+          placeholder="Uma síntese do artigo, escrita por você"
           className={`${ESTILO_CAMPO} text-lg`}
         />
         <span className="self-end text-sm text-gray-300">
-          {valores.resumo.length}/{LIMITE_RESUMO}
+          Mínimo de {MINIMO_RESUMO} caracteres · {valores.resumo.length}/{LIMITE_RESUMO}
         </span>
 
         <label htmlFor={campoId("fonte")}>Link do artigo</label>

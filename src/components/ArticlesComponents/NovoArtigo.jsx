@@ -9,11 +9,13 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
   const [form, setForm] = useState(ARTIGO_VAZIO);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
+  const [camposComErro, setCamposComErro] = useState([]);
 
   function fecharModal() {
     setModalAberto(false);
     setForm(ARTIGO_VAZIO);
     setErro(null);
+    setCamposComErro([]);
   }
 
   function handleChange(evento) {
@@ -23,6 +25,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
 
   async function handleSubmit(evento) {
     evento.preventDefault();
+    setCamposComErro([]);
 
     const mensagemInvalida = validarArtigo(form);
     if (mensagemInvalida) {
@@ -44,6 +47,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
       );
     } catch (err) {
       setErro(err.mensagem || "Não foi possível enviar o artigo.");
+      setCamposComErro(err.campos ?? []);
     } finally {
       setEnviando(false);
     }
@@ -68,6 +72,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
           categorias={categorias}
           carregandoOpcoes={carregandoOpcoes}
           enviando={enviando}
+          camposComErro={camposComErro}
           erro={erro}
           textoBotao="Enviar artigo"
           textoBotaoEnviando="Enviando..."

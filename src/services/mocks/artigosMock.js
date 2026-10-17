@@ -6,7 +6,8 @@ export const categoriasMock = [
 ];
 
 const APROVACOES_PARA_PUBLICAR = 3;
-const LIMITE_RESUMO = 250;
+const MINIMO_RESUMO = 250;
+const LIMITE_RESUMO = 1000;
 
 const AUTOR_MOCK = {
   id: "a1b2c3d4-0000-0000-0000-000000000001",
@@ -107,8 +108,8 @@ const artigos = [
   },
 ];
 
-function falhar(status, mensagem) {
-  throw { status, mensagem };
+function falhar(status, mensagem, campos = []) {
+  throw { status, mensagem, campos };
 }
 
 function ehAdministrador(usuario) {
@@ -169,12 +170,23 @@ function buscarVisivel(id, usuario) {
 }
 
 function validarDados(dados) {
-  if (dados.resumo.length > LIMITE_RESUMO) {
-    falhar(400, `O resumo deve ter no máximo ${LIMITE_RESUMO} caracteres.`);
+  const campos = [];
+  const tamanhoResumo = dados.resumo.trim().length;
+
+  if (tamanhoResumo < MINIMO_RESUMO || tamanhoResumo > LIMITE_RESUMO) {
+    campos.push({
+      campo: "resumo",
+      mensagem: `O resumo deve ter entre ${MINIMO_RESUMO} e ${LIMITE_RESUMO} caracteres`,
+    });
   }
   if (!dados.fonte.trim().startsWith("https://")) {
-    falhar(400, "O link do artigo deve começar com https://.");
+    campos.push({
+      campo: "fonte",
+      mensagem: "A fonte deve ser um endereço https, sem usuário e senha no endereço",
+    });
   }
+
+  if (campos.length > 0) falhar(400, "Dados invalidos", campos);
 }
 
 function aplicarDados(artigo, dados) {

@@ -15,7 +15,8 @@ export function etiquetaDoArtigo(artigo) {
   return `${etiqueta} · ${artigo.aprovacoesDeProfessores} de ${artigo.aprovacoesNecessarias}`;
 }
 
-export const LIMITE_RESUMO = 250;
+export const MINIMO_RESUMO = 250;
+export const LIMITE_RESUMO = 1000;
 export const LIMITE_MOTIVO = 500;
 export const ARTIGO_VAZIO = {
   titulo: "",

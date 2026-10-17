@@ -22,16 +22,19 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, usuario, aoEditar 
   const [form, setForm] = useState(() => valoresDoArtigo(artigo));
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
+  const [camposComErro, setCamposComErro] = useState([]);
 
   function abrirModal() {
     setForm(valoresDoArtigo(artigo));
     setErro(null);
+    setCamposComErro([]);
     setModalAberto(true);
   }
 
   function fecharModal() {
     setModalAberto(false);
     setErro(null);
+    setCamposComErro([]);
   }
 
   function handleChange(evento) {
@@ -41,6 +44,7 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, usuario, aoEditar 
 
   async function handleSubmit(evento) {
     evento.preventDefault();
+    setCamposComErro([]);
 
     const mensagemInvalida = validarArtigo(form);
     if (mensagemInvalida) {
@@ -62,6 +66,7 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, usuario, aoEditar 
       );
     } catch (err) {
       setErro(err.mensagem || "Não foi possível salvar o artigo.");
+      setCamposComErro(err.campos ?? []);
     } finally {
       setEnviando(false);
     }
@@ -87,6 +92,7 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, usuario, aoEditar 
           carregandoOpcoes={carregandoOpcoes}
           enviando={enviando}
           erro={erro}
+          camposComErro={camposComErro}
           textoBotao="Salvar alterações"
           textoBotaoEnviando="Salvando..."
         />
