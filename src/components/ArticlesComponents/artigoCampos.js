@@ -1,4 +1,3 @@
-// Etiqueta nula = não mostra nada no card (artigo aprovado é o caso normal).
 export const STATUS_ARTIGO = {
   PENDENTE: { descricao: "Pendente", etiqueta: "Aguardando aprovação" },
   APROVADO_PELOS_PROFESSORES: {

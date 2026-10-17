@@ -1,8 +1,3 @@
-// Mock temporario da trilha de auditoria. Remover quando GET /api/auditoria
-// existir no back (ver memoria/contrato-auditoria.md). O formato imita o
-// contrato: acao e recurso sao dimensoes separadas, e o usuario vem em campos
-// planos — a trilha guarda so o id, e nome e e-mail sao resolvidos na consulta.
-
 export const acoesMock = [
   { codigo: "CRIADO", descricao: "Criado" },
   { codigo: "LIDO", descricao: "Lido" },
