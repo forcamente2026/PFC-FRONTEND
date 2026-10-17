@@ -117,7 +117,7 @@ function ArtigoForm({
           className={ESTILO_CAMPO}
         />
 
-        <label htmlFor={campoId("tipoEstudo")}>Tipo de estudo</label>
+        <label htmlFor={campoId("tipoEstudo")}>Tipo de estudo (opcional)</label>
         <input
           type="text"
           id={campoId("tipoEstudo")}
@@ -130,7 +130,7 @@ function ArtigoForm({
 
         <div className="flex flex-wrap gap-4">
           <div className="flex flex-col gap-2">
-            <label htmlFor={campoId("ano")}>Ano de publicação</label>
+            <label htmlFor={campoId("ano")}>Ano de publicação (opcional)</label>
             <input
               type="number"
               id={campoId("ano")}

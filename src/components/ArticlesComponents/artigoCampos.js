@@ -39,8 +39,8 @@ export function validarArtigo(form) {
 
   const anoAtual = new Date().getFullYear();
   const ano = Number(form.ano);
-  if (!form.ano || ano < 1900 || ano > anoAtual) {
-    return `Informe um ano de publicação entre 1900 e ${anoAtual}.`;
+  if (form.ano && (ano < 1900 || ano > anoAtual)) {
+    return `O ano de publicação deve ficar entre 1900 e ${anoAtual}.`;
   }
 
   return null;
