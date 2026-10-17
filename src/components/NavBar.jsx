@@ -6,25 +6,13 @@ import Autenticacao from "./Autenticacao";
 import AvisoLogin from "./AvisoLogin";
 import { PAPEIS_VALIDADORES } from "../utils/papeis";
 
-// `papeis` restringe o link a quem tem o papel; sem ele, o link vale para todos.
 const LINKS = [
   { para: "/", rotulo: "HOME", exato: true },
   { para: "/articles", rotulo: "ARTIGOS", protegida: true },
   { para: "/library", rotulo: "BIBLIOTECA", protegida: true },
   { para: "/progress", rotulo: "PROGRESSO", protegida: true },
   { para: "/about", rotulo: "QUEM SOMOS" },
-  {
-    para: "/admin/usuarios",
-    rotulo: "USUÁRIOS",
-    protegida: true,
-    papeis: PAPEIS_VALIDADORES,
-  },
-  {
-    para: "/admin/auditoria",
-    rotulo: "AUDITORIA",
-    protegida: true,
-    papeis: PAPEIS_VALIDADORES,
-  },
+  { para: "/admin", rotulo: "ADMINISTRAÇÃO", protegida: true, papeis: PAPEIS_VALIDADORES,},
 ];
 
 const linkClass = ({ isActive }) =>

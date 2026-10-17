@@ -8,6 +8,7 @@ import TabelaUsuarios from "../components/AdminComponents/TabelaUsuarios";
 import FormEdicaoUsuario from "../components/AdminComponents/FormEdicaoUsuario";
 import ConfirmarAnonimizacao from "../components/AdminComponents/ConfirmarAnonimizacao";
 import Paginacao from "../components/AdminComponents/Paginacao";
+import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import {
   alterarAtivo,
   anonimizarUsuario,
@@ -146,6 +147,8 @@ function UsuariosPages() {
         titulo="Gestão de usuários"
         descricao="Consulta, correção de dados e bloqueio de acesso das contas da plataforma."
       />
+
+      <AbasAdministracao />
 
       <p className="mb-6 rounded-md border border-gray-700 p-3 text-sm text-gray-400">
         <strong className="text-gray-300">Inativar não é excluir.</strong> Inativar
