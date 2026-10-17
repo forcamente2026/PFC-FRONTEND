@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "../Modal";
 import ArtigoForm from "./ArtigoForm";
-import { validarArtigo } from "./artigoCampos";
+import { artigoParaEnvio, validarArtigo } from "./artigoCampos";
 import { editarArtigo } from "../../services/artigoService";
 
 function valoresDoArtigo(artigo) {
@@ -11,9 +11,8 @@ function valoresDoArtigo(artigo) {
     resumo: artigo.resumo,
     fonte: artigo.fonte,
     autoria: artigo.autoria ?? "",
-    tipoEstudo: artigo.tipoEstudo,
-    ano: String(artigo.ano),
-    minutosLeitura: String(artigo.minutosLeitura),
+    tipoEstudo: artigo.tipoEstudo ?? "",
+    ano: artigo.ano?.toString() ?? "",
   };
 }
 
@@ -56,7 +55,7 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, usuario, aoEditar 
     setErro(null);
 
     try {
-      const atualizado = await editarArtigo(artigo.id, form, usuario);
+      const atualizado = await editarArtigo(artigo.id, artigoParaEnvio(form), usuario);
       aoEditar(atualizado);
       fecharModal();
       alert(

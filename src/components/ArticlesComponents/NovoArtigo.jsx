@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "../Modal";
 import ArtigoForm from "./ArtigoForm";
-import { ARTIGO_VAZIO, validarArtigo } from "./artigoCampos";
+import { ARTIGO_VAZIO, artigoParaEnvio, validarArtigo } from "./artigoCampos";
 import { criarArtigo } from "../../services/artigoService";
 
 function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
@@ -37,7 +37,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
     setErro(null);
 
     try {
-      const novo = await criarArtigo(form, usuario);
+      const novo = await criarArtigo(artigoParaEnvio(form), usuario);
       aoCriar(novo);
       fecharModal();
       alert(

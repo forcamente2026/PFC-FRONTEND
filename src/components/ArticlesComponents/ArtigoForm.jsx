@@ -130,7 +130,7 @@ function ArtigoForm({
 
         <div className="flex flex-wrap gap-4">
           <div className="flex flex-col gap-2">
-            <label htmlFor={campoId("ano")}>Ano</label>
+            <label htmlFor={campoId("ano")}>Ano de publicação</label>
             <input
               type="number"
               id={campoId("ano")}
@@ -140,19 +140,6 @@ function ArtigoForm({
               min="1900"
               max={new Date().getFullYear()}
               placeholder="Ex: 2024"
-              className={ESTILO_CAMPO}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor={campoId("minutosLeitura")}>Minutos de leitura</label>
-            <input
-              type="number"
-              id={campoId("minutosLeitura")}
-              name="minutosLeitura"
-              value={valores.minutosLeitura}
-              onChange={aoAlterar}
-              min="1"
-              placeholder="Ex: 10"
               className={ESTILO_CAMPO}
             />
           </div>

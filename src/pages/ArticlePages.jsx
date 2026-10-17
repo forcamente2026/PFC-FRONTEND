@@ -101,10 +101,8 @@ function ArticlePages() {
               )}
 
               <div className="flex justify-between text-xs uppercase tracking-[0.2em] text-gray-400">
-                <span>
-                  {artigo.tipoEstudo} · {artigo.ano}
-                </span>
-                <span>{artigo.minutosLeitura} min</span>
+                <span>{artigo.tipoEstudo}</span>
+                {artigo.ano && <span>Ano de publicação: {artigo.ano}</span>}
               </div>
 
               <div className="h-px bg-gray-700"></div>

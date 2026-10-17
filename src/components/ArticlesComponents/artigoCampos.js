@@ -25,8 +25,7 @@ export const ARTIGO_VAZIO = {
   fonte: "",
   autoria:"",
   tipoEstudo: "",
-  ano: "",
-  minutosLeitura: "",
+  ano: ""
 };
 
 export function validarArtigo(form) {
@@ -42,12 +41,12 @@ export function validarArtigo(form) {
   const anoAtual = new Date().getFullYear();
   const ano = Number(form.ano);
   if (!form.ano || ano < 1900 || ano > anoAtual) {
-    return `Informe um ano entre 1900 e ${anoAtual}.`;
-  }
-
-  if (!form.minutosLeitura || Number(form.minutosLeitura) <= 0) {
-    return "Informe o tempo de leitura em minutos.";
+    return `Informe um ano de publicação entre 1900 e ${anoAtual}.`;
   }
 
   return null;
+}
+
+export function artigoParaEnvio(form) {
+  return { ...form, ano: form.ano === "" ? null : Number(form.ano) };
 }

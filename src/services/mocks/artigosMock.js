@@ -31,7 +31,6 @@ const artigos = [
     autoria: "Silva A, Souza B",
     tipoEstudo: "Rev. sistemática",
     ano: 2024,
-    minutosLeitura: 12,
     autor: AUTOR_MOCK,
     status: "APROVADO",
     motivoRejeicao: null,
@@ -48,7 +47,6 @@ const artigos = [
     autoria: "",
     tipoEstudo: "Ensaio clínico",
     ano: 2023,
-    minutosLeitura: 9,
     autor: AUTOR_MOCK,
     status: "APROVADO",
     motivoRejeicao: null,
@@ -65,7 +63,6 @@ const artigos = [
     autoria: "Pereira C, Rocha D",
     tipoEstudo: "Meta-análise",
     ano: 2024,
-    minutosLeitura: 15,
     autor: AUTOR_MOCK,
     status: "APROVADO_PELOS_PROFESSORES",
     motivoRejeicao: null,
@@ -82,7 +79,6 @@ const artigos = [
     autoria: "",
     tipoEstudo: "Rev. narrativa",
     ano: 2022,
-    minutosLeitura: 8,
     autor: AUTOR_MOCK,
     status: "PENDENTE",
     motivoRejeicao: null,
@@ -99,7 +95,6 @@ const artigos = [
     autoria: "Lima E",
     tipoEstudo: "Ensaio clínico",
     ano: 2021,
-    minutosLeitura: 6,
     autor: AUTOR_MOCK,
     status: "REJEITADO",
     motivoRejeicao: "O link não abre o estudo citado. Confira a fonte e reenvie.",
@@ -148,7 +143,6 @@ function paraResposta(artigo, usuario) {
     autoria: artigo.autoria,
     tipoEstudo: artigo.tipoEstudo,
     ano: artigo.ano,
-    minutosLeitura: artigo.minutosLeitura,
     autorNome: artigo.autor.nomeCompleto,
     status: artigo.status,
     motivoRejeicao: autorOuAdministrador ? artigo.motivoRejeicao : null,
@@ -196,8 +190,7 @@ function aplicarDados(artigo, dados) {
   artigo.fonte = dados.fonte.trim();
   artigo.autoria = dados.autoria.trim();
   artigo.tipoEstudo = dados.tipoEstudo.trim();
-  artigo.ano = Number(dados.ano);
-  artigo.minutosLeitura = Number(dados.minutosLeitura);
+  artigo.ano = dados.ano;
 }
 
 export function listarArtigosMock(usuario) {

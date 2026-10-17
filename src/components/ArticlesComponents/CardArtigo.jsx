@@ -3,7 +3,7 @@ import Cartao from "../ComponentesHome/Cartao";
 import { etiquetaDoArtigo } from "./artigoCampos";
 
 function CardArtigo({ artigo }) {
-  const { id, categoria, titulo, resumo, tipoEstudo, ano, minutosLeitura } = artigo;
+  const { id, categoria, titulo, resumo, tipoEstudo, ano } = artigo;
   const etiquetaStatus = etiquetaDoArtigo(artigo);
 
   return (
@@ -26,10 +26,8 @@ function CardArtigo({ artigo }) {
       <div className="mt-auto pt-4">
         <div className="h-px bg-gray-700"></div>
         <div className="mt-4 flex justify-between text-xs uppercase tracking-[0.2em] text-gray-400">
-          <span>
-            {tipoEstudo} · {ano}
-          </span>
-          <span>{minutosLeitura} min</span>
+          <span>{tipoEstudo}</span>
+          {ano && <span>Ano de publicação: {ano}</span>}
         </div>
       </div>
     </Cartao>
