@@ -9,6 +9,7 @@ import RenovarCref from "../components/RenovarCref";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
+import { EMAIL_CONTATO } from "../utils/contato";
 import { buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes, renovarCref, solicitarExclusaoDaMinhaConta, 
 } from "../services/usuarioService";
 
@@ -250,6 +251,17 @@ function MinhaContaPages() {
           </>
         )}
       </EstadoRequisicao>
+
+      <p className="mt-6 text-sm text-gray-400">
+        Para dúvidas ou pedidos sobre a sua conta, fale com o administrador pelo e-mail{" "}
+        <a
+          href={`mailto:${EMAIL_CONTATO}`}
+          className="text-red-200 underline underline-offset-4 hover:text-red-100"
+        >
+          {EMAIL_CONTATO}
+        </a>
+        .
+      </p>
 
       <Modal isOpen={modalAberto} setCloseModal={() => setModalAberto(false)}>
         <ConfirmarExclusaoConta
