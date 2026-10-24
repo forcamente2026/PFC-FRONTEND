@@ -24,7 +24,6 @@ const USUARIOS = [
   { id: "u-3", nome: "Aluno de Teste", email: "aluno@forcamente.com" },
 ];
 
-// Combinacoes que fazem sentido: nem toda acao cabe em todo recurso.
 const EVENTOS = [
   { acao: "LOGIN_REALIZADO", recurso: "USUARIO" },
   { acao: "LOGIN_FALHOU", recurso: "USUARIO" },
@@ -52,7 +51,6 @@ function gerarRegistros() {
   for (let indice = 0; indice < 120; indice += 1) {
     const evento = EVENTOS[indice % EVENTOS.length];
 
-    // Falha de login com e-mail inexistente nao tem usuario a apontar.
     const semUsuario = evento.acao === "LOGIN_FALHOU" && indice % 3 === 0;
     const usuario = semUsuario ? null : USUARIOS[indice % USUARIOS.length];
 
