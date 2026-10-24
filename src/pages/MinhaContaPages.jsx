@@ -4,13 +4,11 @@ import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import Modal from "../components/Modal";
 import ConfirmarExclusaoConta from "../components/ConfirmarExclusaoConta";
+import AvisoCref from "../components/AvisoCref";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
-import {
-  buscarMinhaConta,
-  cancelarExclusaoDaMinhaConta,
-  listarFormacoes,
-  solicitarExclusaoDaMinhaConta,
+import { rotuloDaSituacaoCref } from "../utils/cref";
+import { buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes,solicitarExclusaoDaMinhaConta,
 } from "../services/usuarioService";
 
 const ESTILO_ROTULO = "block text-xs text-gray-400";
@@ -123,6 +121,9 @@ function MinhaContaPages() {
       >
         {conta && (
           <>
+            {professor && (<AvisoCref situacao={conta.situacaoCref}
+            motivo={conta.motivoRejeicaoCref}/>
+            )}
             <section className="py-4">
               <Cartao className="space-y-5">
                 <h2 className={ESTILO_SUBTITULO}>Seus dados</h2>
@@ -151,6 +152,9 @@ function MinhaContaPages() {
                     <div className="grid gap-4 md:grid-cols-2">
                       <Dado rotulo="CREF" valor={conta.cref} />
                       <Dado rotulo="Formação" valor={descricaoFormacao} />
+                      {conta.situacaoCref && (<Dado rotulo="Verificação do CREF"
+                      valor={rotuloDaSituacaoCref(conta.situacaoCref)}/>
+                      )}
                     </div>
 
                     <h2 className={`${ESTILO_SUBTITULO} pt-2`}>
