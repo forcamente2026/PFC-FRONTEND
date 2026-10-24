@@ -5,10 +5,11 @@ import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import Modal from "../components/Modal";
 import ConfirmarExclusaoConta from "../components/ConfirmarExclusaoConta";
 import AvisoCref from "../components/AvisoCref";
+import RenovarCref from "../components/RenovarCref";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
-import { buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes,solicitarExclusaoDaMinhaConta,
+import { buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes, renovarCref, solicitarExclusaoDaMinhaConta, 
 } from "../services/usuarioService";
 
 const ESTILO_ROTULO = "block text-xs text-gray-400";
@@ -35,6 +36,7 @@ function MinhaContaPages() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [modalAberto, setModalAberto] = useState(false);
+  const [renovacaoAberta, setRenovacaoAberta] = useState(false);
   const [cancelando, setCancelando] = useState(false);
   const [versao, setVersao] = useState(0);
 
@@ -80,6 +82,12 @@ function MinhaContaPages() {
   async function solicitar() {
     await solicitarExclusaoDaMinhaConta();
     setModalAberto(false);
+    setVersao((atual) => atual + 1);
+  }
+
+    async function renovar(cref, formacao) {
+    await renovarCref(cref, formacao);
+    setRenovacaoAberta(false);
     setVersao((atual) => atual + 1);
   }
 
@@ -156,6 +164,16 @@ function MinhaContaPages() {
                       valor={rotuloDaSituacaoCref(conta.situacaoCref)}/>
                       )}
                     </div>
+                      
+                    {conta.situacaoCref === "APROVADO" && (
+                      <button
+                        type="button"
+                        onClick={() => setRenovacaoAberta(true)}
+                        className={ESTILO_BOTAO_SECUNDARIO}
+                      >
+                        Atualizar CREF
+                      </button>
+                    )}
 
                     <h2 className={`${ESTILO_SUBTITULO} pt-2`}>
                       Endereço profissional
@@ -238,6 +256,18 @@ function MinhaContaPages() {
           aoConfirmar={solicitar}
           aoCancelar={() => setModalAberto(false)}
         />
+      </Modal>
+            
+      <Modal isOpen={renovacaoAberta} setCloseModal={() => setRenovacaoAberta(false)}>
+        {conta && (
+          <RenovarCref
+            crefAtual={conta.cref}
+            formacaoAtual={conta.formacao}
+            formacoes={formacoes}
+            aoRenovar={renovar}
+            aoCancelar={() => setRenovacaoAberta(false)}
+          />
+        )}
       </Modal>
     </div>
   );

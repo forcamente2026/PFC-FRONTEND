@@ -83,3 +83,8 @@ export async function solicitarExclusaoDaMinhaConta() {
 export async function cancelarExclusaoDaMinhaConta() {
   await api.delete("/usuarios/me/anonimizacao");
 }
+
+export async function renovarCref(cref, formacao) {
+  const { data } = await api.patch("/usuarios/me/cref", { cref, formacao });
+  return data;
+}
