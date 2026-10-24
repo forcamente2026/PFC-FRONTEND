@@ -1,4 +1,19 @@
 import api from "./api";
+import {decidirVerificacaoCrefMock,listarVerificacoesPendentesMock,} from "./mocks/verificacaoCrefMock";
+
+const usarMockCref = import.meta.env.VITE_CREF_MOCK === "true";
+
+function responderMock(executar) {
+  return new Promise((resolve, reject) =>
+    setTimeout(() => {
+      try {
+        resolve(executar());
+      } catch (falha) {
+        reject(falha);
+      }
+    }, 400),
+  );
+}
 
 function limparParametros(parametros) {
   return Object.fromEntries(
@@ -39,6 +54,20 @@ export async function anonimizarUsuario(id) {
 
 export async function listarAnonimizacoesPendentes() {
   const { data } = await api.get("/usuarios/anonimizacoes-pendentes");
+  return data;
+}
+
+export async function listarVerificacoesPendentes() {
+  if (usarMockCref) return responderMock(() => listarVerificacoesPendentesMock());
+  const { data } = await api.get("/usuarios/pendentes-verificacao");
+  return data;
+}
+
+export async function decidirVerificacaoCref(id, status, motivo) {
+  if (usarMockCref) {
+    return responderMock(() => decidirVerificacaoCrefMock(id, status, motivo));
+  }
+  const { data } = await api.patch(`/usuarios/${id}/verificacao`, { status, motivo });
   return data;
 }
 
