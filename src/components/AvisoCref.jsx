@@ -21,7 +21,7 @@ function AvisoCref({ situacao, motivo }) {
         {motivo && <p className="mt-1">Motivo: {motivo}</p>}
         <p className="mt-1">
           Sua conta continua com as permissões de aluno. Para corrigir o CREF ou a
-          formação, fale com o administrador.
+            formação, use o botão "Atualizar CREF" em Minha conta.
         </p>
       </div>
     );

@@ -35,8 +35,8 @@ function RenovarCref({ crefAtual, formacaoAtual, formacoes, aoRenovar, aoCancela
     <form onSubmit={enviar} className="w-full max-w-xl pr-8">
       <h2 className="mb-1 text-xl font-bold text-white">Atualizar CREF</h2>
       <p className="mb-5 text-sm text-gray-400">
-        Use quando o seu registro ou a sua formação mudarem, ou para pedir uma nova
-        verificação.
+        Use para corrigir uma verificação rejeitada, quando o seu registro ou a sua
+        formação mudarem, ou para pedir uma nova verificação.
       </p>
 
       <div className="mb-5 rounded-xl border border-yellow-500 bg-yellow-500/10 p-4 text-sm text-yellow-100">

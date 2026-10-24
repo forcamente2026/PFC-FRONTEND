@@ -18,6 +18,7 @@ import { alterarMinhaSenha, atualizarMinhaConta, buscarMinhaConta,
   cancelarExclusaoDaMinhaConta, confirmarTrocaDeEmail, listarFormacoes, renovarCref, 
   solicitarExclusaoDaMinhaConta, solicitarTrocaDeEmail, } from "../services/usuarioService";
 
+const SITUACOES_COM_RENOVACAO = ["APROVADO", "REJEITADO"];
 const ESTILO_ROTULO = "block text-xs text-gray-400";
 const ESTILO_VALOR = "block text-white";
 const ESTILO_SUBTITULO =
@@ -191,7 +192,7 @@ function MinhaContaPages() {
                       )}
                     </div>
                       
-                    {conta.situacaoCref === "APROVADO" && (
+                    {SITUACOES_COM_RENOVACAO.includes(conta.situacaoCref) && (
                       <button
                         type="button"
                         onClick={() => setRenovacaoAberta(true)}
