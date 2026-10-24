@@ -9,12 +9,14 @@ import AvisoCref from "../components/AvisoCref";
 import RenovarCref from "../components/RenovarCref";
 import EditarMeusDados from "../components/EditarMeusDados";
 import AlterarSenha from "../components/AlterarSenha";
+import AlterarEmail from "../components/AlterarEmail";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
 import { EMAIL_CONTATO } from "../utils/contato";
-import { alterarMinhaSenha, atualizarMinhaConta, buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes, renovarCref, solicitarExclusaoDaMinhaConta, 
-} from "../services/usuarioService";
+import { alterarMinhaSenha, atualizarMinhaConta, buscarMinhaConta, 
+  cancelarExclusaoDaMinhaConta, confirmarTrocaDeEmail, listarFormacoes, renovarCref, 
+  solicitarExclusaoDaMinhaConta, solicitarTrocaDeEmail, } from "../services/usuarioService";
 
 const ESTILO_ROTULO = "block text-xs text-gray-400";
 const ESTILO_VALOR = "block text-white";
@@ -44,6 +46,7 @@ function MinhaContaPages() {
   const [renovacaoAberta, setRenovacaoAberta] = useState(false);
   const [edicaoAberta, setEdicaoAberta] = useState(false);
   const [senhaAberta, setSenhaAberta] = useState(false);
+  const [emailAberto, setEmailAberto] = useState(false);
   const [cancelando, setCancelando] = useState(false);
   const [versao, setVersao] = useState(0);
 
@@ -103,6 +106,15 @@ function MinhaContaPages() {
     setConta(atualizada);
     setEdicaoAberta(false);
     aoRenomear(atualizada.nomeCompleto);
+  }
+
+  async function solicitarEmail(novoEmail, senhaAtual) {
+    await solicitarTrocaDeEmail(novoEmail, senhaAtual, conta);
+  }
+
+  async function confirmarEmail(codigo) {
+    const atualizada = await confirmarTrocaDeEmail(codigo, conta);
+    setConta(atualizada);
   }
 
   async function cancelarPedido() {
@@ -219,6 +231,13 @@ function MinhaContaPages() {
                   >
                     Alterar senha
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setEmailAberto(true)}
+                    className={ESTILO_BOTAO_SECUNDARIO}
+                  >
+                    Alterar e-mail
+                  </button>
                 </div>
 
               </Cartao>
@@ -326,6 +345,16 @@ function MinhaContaPages() {
           aoAlterar={alterarMinhaSenha}
           aoFechar={() => setSenhaAberta(false)}
         />
+      </Modal>
+      <Modal isOpen={emailAberto} setCloseModal={() => setEmailAberto(false)}>
+        {conta && (
+          <AlterarEmail
+            emailAtual={conta.email}
+            aoSolicitar={solicitarEmail}
+            aoConfirmar={confirmarEmail}
+            aoFechar={() => setEmailAberto(false)}
+          />
+        )}
       </Modal>
     </div>
   );
