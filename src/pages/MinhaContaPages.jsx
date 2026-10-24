@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
@@ -6,11 +7,12 @@ import Modal from "../components/Modal";
 import ConfirmarExclusaoConta from "../components/ConfirmarExclusaoConta";
 import AvisoCref from "../components/AvisoCref";
 import RenovarCref from "../components/RenovarCref";
+import EditarMeusDados from "../components/EditarMeusDados";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
 import { EMAIL_CONTATO } from "../utils/contato";
-import { buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes, renovarCref, solicitarExclusaoDaMinhaConta, 
+import { atualizarMinhaConta, buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes, renovarCref, solicitarExclusaoDaMinhaConta, 
 } from "../services/usuarioService";
 
 const ESTILO_ROTULO = "block text-xs text-gray-400";
@@ -32,12 +34,14 @@ function Dado({ rotulo, valor }) {
 }
 
 function MinhaContaPages() {
+  const { aoRenomear } = useOutletContext();
   const [conta, setConta] = useState(null);
   const [formacoes, setFormacoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [modalAberto, setModalAberto] = useState(false);
   const [renovacaoAberta, setRenovacaoAberta] = useState(false);
+  const [edicaoAberta, setEdicaoAberta] = useState(false);
   const [cancelando, setCancelando] = useState(false);
   const [versao, setVersao] = useState(0);
 
@@ -90,6 +94,13 @@ function MinhaContaPages() {
     await renovarCref(cref, formacao);
     setRenovacaoAberta(false);
     setVersao((atual) => atual + 1);
+  }
+
+    async function salvarDados(dados) {
+    const atualizada = await atualizarMinhaConta(dados, conta);
+    setConta(atualizada);
+    setEdicaoAberta(false);
+    aoRenomear(atualizada.nomeCompleto);
   }
 
   async function cancelarPedido() {
@@ -190,6 +201,17 @@ function MinhaContaPages() {
                     </div>
                   </>
                 )}
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setEdicaoAberta(true)}
+                    className={ESTILO_BOTAO_SECUNDARIO}
+                  >
+                    Editar meus dados
+                  </button>
+                </div>
+
               </Cartao>
             </section>
 
@@ -278,6 +300,15 @@ function MinhaContaPages() {
             formacoes={formacoes}
             aoRenovar={renovar}
             aoCancelar={() => setRenovacaoAberta(false)}
+          />
+        )}
+      </Modal>
+      <Modal isOpen={edicaoAberta} setCloseModal={() => setEdicaoAberta(false)}>
+        {conta && (
+          <EditarMeusDados
+            conta={conta}
+            aoSalvar={salvarDados}
+            aoCancelar={() => setEdicaoAberta(false)}
           />
         )}
       </Modal>

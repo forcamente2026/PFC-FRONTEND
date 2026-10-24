@@ -4,7 +4,7 @@ import NavBar from "../components/NavBar";
 import Modal from "../components/Modal";
 import AvisoCrefNoLogin from "../components/AvisoCrefNoLogin";
 import Footer from "./Footer";
-import { lerSessao, gravarSessao, limparSessao } from "../utils/sessao";
+import { lerSessao, gravarSessao, limparSessao, atualizarNomeDaSessao } from "../utils/sessao";
 import { buscarMinhaConta } from "../services/usuarioService";
 
 const SITUACOES_COM_AVISO = ["PENDENTE", "REJEITADO"];
@@ -30,6 +30,11 @@ function Layout () {
     if (resposta.papel === "ALUNO") conferirVerificacaoDoCref();
   }
 
+  function renomear(nomeCompleto) {
+    atualizarNomeDaSessao(nomeCompleto);
+    setUsuario((atual) => (atual ? { ...atual, nomeCompleto } : atual));
+  }
+
   function sair () {
     limparSessao();
     setUsuario(null);
@@ -45,7 +50,7 @@ function Layout () {
     <div className="min-h-screen flex flex-col bg-slate-950">
       <NavBar usuario={usuario} aoEntrar={entrar} aoSair={sair} />
       <main className="flex-1">
-        <Outlet context ={{ usuario }} />
+        <Outlet context ={{ usuario, aoRenomear: renomear }} />
       </main>
       <Footer />
 
