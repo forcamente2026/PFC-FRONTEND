@@ -1,7 +1,14 @@
 import api from "./api";
+import {
+  alterarMinhaSenhaMock,
+  atualizarMinhaContaMock,
+  confirmarTrocaDeEmailMock,
+  solicitarTrocaDeEmailMock,
+} from "./mocks/minhaContaMock";
 import {decidirVerificacaoCrefMock,listarVerificacoesPendentesMock,} from "./mocks/verificacaoCrefMock";
 
 const usarMockCref = import.meta.env.VITE_CREF_MOCK === "true";
+const usarMockMinhaConta = import.meta.env.VITE_MINHA_CONTA_MOCK === "true";
 
 function responderMock(executar) {
   return new Promise((resolve, reject) =>
@@ -86,5 +93,35 @@ export async function cancelarExclusaoDaMinhaConta() {
 
 export async function renovarCref(cref, formacao) {
   const { data } = await api.patch("/usuarios/me/cref", { cref, formacao });
+  return data;
+}
+
+export async function atualizarMinhaConta(dados, contaAtual) {
+  if (usarMockMinhaConta) {
+    return responderMock(() => atualizarMinhaContaMock(dados, contaAtual));
+  }
+  const { data } = await api.put("/usuarios/me", dados);
+  return data;
+}
+
+export async function alterarMinhaSenha(senhaAtual, novaSenha) {
+  if (usarMockMinhaConta) {
+    return responderMock(() => alterarMinhaSenhaMock(senhaAtual, novaSenha));
+  }
+  await api.patch("/usuarios/me/senha", { senhaAtual, novaSenha });
+}
+
+export async function solicitarTrocaDeEmail(novoEmail, senhaAtual, contaAtual) {
+  if (usarMockMinhaConta) {
+    return responderMock(() => solicitarTrocaDeEmailMock(novoEmail, senhaAtual, contaAtual));
+  }
+  await api.post("/usuarios/me/email", { novoEmail, senhaAtual });
+}
+
+export async function confirmarTrocaDeEmail(codigo, contaAtual) {
+  if (usarMockMinhaConta) {
+    return responderMock(() => confirmarTrocaDeEmailMock(codigo, contaAtual));
+  }
+  const { data } = await api.post("/usuarios/me/email/confirmacao", { codigo });
   return data;
 }
