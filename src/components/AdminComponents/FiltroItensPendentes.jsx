@@ -1,6 +1,7 @@
 const FILTROS = [
   { valor: "todos", rotulo: "Todos" },
   { valor: "artigos", rotulo: "Artigos" },
+  { valor: "professores", rotulo: "Professores" },
   { valor: "exclusoes", rotulo: "Pedidos de exclusão" },
 ];
 

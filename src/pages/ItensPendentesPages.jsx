@@ -4,15 +4,19 @@ import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import FiltroItensPendentes from "../components/AdminComponents/FiltroItensPendentes";
 import PedidosDeExclusao from "../components/AdminComponents/PedidosDeExclusao";
 import FilaDeArtigos from "../components/AdminComponents/FilaDeArtigos";
+import VerificacoesCref from "../components/AdminComponents/VerificacoesCref";
 
-const TIPOS_FILTRADOS = ["artigos", "exclusoes"];
+const TIPOS_FILTRADOS = ["artigos", "professores", "exclusoes"];
 
 function ItensPendentesPages() {
   const { usuario } = useOutletContext();
   const [parametros, setParametros] = useSearchParams();
-
   const tipoNoEndereco = parametros.get("tipo");
   const tipo = TIPOS_FILTRADOS.includes(tipoNoEndereco) ? tipoNoEndereco : "todos";
+
+  function mostrar(valor) {
+    return tipo === "todos" || tipo === valor;
+  }
 
   function mudarTipo(valor) {
     setParametros(valor === "todos" ? {} : { tipo: valor }, { replace: true });
@@ -23,15 +27,16 @@ function ItensPendentesPages() {
       <CabecalhoSecao
         rotulo="Administração"
         titulo="Itens pendentes"
-        descricao="O que espera a decisão do administrador: artigos e pedidos de exclusão de conta."
+        descricao="O que espera a decisão do administrador: artigos, professores aguardando verificação e pedidos de exclusão de conta."
       />
 
       <AbasAdministracao />
       <FiltroItensPendentes tipo={tipo} aoMudar={mudarTipo} />
 
       <div className="flex flex-col gap-12">
-        {tipo !== "exclusoes" && <FilaDeArtigos usuario={usuario} />}
-        {tipo !== "artigos" && <PedidosDeExclusao />}
+        {mostrar("artigos") && <FilaDeArtigos usuario={usuario} />}
+        {mostrar("professores") && <VerificacoesCref />}
+        {mostrar("exclusoes") && <PedidosDeExclusao />}
       </div>
     </div>
   );
