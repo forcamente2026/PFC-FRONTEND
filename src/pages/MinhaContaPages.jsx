@@ -8,11 +8,12 @@ import ConfirmarExclusaoConta from "../components/ConfirmarExclusaoConta";
 import AvisoCref from "../components/AvisoCref";
 import RenovarCref from "../components/RenovarCref";
 import EditarMeusDados from "../components/EditarMeusDados";
+import AlterarSenha from "../components/AlterarSenha";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
 import { EMAIL_CONTATO } from "../utils/contato";
-import { atualizarMinhaConta, buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes, renovarCref, solicitarExclusaoDaMinhaConta, 
+import { alterarMinhaSenha, atualizarMinhaConta, buscarMinhaConta, cancelarExclusaoDaMinhaConta, listarFormacoes, renovarCref, solicitarExclusaoDaMinhaConta, 
 } from "../services/usuarioService";
 
 const ESTILO_ROTULO = "block text-xs text-gray-400";
@@ -42,6 +43,7 @@ function MinhaContaPages() {
   const [modalAberto, setModalAberto] = useState(false);
   const [renovacaoAberta, setRenovacaoAberta] = useState(false);
   const [edicaoAberta, setEdicaoAberta] = useState(false);
+  const [senhaAberta, setSenhaAberta] = useState(false);
   const [cancelando, setCancelando] = useState(false);
   const [versao, setVersao] = useState(0);
 
@@ -202,13 +204,20 @@ function MinhaContaPages() {
                   </>
                 )}
 
-                <div className="pt-2">
+                <div className="flex flex-wrap gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => setEdicaoAberta(true)}
                     className={ESTILO_BOTAO_SECUNDARIO}
                   >
                     Editar meus dados
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSenhaAberta(true)}
+                    className={ESTILO_BOTAO_SECUNDARIO}
+                  >
+                    Alterar senha
                   </button>
                 </div>
 
@@ -311,6 +320,12 @@ function MinhaContaPages() {
             aoCancelar={() => setEdicaoAberta(false)}
           />
         )}
+      </Modal>
+            <Modal isOpen={senhaAberta} setCloseModal={() => setSenhaAberta(false)}>
+        <AlterarSenha
+          aoAlterar={alterarMinhaSenha}
+          aoFechar={() => setSenhaAberta(false)}
+        />
       </Modal>
     </div>
   );
