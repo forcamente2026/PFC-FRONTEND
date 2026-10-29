@@ -4,9 +4,10 @@ import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import FiltroItensPendentes from "../components/AdminComponents/FiltroItensPendentes";
 import PedidosDeExclusao from "../components/AdminComponents/PedidosDeExclusao";
 import FilaDeArtigos from "../components/AdminComponents/FilaDeArtigos";
+import FilaDeQuizzes from "../components/AdminComponents/FilaDeQuizzes";
 import VerificacoesCref from "../components/AdminComponents/VerificacoesCref";
 
-const TIPOS_FILTRADOS = ["artigos", "professores", "exclusoes"];
+const TIPOS_FILTRADOS = ["artigos", "quizzes", "professores", "exclusoes"];
 
 function ItensPendentesPages() {
   const { usuario } = useOutletContext();
@@ -27,7 +28,7 @@ function ItensPendentesPages() {
       <CabecalhoSecao
         rotulo="Administração"
         titulo="Itens pendentes"
-        descricao="O que espera a decisão do administrador: artigos, professores aguardando verificação e pedidos de exclusão de conta."
+        descricao="O que espera a decisão do administrador: artigos, quizzes, professores aguardando verificação e pedidos de exclusão de conta."
       />
 
       <AbasAdministracao />
@@ -35,6 +36,7 @@ function ItensPendentesPages() {
 
       <div className="flex flex-col gap-12">
         {mostrar("artigos") && <FilaDeArtigos usuario={usuario} />}
+        {mostrar("quizzes") && <FilaDeQuizzes usuario={usuario} />}
         {mostrar("professores") && <VerificacoesCref />}
         {mostrar("exclusoes") && <PedidosDeExclusao />}
       </div>
