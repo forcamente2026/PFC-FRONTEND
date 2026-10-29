@@ -347,7 +347,7 @@ function validarDados(dados) {
 
   questoes.forEach((item, indice) => {
     const base = `questoes[${indice}]`;
-    validarTexto(campos, item.enunciado, `${base}.enunciado`, "o enunciado da pergunta", 500);
+    validarTexto(campos, item.enunciado, `${base}.enunciado`, "o enunciado da pergunta", 250);
     validarTexto(campos, item.explicacao, `${base}.explicacao`, "a explicação", 500, false);
 
     const alternativas = item.alternativas ?? [];
@@ -355,7 +355,7 @@ function validarDados(dados) {
       campos.push({ campo: `${base}.alternativas`, mensagem: "Cada pergunta deve ter de 2 a 5 alternativas" });
     }
     alternativas.forEach((alternativa, posicao) => {
-      validarTexto(campos, alternativa.texto, `${base}.alternativas[${posicao}].texto`, "o texto da alternativa", 200);
+      validarTexto(campos, alternativa.texto, `${base}.alternativas[${posicao}].texto`, "o texto da alternativa", 100);
     });
     if (alternativas.filter((alternativa) => alternativa.correta).length !== 1) {
       campos.push({ campo: `${base}.alternativas`, mensagem: "Marque exatamente uma alternativa correta" });

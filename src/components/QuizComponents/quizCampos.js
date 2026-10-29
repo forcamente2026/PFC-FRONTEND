@@ -1,8 +1,8 @@
 export const LIMITE_TITULO = 150;
 export const LIMITE_DESCRICAO = 500;
-export const LIMITE_ENUNCIADO = 500;
+export const LIMITE_ENUNCIADO = 250;
 export const LIMITE_EXPLICACAO = 500;
-export const LIMITE_ALTERNATIVA = 200;
+export const LIMITE_ALTERNATIVA = 100;
 export const MINIMO_QUESTOES = 3;
 export const MAXIMO_QUESTOES = 10;
 export const MAXIMO_ALTERNATIVAS = 5;

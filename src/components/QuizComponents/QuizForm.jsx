@@ -27,6 +27,12 @@ const ESTILO_ADICIONAR =
   "inline-flex items-center gap-2 self-start rounded-md border border-gray-600 px-3 py-1 text-sm text-red-200 hover:bg-white/10 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 const ESTILO_REMOVER =
   "rounded-md p-2 text-gray-400 hover:bg-white/10 hover:text-red-400 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed";
+const ESTILO_LIMITE = "text-xs text-gray-400";
+
+function textoDoLimite(quantidade, maximo, nome) {
+  if (quantidade >= maximo) return `limite de ${maximo} ${nome}`;
+  return `${quantidade} de ${maximo} ${nome}`;
+}
 
 function QuizForm({
   valoresIniciais,
@@ -208,8 +214,8 @@ function QuizForm({
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className={ESTILO_TITULO_SECAO}>Perguntas</h2>
-          <span className="text-xs text-gray-400">
-            {quiz.questoes.length} de {MAXIMO_QUESTOES} · mínimo de {MINIMO_QUESTOES}
+          <span className={ESTILO_LIMITE}>
+            mínimo de {MINIMO_QUESTOES}, máximo de {MAXIMO_QUESTOES}
           </span>
         </div>
 
@@ -283,6 +289,9 @@ function QuizForm({
                       aria-label={`Texto da alternativa ${letra} da pergunta ${numero}`}
                       className={`${ESTILO_CAMPO} min-w-0 flex-1`}
                     />
+                    <span className="w-14 shrink-0 text-right text-xs text-gray-400">
+                      {alternativa.texto.length}/{LIMITE_ALTERNATIVA}
+                    </span>
                     <button
                       type="button"
                       onClick={() => removerAlternativa(indice, posicao)}
@@ -295,15 +304,20 @@ function QuizForm({
                   </div>
                 );
               })}
-              <button
-                type="button"
-                onClick={() => adicionarAlternativa(indice)}
-                disabled={questao.alternativas.length >= MAXIMO_ALTERNATIVAS}
-                className={ESTILO_ADICIONAR}
-              >
-                <Plus size={16} aria-hidden="true" />
-                Adicionar alternativa
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => adicionarAlternativa(indice)}
+                  disabled={questao.alternativas.length >= MAXIMO_ALTERNATIVAS}
+                  className={ESTILO_ADICIONAR}
+                >
+                  <Plus size={16} aria-hidden="true" />
+                  Adicionar alternativa
+                </button>
+                <span className={ESTILO_LIMITE}>
+                  {textoDoLimite(questao.alternativas.length, MAXIMO_ALTERNATIVAS, "alternativas")}
+                </span>
+              </div>
 
               <label htmlFor={campoId(`explicacao-${indice}`)} className={`${ESTILO_ROTULO} mt-2`}>
                 Explicação (opcional)
@@ -326,15 +340,20 @@ function QuizForm({
           );
         })}
 
-        <button
-          type="button"
-          onClick={adicionarQuestao}
-          disabled={quiz.questoes.length >= MAXIMO_QUESTOES}
-          className={ESTILO_ADICIONAR}
-        >
-          <Plus size={16} aria-hidden="true" />
-          Adicionar pergunta
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={adicionarQuestao}
+            disabled={quiz.questoes.length >= MAXIMO_QUESTOES}
+            className={ESTILO_ADICIONAR}
+          >
+            <Plus size={16} aria-hidden="true" />
+            Adicionar pergunta
+          </button>
+          <span className={ESTILO_LIMITE}>
+            {textoDoLimite(quiz.questoes.length, MAXIMO_QUESTOES, "perguntas")}
+          </span>
+        </div>
       </section>
 
       <section className="flex flex-col gap-2">
