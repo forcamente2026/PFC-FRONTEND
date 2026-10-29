@@ -18,8 +18,11 @@ import AuditoriaPages from "./pages/AuditoriaPages.jsx";
 import UsuariosPages from "./pages/UsuariosPages.jsx";
 import ItensPendentesPages from "./pages/ItensPendentesPages.jsx";
 import MinhaContaPages from "./pages/MinhaContaPages.jsx";
+import QuizzesPages from "./pages/QuizzesPages.jsx";
+import QuizPages from "./pages/QuizPages.jsx";
+import QuizFormPages from "./pages/QuizFormPages.jsx";
 import RotaPorPapel from "./components/RotaPorPapel.jsx";
-import { PAPEIS_VALIDADORES } from "./utils/papeis.js";
+import { PAPEIS_EDITORES, PAPEIS_VALIDADORES } from "./utils/papeis.js";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +35,17 @@ const router = createBrowserRouter([
       { path: "/about", element: <AboutPages /> },
       { path: "/articles", element: <RotaProtegida><ArticlesPages /></RotaProtegida> },
       { path: "/articles/:id", element: <RotaProtegida><ArticlePages /></RotaProtegida> },
+      { path: "/quiz", element: <RotaProtegida><QuizzesPages /></RotaProtegida> },
+      {
+        path: "/quiz/novo",
+        element: (
+          <RotaPorPapel papeis={PAPEIS_EDITORES}>
+            <QuizFormPages />
+          </RotaPorPapel>
+        ),
+      },
+      { path: "/quiz/:id", element: <RotaProtegida><QuizPages /></RotaProtegida> },
+      { path: "/quiz/:id/editar", element: <RotaProtegida><QuizFormPages /></RotaProtegida> },
       { path: "/library", element: <RotaProtegida><LibraryPages /></RotaProtegida> },
       { path: "/progress", element: <RotaProtegida><ProgressPages /></RotaProtegida> },
       { path: "/minha-conta", element: <RotaProtegida><MinhaContaPages /></RotaProtegida> },
