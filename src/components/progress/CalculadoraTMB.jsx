@@ -5,15 +5,19 @@ import {
   listarSexos,
 } from "../../services/metricasService";
 import useCalculo from "../../hooks/useCalculo";
-import { formatarNumero } from "../../utils/formatar";
 import SecaoCalculadora from "./SecaoCalculadora";
 import CardResultado from "./CardResultado";
 import CampoNumero from "./CampoNumero";
 import MemoriaCalculo from "./MemoriaCalculo";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
+import { EXPLICACAO_TMB, COMO_CALCULAMOS_TMB } from "./explicacoesCalculo";
+import { formatarNumero, paraNumero } from "../../utils/formatar";
+import ComoCalculamos from "./ComoCalculamos";
 
-function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
+const CONSTANTE_POR_SEXO = { MASCULINO: "+ 5", FEMININO: "− 161" };
+
+function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
   const [alturaCm, setAlturaCm] = useState("");
   const [idade, setIdade] = useState("");
   const [sexos, setSexos] = useState([]);
@@ -22,6 +26,7 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
   const [nivelAtividade, setNivelAtividade] = useState("");
   const [carregandoOpcoes, setCarregandoOpcoes] = useState(true);
   const [erroListas, setErroListas] = useState(null);
+  const [dadosCalculados, setDadosCalculados] = useState(null);
 
   const { resultado, carregando, erro, executar } =
     useCalculo(calcularGastoEnergetico);
@@ -56,20 +61,30 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
   }, []);
 
   const formularioValido =
-    pesoKg && alturaCm && idade && sexoBiologico && nivelAtividade;
+    consentiu && pesoKg && alturaCm && idade && sexoBiologico && nivelAtividade;
 
-  function aoEnviar(evento) {
+  async function aoEnviar(evento) {
     evento.preventDefault();
     if (!formularioValido) return;
 
-    executar({
-      pesoKg: Number(pesoKg),
-      alturaCm: Number(alturaCm),
-      idade: Number(idade),
+    const dados = {
+      pesoKg: paraNumero(pesoKg),
+      alturaCm: paraNumero(alturaCm),
+      idade: paraNumero(idade),
       sexoBiologico,
       nivelAtividade,
-    });
+    };
+    const resposta = await executar(dados);
+    if (resposta) setDadosCalculados(dados);
   }
+
+  const seuCalculo =
+    resultado && dadosCalculados
+      ? [
+          `TMB = 10 × ${formatarNumero(dadosCalculados.pesoKg)} + 6,25 × ${formatarNumero(dadosCalculados.alturaCm)} − 5 × ${formatarNumero(dadosCalculados.idade)} ${CONSTANTE_POR_SEXO[dadosCalculados.sexoBiologico]} = ${formatarNumero(resultado.tmb)} kcal`,
+          `GET = ${formatarNumero(resultado.tmb)} × ${formatarNumero(resultado.fatorAtividadeAplicado)} = ${formatarNumero(resultado.gastoEnergeticoTotal)} kcal`,
+        ]
+      : null;
 
   const blocoResultado = (
     <EstadoRequisicao
@@ -106,7 +121,7 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
             ]}
           />
 
-          <BlocoExplicacao texto={resultado.explicacao} />
+          <BlocoExplicacao texto={EXPLICACAO_TMB} />
         </div>
       ) : null}
     </EstadoRequisicao>
@@ -125,6 +140,9 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
         </>
       }
       resultado={blocoResultado}
+      comoCalculamos={
+        <ComoCalculamos {...COMO_CALCULAMOS_TMB} seuCalculo={seuCalculo} />
+      }
     >
       <form
         onSubmit={aoEnviar}
@@ -143,16 +161,14 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
             rotulo="PESO (KG)"
             valor={pesoKg}
             aoAlterar={aoAlterarPeso}
-            min="1"
-            step="0.1"
-            placeholder="82.5"
+            decimal
+            placeholder="82,5"
           />
           <CampoNumero
             id="altura"
             rotulo="ALTURA (CM)"
             valor={alturaCm}
             aoAlterar={setAlturaCm}
-            min="1"
             placeholder="178"
           />
           <CampoNumero
@@ -160,7 +176,6 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso }) {
             rotulo="IDADE"
             valor={idade}
             aoAlterar={setIdade}
-            min="1"
             placeholder="27"
           />
 

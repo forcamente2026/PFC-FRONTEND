@@ -2,7 +2,6 @@ import { useState } from "react";
 import { calcularHidratacao } from "../../services/metricasService";
 import useCalculo from "../../hooks/useCalculo";
 import useConsumoAgua from "../../hooks/useConsumoAgua";
-import { formatarNumero } from "../../utils/formatar";
 import SecaoCalculadora from "./SecaoCalculadora";
 import CardResultado from "./CardResultado";
 import CampoNumero from "./CampoNumero";
@@ -10,8 +9,14 @@ import BarraComposicao from "./BarraComposicao";
 import BlocoExplicacao from "./BlocoExplicacao";
 import EstadoRequisicao from "./EstadoRequisicao";
 import TrackerAgua from "./TrackerAgua";
+import { EXPLICACAO_HIDRATACAO, COMO_CALCULAMOS_HIDRATACAO } from "./explicacoesCalculo";
+import { formatarNumero, paraNumero } from "../../utils/formatar";
+import ComoCalculamos from "./ComoCalculamos";
 
-function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
+const EXIBIR_REGISTRO_DE_AGUA = false;
+
+function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
+  const [dadosCalculados, setDadosCalculados] = useState(null); 
   const [minutosTreinoPorDia, setMinutosTreinoPorDia] = useState("");
 
   const { resultado, carregando, erro, executar } =
@@ -25,12 +30,12 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
     registrar,
   } = useConsumoAgua();
 
-  const formularioValido = pesoKg && minutosTreinoPorDia !== "";
+  const formularioValido = consentiu && pesoKg && minutosTreinoPorDia !== "";
 
   function dadosDoDia() {
     return {
-      pesoKg: Number(pesoKg),
-      minutosTreinoPorDia: Number(minutosTreinoPorDia),
+      pesoKg: paraNumero(pesoKg),
+      minutosTreinoPorDia: paraNumero(minutosTreinoPorDia),
     };
   }
 
@@ -38,9 +43,20 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
     evento.preventDefault();
     if (!formularioValido) return;
 
-    await executar(dadosDoDia());
-    carregar(dadosDoDia());
+    const dados = dadosDoDia();
+    const resposta = await executar(dados);
+    if (resposta) setDadosCalculados(dados);
+    if (EXIBIR_REGISTRO_DE_AGUA) carregar(dados);
   }
+
+  const seuCalculo =
+    resultado && dadosCalculados
+      ? [
+          `Base = 35 × ${formatarNumero(dadosCalculados.pesoKg)} = ${formatarNumero(resultado.baseCorporalMl)} ml`,
+          `Adicional = (${formatarNumero(dadosCalculados.minutosTreinoPorDia)} ÷ 60) × 500 = ${formatarNumero(resultado.adicionalTreinoMl)} ml`,
+          `Meta = ${formatarNumero(resultado.baseCorporalMl)} + ${formatarNumero(resultado.adicionalTreinoMl)} = ${formatarNumero(resultado.mlPorDia)} ml (${formatarNumero(resultado.litrosPorDia)} litros)`,
+        ]
+      : null;
 
   function aoRegistrarConsumo(quantidadeMl) {
     registrar({ ...dadosDoDia(), quantidadeMl });
@@ -82,12 +98,12 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
               ]}
             />
 
-            <BlocoExplicacao texto={resultado.explicacao} />
+            <BlocoExplicacao texto={EXPLICACAO_HIDRATACAO} />
           </div>
         ) : null}
       </EstadoRequisicao>
 
-      {resumo ? (
+      {EXIBIR_REGISTRO_DE_AGUA && resumo ? (
         <CardResultado
           rotulo="ÁGUA CONSUMIDA HOJE"
           valor={resumo.totalConsumidoMl}
@@ -113,6 +129,9 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
         </>
       }
       resultado={blocoResultado}
+      comoCalculamos={
+        <ComoCalculamos {...COMO_CALCULAMOS_HIDRATACAO} seuCalculo={seuCalculo} />
+      }
     >
       <div className="flex flex-col gap-6">
         <form
@@ -133,9 +152,8 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
                 rotulo="PESO (KG)"
                 valor={pesoKg}
                 aoAlterar={aoAlterarPeso}
-                min="1"
-                step="0.1"
-                placeholder="82.5"
+                decimal
+                placeholder="82,5"
               />
               <span className="text-xs text-gray-300">
                 É o mesmo peso da calculadora de TMB.
@@ -148,7 +166,6 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
                 rotulo="TREINO POR DIA (MIN)"
                 valor={minutosTreinoPorDia}
                 aoAlterar={setMinutosTreinoPorDia}
-                min="0"
                 placeholder="60"
               />
               <span className="text-xs text-gray-300">
@@ -165,7 +182,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
             {carregando ? "CALCULANDO..." : "CALCULAR"}
           </button>
         </form>
-
+      {EXIBIR_REGISTRO_DE_AGUA && (
         <TrackerAgua
           habilitado={Boolean(formularioValido && resultado)}
           resumo={resumo}
@@ -173,6 +190,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso }) {
           erro={erroConsumo}
           aoRegistrar={aoRegistrarConsumo}
         />
+      )}
       </div>
     </SecaoCalculadora>
   );

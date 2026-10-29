@@ -74,3 +74,14 @@ export function formatarDataExtenso(valor) {
     year: "numeric"
   });
 }
+
+
+export function somenteNumeroDecimal(valor) {
+  const limpo = String(valor ?? "").replace(/\./g, ",").replace(/[^\d,]/g, "");
+  const [inteiro, ...decimais] = limpo.split(",");
+  return decimais.length ? `${inteiro},${decimais.join("")}` : inteiro;
+}
+
+export function paraNumero(texto) {
+  return Number(String(texto).replace(",", "."));
+}
