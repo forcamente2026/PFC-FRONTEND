@@ -21,6 +21,17 @@ export function gravarSessao({ id, token, nomeCompleto, papel }) {
     }
 }
 
+export function atualizarNomeDaSessao(nomeCompleto) {
+    const sessao = lerSessao();
+    if (!sessao) return false;
+    try {
+        localStorage.setItem(CHAVE_USUARIO, JSON.stringify({ ...sessao, nomeCompleto }));
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 export function limparSessao() {
     localStorage.removeItem(CHAVE_TOKEN);
     localStorage.removeItem(CHAVE_USUARIO);

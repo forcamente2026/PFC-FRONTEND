@@ -4,6 +4,7 @@ import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroAuditoria from "../components/AdminComponents/FiltroAuditoria";
 import TabelaAuditoria from "../components/AdminComponents/TabelaAuditoria";
 import Paginacao from "../components/AdminComponents/Paginacao";
+import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import {
   EXPORTACAO_DISPONIVEL,
   buscarAuditoria,
@@ -97,6 +98,8 @@ function AuditoriaPages() {
         titulo="Trilha de auditoria"
         descricao="Registro das ações que tocam dados pessoais e conteúdo da plataforma."
       />
+
+      <AbasAdministracao />
 
       <FiltroAuditoria
         filtros={filtros}

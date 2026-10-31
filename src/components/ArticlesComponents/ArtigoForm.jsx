@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { LIMITE_RESUMO, MINIMO_RESUMO } from "./artigoCampos";
 
 const ESTILO_CAMPO = "bg-gray-500 rounded-xl p-1 text-white";
 const ESTILO_SELECT =
@@ -13,6 +14,7 @@ function ArtigoForm({
   carregandoOpcoes,
   enviando,
   erro,
+  camposComErro = [],
   textoBotao,
   textoBotaoEnviando,
 }) {
@@ -30,6 +32,14 @@ function ArtigoForm({
         <p role="alert" className="text-red-500 text-sm font-normal text-center">
           {erro}
         </p>
+      )}
+
+      {camposComErro.length > 0 && (
+        <ul className="list-disc pl-6 text-sm font-normal text-red-500">
+          {camposComErro.map((campo) => (
+            <li key={`${campo.campo}-${campo.mensagem}`}>{campo.mensagem}</li>
+          ))}
+        </ul>
       )}
 
       <div className="flex flex-col text-red-200 gap-2 mb-6">
@@ -70,28 +80,44 @@ function ArtigoForm({
 
       <div className="flex flex-col text-red-200 gap-2 mb-6">
         <label htmlFor={campoId("resumo")}>Resumo</label>
-        <input
-          type="text"
+        <textarea
           id={campoId("resumo")}
           name="resumo"
           value={valores.resumo}
           onChange={aoAlterar}
-          placeholder="Uma ou duas frases"
+          rows={6}
+          maxLength={LIMITE_RESUMO}
+          placeholder="Uma síntese do artigo, escrita por você"
+          className={`${ESTILO_CAMPO} text-lg`}
+        />
+        <span className="self-end text-sm text-gray-300">
+          Mínimo de {MINIMO_RESUMO} caracteres · {valores.resumo.length}/{LIMITE_RESUMO}
+        </span>
+
+        <label htmlFor={campoId("fonte")}>Link do artigo</label>
+        <input
+          type="text"
+          inputMode="url"
+          id={campoId("fonte")}
+          name="fonte"
+          value={valores.fonte}
+          onChange={aoAlterar}
+          placeholder="https://..."
           className={ESTILO_CAMPO}
         />
 
-        <label htmlFor={campoId("conteudo")}>Conteúdo</label>
-        <textarea
-          id={campoId("conteudo")}
-          name="conteudo"
-          value={valores.conteudo}
+        <label htmlFor={campoId("autoria")}>Autoria do estudo (opcional)</label>
+        <input
+          type="text"
+          id={campoId("autoria")}
+          name="autoria"
+          value={valores.autoria}
           onChange={aoAlterar}
-          rows={8}
-          placeholder="Texto completo. Separe os parágrafos com uma linha em branco."
-          className={`${ESTILO_CAMPO} text-lg`}
+          placeholder="Deixe em branco se o artigo é seu"
+          className={ESTILO_CAMPO}
         />
 
-        <label htmlFor={campoId("tipoEstudo")}>Tipo de estudo</label>
+        <label htmlFor={campoId("tipoEstudo")}>Tipo de estudo (opcional)</label>
         <input
           type="text"
           id={campoId("tipoEstudo")}
@@ -104,7 +130,7 @@ function ArtigoForm({
 
         <div className="flex flex-wrap gap-4">
           <div className="flex flex-col gap-2">
-            <label htmlFor={campoId("ano")}>Ano</label>
+            <label htmlFor={campoId("ano")}>Ano de publicação (opcional)</label>
             <input
               type="number"
               id={campoId("ano")}
@@ -114,19 +140,6 @@ function ArtigoForm({
               min="1900"
               max={new Date().getFullYear()}
               placeholder="Ex: 2024"
-              className={ESTILO_CAMPO}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor={campoId("minutosLeitura")}>Minutos de leitura</label>
-            <input
-              type="number"
-              id={campoId("minutosLeitura")}
-              name="minutosLeitura"
-              value={valores.minutosLeitura}
-              onChange={aoAlterar}
-              min="1"
-              placeholder="Ex: 10"
               className={ESTILO_CAMPO}
             />
           </div>

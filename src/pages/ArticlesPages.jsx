@@ -21,7 +21,7 @@ function ArticlesPages() {
   useEffect(() => {
     let ativo = true;
 
-    Promise.all([listarArtigos(usuario?.papel), listarCategorias()])
+    Promise.all([listarArtigos(usuario), listarCategorias()])
       .then(([lista, listaCategorias]) => {
         if (!ativo) return;
         setArtigos(lista);
@@ -38,7 +38,7 @@ function ArticlesPages() {
     return () => {
       ativo = false;
     };
-  }, [usuario?.papel]);
+  }, [usuario]);
 
   function adicionarArtigo(novo) {
     setArtigos((prev) => [...prev, novo]);

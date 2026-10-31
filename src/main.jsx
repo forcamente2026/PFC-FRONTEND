@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource/montserrat/900.css";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import HomePages from "./pages/HomePages.jsx";
 import AboutPages from "./pages/AboutPages.jsx";
 import LibraryPages from "./pages/LibraryPages.jsx";
@@ -16,6 +16,7 @@ import TermosPages from "./pages/TermosPages.jsx";
 import PoliticaPages from "./pages/PoliticaPages.jsx";
 import AuditoriaPages from "./pages/AuditoriaPages.jsx";
 import UsuariosPages from "./pages/UsuariosPages.jsx";
+import ItensPendentesPages from "./pages/ItensPendentesPages.jsx";
 import MinhaContaPages from "./pages/MinhaContaPages.jsx";
 import RotaPorPapel from "./components/RotaPorPapel.jsx";
 import { PAPEIS_VALIDADORES } from "./utils/papeis.js";
@@ -50,6 +51,15 @@ const router = createBrowserRouter([
           </RotaPorPapel>
         ),
       },
+            {
+        path: "/admin/pendentes",
+        element: (
+          <RotaPorPapel papeis={PAPEIS_VALIDADORES}>
+            <ItensPendentesPages />
+          </RotaPorPapel>
+        ),
+      },
+      { path: "/admin", element: <Navigate to="/admin/usuarios" replace /> },
     ],
   },
 ]);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "../Modal";
 import ArtigoForm from "./ArtigoForm";
-import { ARTIGO_VAZIO, validarArtigo } from "./artigoCampos";
+import { ARTIGO_VAZIO, artigoParaEnvio, validarArtigo } from "./artigoCampos";
 import { criarArtigo } from "../../services/artigoService";
 
 function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
@@ -9,11 +9,13 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
   const [form, setForm] = useState(ARTIGO_VAZIO);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
+  const [camposComErro, setCamposComErro] = useState([]);
 
   function fecharModal() {
     setModalAberto(false);
     setForm(ARTIGO_VAZIO);
     setErro(null);
+    setCamposComErro([]);
   }
 
   function handleChange(evento) {
@@ -23,6 +25,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
 
   async function handleSubmit(evento) {
     evento.preventDefault();
+    setCamposComErro([]);
 
     const mensagemInvalida = validarArtigo(form);
     if (mensagemInvalida) {
@@ -34,12 +37,17 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
     setErro(null);
 
     try {
-      const novo = await criarArtigo(form, usuario);
+      const novo = await criarArtigo(artigoParaEnvio(form), usuario);
       aoCriar(novo);
       fecharModal();
-      alert("Artigo enviado para validação!");
+      alert(
+        novo.status === "PENDENTE"
+          ? "Artigo enviado! Ele aparece no site depois de aprovado."
+          : "Artigo publicado!",
+      );
     } catch (err) {
       setErro(err.mensagem || "Não foi possível enviar o artigo.");
+      setCamposComErro(err.campos ?? []);
     } finally {
       setEnviando(false);
     }
@@ -64,8 +72,9 @@ function NovoArtigo({ categorias, carregandoOpcoes, usuario, aoCriar }) {
           categorias={categorias}
           carregandoOpcoes={carregandoOpcoes}
           enviando={enviando}
+          camposComErro={camposComErro}
           erro={erro}
-          textoBotao="Enviar para validação"
+          textoBotao="Enviar artigo"
           textoBotaoEnviando="Enviando..."
         />
       </Modal>

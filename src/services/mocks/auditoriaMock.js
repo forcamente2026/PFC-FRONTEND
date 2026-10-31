@@ -1,8 +1,3 @@
-// Mock temporario da trilha de auditoria. Remover quando GET /api/auditoria
-// existir no back (ver memoria/contrato-auditoria.md). O formato imita o
-// contrato: acao e recurso sao dimensoes separadas, e o usuario vem em campos
-// planos — a trilha guarda so o id, e nome e e-mail sao resolvidos na consulta.
-
 export const acoesMock = [
   { codigo: "CRIADO", descricao: "Criado" },
   { codigo: "LIDO", descricao: "Lido" },
@@ -29,7 +24,6 @@ const USUARIOS = [
   { id: "u-3", nome: "Aluno de Teste", email: "aluno@forcamente.com" },
 ];
 
-// Combinacoes que fazem sentido: nem toda acao cabe em todo recurso.
 const EVENTOS = [
   { acao: "LOGIN_REALIZADO", recurso: "USUARIO" },
   { acao: "LOGIN_FALHOU", recurso: "USUARIO" },
@@ -57,7 +51,6 @@ function gerarRegistros() {
   for (let indice = 0; indice < 120; indice += 1) {
     const evento = EVENTOS[indice % EVENTOS.length];
 
-    // Falha de login com e-mail inexistente nao tem usuario a apontar.
     const semUsuario = evento.acao === "LOGIN_FALHOU" && indice % 3 === 0;
     const usuario = semUsuario ? null : USUARIOS[indice % USUARIOS.length];
 

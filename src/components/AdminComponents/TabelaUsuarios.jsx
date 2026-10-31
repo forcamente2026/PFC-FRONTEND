@@ -4,6 +4,16 @@ import { rotuloDoPapel } from "../../utils/papeis";
 const ESTILO_CABECALHO = "py-2 pr-4 font-semibold text-red-200 whitespace-nowrap";
 const ESTILO_CELULA = "py-2 pr-4 text-gray-300 align-top";
 const ESTILO_ETIQUETA = "rounded-md px-2 py-1 text-xs font-medium whitespace-nowrap";
+const ETIQUETAS_CREF = {
+  PENDENTE: {
+    texto: "CREF pendente",
+    cores: "border-yellow-500 bg-yellow-500/15 text-yellow-200",
+  },
+  REJEITADO: {
+    texto: "CREF rejeitado",
+    cores: "border-red-500 bg-red-500/15 text-red-300",
+  },
+};
 
 const ESTILO_ACAO =
   "rounded-md border border-gray-600 px-3 py-1 text-xs text-red-200 hover:bg-white/10 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
@@ -46,6 +56,7 @@ function TabelaUsuarios({
             const ehAPropriaConta = usuario.id === idDoLogado;
             const naoPodeInativar = anonimizada || (ehAPropriaConta && usuario.ativo);
             const pediuExclusao = Boolean(usuario.anonimizacaoSolicitadaEm) && !anonimizada;
+            const etiquetaCref = ETIQUETAS_CREF[usuario.situacaoCref];
 
             return (
               <tr key={usuario.id} className="border-b border-gray-700">
@@ -67,6 +78,13 @@ function TabelaUsuarios({
                       <span className="block text-xs text-gray-400">
                         {descricaoDaFormacao(usuario.formacao, formacoes)}
                       </span>
+                      {etiquetaCref && (
+                        <span
+                          className={`mt-1 inline-block border ${ESTILO_ETIQUETA} ${etiquetaCref.cores}`}
+                        >
+                          {etiquetaCref.texto}
+                        </span>
+                      )}
                     </>
                   ) : (
                     <span className="text-gray-500">—</span>

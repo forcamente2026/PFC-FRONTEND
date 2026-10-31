@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import Modal from "../components/Modal";
 import ConfirmarExclusaoConta from "../components/ConfirmarExclusaoConta";
+import AvisoCref from "../components/AvisoCref";
+import RenovarCref from "../components/RenovarCref";
+import EditarMeusDados from "../components/EditarMeusDados";
+import AlterarSenha from "../components/AlterarSenha";
+import AlterarEmail from "../components/AlterarEmail";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
-import {
-  buscarMinhaConta,
-  cancelarExclusaoDaMinhaConta,
-  listarFormacoes,
-  solicitarExclusaoDaMinhaConta,
-} from "../services/usuarioService";
+import { rotuloDaSituacaoCref } from "../utils/cref";
+import { EMAIL_CONTATO } from "../utils/contato";
+import { alterarMinhaSenha, atualizarMinhaConta, buscarMinhaConta, 
+  cancelarExclusaoDaMinhaConta, confirmarTrocaDeEmail, listarFormacoes, renovarCref, 
+  solicitarExclusaoDaMinhaConta, solicitarTrocaDeEmail, } from "../services/usuarioService";
 
+const SITUACOES_COM_RENOVACAO = ["APROVADO", "REJEITADO"];
 const ESTILO_ROTULO = "block text-xs text-gray-400";
 const ESTILO_VALOR = "block text-white";
 const ESTILO_SUBTITULO =
@@ -32,11 +38,16 @@ function Dado({ rotulo, valor }) {
 }
 
 function MinhaContaPages() {
+  const { aoRenomear } = useOutletContext();
   const [conta, setConta] = useState(null);
   const [formacoes, setFormacoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [modalAberto, setModalAberto] = useState(false);
+  const [renovacaoAberta, setRenovacaoAberta] = useState(false);
+  const [edicaoAberta, setEdicaoAberta] = useState(false);
+  const [senhaAberta, setSenhaAberta] = useState(false);
+  const [emailAberto, setEmailAberto] = useState(false);
   const [cancelando, setCancelando] = useState(false);
   const [versao, setVersao] = useState(0);
 
@@ -85,6 +96,28 @@ function MinhaContaPages() {
     setVersao((atual) => atual + 1);
   }
 
+    async function renovar(cref, formacao) {
+    await renovarCref(cref, formacao);
+    setRenovacaoAberta(false);
+    setVersao((atual) => atual + 1);
+  }
+
+    async function salvarDados(dados) {
+    const atualizada = await atualizarMinhaConta(dados, conta);
+    setConta(atualizada);
+    setEdicaoAberta(false);
+    aoRenomear(atualizada.nomeCompleto);
+  }
+
+  async function solicitarEmail(novoEmail, senhaAtual) {
+    await solicitarTrocaDeEmail(novoEmail, senhaAtual, conta);
+  }
+
+  async function confirmarEmail(codigo) {
+    const atualizada = await confirmarTrocaDeEmail(codigo, conta);
+    setConta(atualizada);
+  }
+
   async function cancelarPedido() {
     setCancelando(true);
     setErro(null);
@@ -123,6 +156,9 @@ function MinhaContaPages() {
       >
         {conta && (
           <>
+            {professor && (<AvisoCref situacao={conta.situacaoCref}
+            motivo={conta.motivoRejeicaoCref}/>
+            )}
             <section className="py-4">
               <Cartao className="space-y-5">
                 <h2 className={ESTILO_SUBTITULO}>Seus dados</h2>
@@ -151,7 +187,20 @@ function MinhaContaPages() {
                     <div className="grid gap-4 md:grid-cols-2">
                       <Dado rotulo="CREF" valor={conta.cref} />
                       <Dado rotulo="Formação" valor={descricaoFormacao} />
+                      {conta.situacaoCref && (<Dado rotulo="Verificação do CREF"
+                      valor={rotuloDaSituacaoCref(conta.situacaoCref)}/>
+                      )}
                     </div>
+                      
+                    {SITUACOES_COM_RENOVACAO.includes(conta.situacaoCref) && (
+                      <button
+                        type="button"
+                        onClick={() => setRenovacaoAberta(true)}
+                        className={ESTILO_BOTAO_SECUNDARIO}
+                      >
+                        Atualizar CREF
+                      </button>
+                    )}
 
                     <h2 className={`${ESTILO_SUBTITULO} pt-2`}>
                       Endereço profissional
@@ -167,6 +216,31 @@ function MinhaContaPages() {
                     </div>
                   </>
                 )}
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setEdicaoAberta(true)}
+                    className={ESTILO_BOTAO_SECUNDARIO}
+                  >
+                    Editar meus dados
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSenhaAberta(true)}
+                    className={ESTILO_BOTAO_SECUNDARIO}
+                  >
+                    Alterar senha
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEmailAberto(true)}
+                    className={ESTILO_BOTAO_SECUNDARIO}
+                  >
+                    Alterar e-mail
+                  </button>
+                </div>
+
               </Cartao>
             </section>
 
@@ -229,11 +303,59 @@ function MinhaContaPages() {
         )}
       </EstadoRequisicao>
 
+      <p className="mt-6 text-sm text-gray-400">
+        Para dúvidas ou pedidos sobre a sua conta, fale com o administrador pelo e-mail{" "}
+        <a
+          href={`mailto:${EMAIL_CONTATO}`}
+          className="text-red-200 underline underline-offset-4 hover:text-red-100"
+        >
+          {EMAIL_CONTATO}
+        </a>
+        .
+      </p>
+
       <Modal isOpen={modalAberto} setCloseModal={() => setModalAberto(false)}>
         <ConfirmarExclusaoConta
           aoConfirmar={solicitar}
           aoCancelar={() => setModalAberto(false)}
         />
+      </Modal>
+            
+      <Modal isOpen={renovacaoAberta} setCloseModal={() => setRenovacaoAberta(false)}>
+        {conta && (
+          <RenovarCref
+            crefAtual={conta.cref}
+            formacaoAtual={conta.formacao}
+            formacoes={formacoes}
+            aoRenovar={renovar}
+            aoCancelar={() => setRenovacaoAberta(false)}
+          />
+        )}
+      </Modal>
+      <Modal isOpen={edicaoAberta} setCloseModal={() => setEdicaoAberta(false)}>
+        {conta && (
+          <EditarMeusDados
+            conta={conta}
+            aoSalvar={salvarDados}
+            aoCancelar={() => setEdicaoAberta(false)}
+          />
+        )}
+      </Modal>
+            <Modal isOpen={senhaAberta} setCloseModal={() => setSenhaAberta(false)}>
+        <AlterarSenha
+          aoAlterar={alterarMinhaSenha}
+          aoFechar={() => setSenhaAberta(false)}
+        />
+      </Modal>
+      <Modal isOpen={emailAberto} setCloseModal={() => setEmailAberto(false)}>
+        {conta && (
+          <AlterarEmail
+            emailAtual={conta.email}
+            aoSolicitar={solicitarEmail}
+            aoConfirmar={confirmarEmail}
+            aoFechar={() => setEmailAberto(false)}
+          />
+        )}
       </Modal>
     </div>
   );
