@@ -9,6 +9,7 @@ import { PAPEIS_VALIDADORES } from "../utils/papeis";
 const LINKS = [
   { para: "/", rotulo: "HOME", exato: true },
   { para: "/articles", rotulo: "ARTIGOS", protegida: true },
+  { para: "/quiz", rotulo: "QUIZ", protegida: true },
   { para: "/library", rotulo: "BIBLIOTECA", protegida: true },
   { para: "/progress", rotulo: "PROGRESSO", protegida: true },
   { para: "/about", rotulo: "QUEM SOMOS" },
@@ -78,10 +79,10 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
   return (
     <nav className="font-montserrat text-rose-200 w-full">
       <div
-        className="flex flex-wrap items-center px-6 py-4 lg:flex-nowrap"
+        className="flex flex-wrap items-center px-6 py-4 lg:flex-nowrap lg:px-4"
         onMouseDown={(evento) => evento.stopPropagation()}
       >
-        <h1 className="text-3xl p-4">FORÇAMENTE</h1>
+        <h1 className="text-3xl p-4 lg:pl-0 lg:pr-2">FORÇAMENTE</h1>
 
         <button
           type="button"
@@ -100,7 +101,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
           id="menu-principal"
           className={`${menuAberto ? "flex" : "hidden"} w-full flex-col gap-4 pt-4 lg:flex lg:w-auto lg:flex-1 lg:flex-row lg:items-center lg:pt-0`}
         >
-          <div className="flex flex-col gap-4 font-bold lg:flex-1 lg:flex-row lg:justify-center">
+          <div className="flex flex-col gap-4 font-bold lg:flex-1 lg:flex-row lg:justify-center lg:gap-3">
             {LINKS.filter(
               ({ papeis }) => !papeis || papeis.includes(usuario?.papel),
             ).map(({ para, rotulo, exato, protegida }) => (
