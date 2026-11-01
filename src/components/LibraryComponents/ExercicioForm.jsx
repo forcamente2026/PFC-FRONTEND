@@ -1,4 +1,12 @@
 import { useId } from "react";
+import {
+  LIMITE_AQUECIMENTO,
+  LIMITE_DESCRICAO_EXECUCAO,
+  LIMITE_EQUIPAMENTO,
+  LIMITE_ERROS_COMUNS,
+  LIMITE_GIF_URL,
+  LIMITE_NOME,
+} from "./exercicioCampos";
 
 const ESTILO_CAMPO = "bg-gray-500 rounded-xl p-1 text-white";
 const ESTILO_SELECT =
@@ -42,6 +50,7 @@ function ExercicioForm({
         <input
           type="text"
           id={campoId("nome")}
+          maxLength={LIMITE_NOME}
           name="nome"
           value={valores.nome}
           onChange={aoAlterar}
@@ -101,44 +110,57 @@ function ExercicioForm({
 
       <div className="flex flex-col text-red-200 gap-2 mb-6">
         <label htmlFor={campoId("descricaoExecucao")}>Descrição execução</label>
-        <input
-          type="text"
+        <textarea
           id={campoId("descricaoExecucao")}
           name="descricaoExecucao"
           value={valores.descricaoExecucao}
           onChange={aoAlterar}
+          rows={4}
+          maxLength={LIMITE_DESCRICAO_EXECUCAO}
           placeholder="Digite"
-          className={ESTILO_CAMPO}
+          className={`${ESTILO_CAMPO} text-lg`}
         />
+        <span className="self-end text-sm text-gray-300">
+          {valores.descricaoExecucao.length}/{LIMITE_DESCRICAO_EXECUCAO}
+        </span>
 
         <label htmlFor={campoId("errosComuns")}>Erros comuns</label>
-        <input
-          type="text"
+        <textarea
           id={campoId("errosComuns")}
           name="errosComuns"
           value={valores.errosComuns}
           onChange={aoAlterar}
+          rows={4}
+          maxLength={LIMITE_ERROS_COMUNS}
           placeholder="Digite"
-          className={ESTILO_CAMPO}
+          className={`${ESTILO_CAMPO} text-lg`}
         />
+        <span className="self-end text-sm text-gray-300">
+          {valores.errosComuns.length}/{LIMITE_ERROS_COMUNS}
+        </span>
 
         <label htmlFor={campoId("aquecimentoRecomendado")}>
           Aquecimento Recomendado
         </label>
-        <input
-          type="text"
+        <textarea
           id={campoId("aquecimentoRecomendado")}
           name="aquecimentoRecomendado"
           value={valores.aquecimentoRecomendado}
           onChange={aoAlterar}
+          rows={4}
+          maxLength={LIMITE_AQUECIMENTO}
           placeholder="Digite"
-          className={ESTILO_CAMPO}
+          className={`${ESTILO_CAMPO} text-lg`}
         />
+        <span className="self-end text-sm text-gray-300">
+          {valores.aquecimentoRecomendado.length}/{LIMITE_AQUECIMENTO}
+        </span>
 
         <label htmlFor={campoId("equipamento")}>Equipamento</label>
         <input
           type="text"
           id={campoId("equipamento")}
+          maxLength={LIMITE_EQUIPAMENTO}
           name="equipamento"
           value={valores.equipamento}
           onChange={aoAlterar}
@@ -150,6 +172,7 @@ function ExercicioForm({
         <input
           type="text"
           id={campoId("gifUrl")}
+          maxLength={LIMITE_GIF_URL}
           name="gifUrl"
           value={valores.gifUrl}
           onChange={aoAlterar}

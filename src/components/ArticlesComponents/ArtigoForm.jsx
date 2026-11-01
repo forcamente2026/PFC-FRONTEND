@@ -1,5 +1,12 @@
 import { useId } from "react";
-import { LIMITE_RESUMO, MINIMO_RESUMO } from "./artigoCampos";
+import {
+  LIMITE_AUTORIA,
+  LIMITE_FONTE,
+  LIMITE_RESUMO,
+  LIMITE_TIPO_ESTUDO,
+  LIMITE_TITULO,
+  MINIMO_RESUMO,
+} from "./artigoCampos";
 
 const ESTILO_CAMPO = "bg-gray-500 rounded-xl p-1 text-white";
 const ESTILO_SELECT =
@@ -47,6 +54,7 @@ function ArtigoForm({
         <input
           type="text"
           id={campoId("titulo")}
+          maxLength={LIMITE_TITULO}
           name="titulo"
           value={valores.titulo}
           onChange={aoAlterar}
@@ -99,6 +107,7 @@ function ArtigoForm({
           type="text"
           inputMode="url"
           id={campoId("fonte")}
+          maxLength={LIMITE_FONTE}
           name="fonte"
           value={valores.fonte}
           onChange={aoAlterar}
@@ -110,6 +119,7 @@ function ArtigoForm({
         <input
           type="text"
           id={campoId("autoria")}
+          maxLength={LIMITE_AUTORIA}
           name="autoria"
           value={valores.autoria}
           onChange={aoAlterar}
@@ -121,6 +131,7 @@ function ArtigoForm({
         <input
           type="text"
           id={campoId("tipoEstudo")}
+          maxLength={LIMITE_TIPO_ESTUDO}
           name="tipoEstudo"
           value={valores.tipoEstudo}
           onChange={aoAlterar}

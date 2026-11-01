@@ -1,3 +1,10 @@
+export const LIMITE_NOME = 120;
+export const LIMITE_DESCRICAO_EXECUCAO = 1000;
+export const LIMITE_ERROS_COMUNS = 500;
+export const LIMITE_AQUECIMENTO = 500;
+export const LIMITE_EQUIPAMENTO = 100;
+export const LIMITE_GIF_URL = 255;
+
 export const EXERCICIO_VAZIO = {
   nome: "",
   grupoMuscular: "",

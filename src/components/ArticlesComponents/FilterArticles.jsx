@@ -1,3 +1,5 @@
+import { LIMITE_BUSCA } from "../../utils/limites";
+
 function FilterArticles({
     categorias,
     categoriaSelecionada,
@@ -17,6 +19,7 @@ function FilterArticles({
         <div className="w-full max-w-6xl mx-auto px-4 mb-10 flex flex-col gap-4">
             <input
                 type="search"
+                maxLength={LIMITE_BUSCA}
                 value={busca}
                 onChange={(evento) => aoBuscar(evento.target.value)}
                 placeholder="Buscar por titulo"

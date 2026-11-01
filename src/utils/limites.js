@@ -1,0 +1,8 @@
+export const LIMITE_NOME_COMPLETO = 150;
+export const LIMITE_EMAIL = 255;
+export const LIMITE_LOGRADOURO = 150;
+export const LIMITE_NUMERO = 10;
+export const LIMITE_COMPLEMENTO = 100;
+export const LIMITE_BAIRRO = 100;
+export const LIMITE_CIDADE = 100;
+export const LIMITE_BUSCA = 100;

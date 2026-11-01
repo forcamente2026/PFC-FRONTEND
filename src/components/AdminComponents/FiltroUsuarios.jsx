@@ -1,4 +1,5 @@
 import { PAPEIS } from "../../utils/papeis";
+import { LIMITE_BUSCA } from "../../utils/limites";
 
 const ESTILO_CAMPO =
   "rounded-xl border border-gray-600 bg-slate-800 p-2 text-white neon-suave-red-500 focus:border-red-500 focus:neon-red-500 focus:outline-none";
@@ -19,6 +20,7 @@ function FiltroUsuarios({ filtros, aoAlterar, aoLimpar }) {
         <input
           type="search"
           id="busca"
+          maxLength={LIMITE_BUSCA}
           name="busca"
           value={filtros.busca}
           onChange={handleChange}

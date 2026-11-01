@@ -10,6 +10,15 @@ import { ESTADOS } from "../../utils/estados";
 import { criarUsuario } from "../../services/usuarioService";
 import { buscarEnderecoPorCep } from "../../services/enderecoService";
 import { listarDocumentos } from "../../services/documentoLegalService";
+import {
+  LIMITE_BAIRRO,
+  LIMITE_CIDADE,
+  LIMITE_COMPLEMENTO,
+  LIMITE_EMAIL,
+  LIMITE_LOGRADOURO,
+  LIMITE_NOME_COMPLETO,
+  LIMITE_NUMERO,
+} from "../../utils/limites";
 
 const FORMACOES = [
     { valor: "BACHARELADO", rotulo: "Bacharelado em Educação Física"},
@@ -253,6 +262,7 @@ function FormCadastro() {
             <input
               type="text"
               id="nome_completo"
+              maxLength={LIMITE_NOME_COMPLETO}
               name="nomeCompleto"
               value={form.nomeCompleto}
               onChange={handleChange}
@@ -284,6 +294,7 @@ function FormCadastro() {
               <input
                 type="email"
                 id="email"
+                maxLength={LIMITE_EMAIL}
                 name="email"
                 value={form.email}
                 onChange={handleChange}
@@ -443,6 +454,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="logradouro"
+                        maxLength={LIMITE_LOGRADOURO}
                         name="logradouro"
                         value={endereco.logradouro}
                         onChange={handleEnderecoChange}
@@ -459,6 +471,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="numero"
+                        maxLength={LIMITE_NUMERO}
                         ref={campoNumero}
                         name="numero"
                         value={endereco.numero}
@@ -476,6 +489,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="complemento"
+                        maxLength={LIMITE_COMPLEMENTO}
                         name="complemento"
                         value={endereco.complemento}
                         onChange={handleEnderecoChange}
@@ -491,6 +505,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="bairro"
+                        maxLength={LIMITE_BAIRRO}
                         name="bairro"
                         value={endereco.bairro}
                         onChange={handleEnderecoChange}
@@ -507,6 +522,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="cidade"
+                        maxLength={LIMITE_CIDADE}
                         name="cidade"
                         value={endereco.cidade}
                         onChange={handleEnderecoChange}

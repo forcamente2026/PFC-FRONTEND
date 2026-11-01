@@ -14,6 +14,10 @@ export function etiquetaDoArtigo(artigo) {
   return `${etiqueta} · ${artigo.aprovacoesDeProfessores} de ${artigo.aprovacoesNecessarias}`;
 }
 
+export const LIMITE_TITULO = 255;
+export const LIMITE_FONTE = 500;
+export const LIMITE_AUTORIA = 255;
+export const LIMITE_TIPO_ESTUDO = 100;
 export const MINIMO_RESUMO = 250;
 export const LIMITE_RESUMO = 1000;
 export const LIMITE_MOTIVO = 500;

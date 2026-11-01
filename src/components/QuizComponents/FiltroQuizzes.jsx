@@ -1,3 +1,5 @@
+import { LIMITE_BUSCA } from "../../utils/limites";
+
 const ESTILO_BASE = "border p-2 rounded-md cursor-pointer";
 const ESTILO_ATIVO = "border-red-500 bg-red-500 text-white";
 const ESTILO_INATIVO = "border-gray-500 text-red-200 hover:bg-red-500 hover:text-white";
@@ -49,6 +51,7 @@ function FiltroQuizzes({
     <div className="w-full max-w-6xl mx-auto px-4 mb-10 flex flex-col gap-4">
       <input
         type="search"
+        maxLength={LIMITE_BUSCA}
         value={busca}
         onChange={(evento) => aoBuscar(evento.target.value)}
         placeholder="Buscar por título"
