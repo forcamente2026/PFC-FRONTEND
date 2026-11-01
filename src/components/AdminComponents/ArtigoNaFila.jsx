@@ -8,7 +8,7 @@ const ESTILO_LINK =
 function ArtigoNaFila({ artigo, aoAlterarStatus }) {
   return (
     <div className="flex flex-col gap-3 pt-1">
-      <p className="text-sm leading-relaxed text-gray-300">{artigo.resumo}</p>
+      <p className="text-sm leading-relaxed text-gray-300 wrap-anywhere">{artigo.resumo}</p>
 
       <div className="flex flex-wrap gap-2">
         <Link to={`/articles/${artigo.id}`} className={ESTILO_LINK}>

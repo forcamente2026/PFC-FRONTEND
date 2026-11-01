@@ -109,7 +109,7 @@ function FilaDeArtigos() {
                 return (
                   <Fragment key={artigo.id}>
                     <tr className={aberto ? "" : "border-b border-gray-700"}>
-                      <td className={ESTILO_CELULA}>
+                      <td className={`${ESTILO_CELULA} wrap-anywhere`}>
                         <span className="block text-white">{artigo.titulo}</span>
                         <span className="block text-xs text-gray-400">
                           por {artigo.autorNome}

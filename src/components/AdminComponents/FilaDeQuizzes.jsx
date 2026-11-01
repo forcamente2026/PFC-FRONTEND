@@ -111,7 +111,7 @@ function FilaDeQuizzes() {
                 return (
                   <Fragment key={quiz.id}>
                     <tr className={aberto ? "" : "border-b border-gray-700"}>
-                      <td className={ESTILO_CELULA}>
+                      <td className={`${ESTILO_CELULA} wrap-anywhere`}>
                         <span className="block text-white">{quiz.titulo}</span>
                         <span className="block text-xs text-gray-400">
                           por {quiz.autorNome} · {quiz.totalQuestoes} perguntas
@@ -144,7 +144,7 @@ function FilaDeQuizzes() {
                       <tr className="border-b border-gray-700">
                         <td colSpan={4} className="pr-4 pb-6">
                           <div className="flex flex-col gap-3 pt-1">
-                            <p className="text-sm leading-relaxed text-gray-300">
+                            <p className="text-sm leading-relaxed text-gray-300 wrap-anywhere">
                               {quiz.descricao}
                             </p>
                             <Link to={`/quiz/${quiz.id}`} className={ESTILO_LINK}>

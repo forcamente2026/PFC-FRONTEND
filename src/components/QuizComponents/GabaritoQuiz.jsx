@@ -23,7 +23,7 @@ function GabaritoQuiz({ quiz }) {
                     : "border-gray-700 text-gray-300"
                 }`}
               >
-                <span className="flex-1">{alternativa.texto}</span>
+                <span className="min-w-0 flex-1">{alternativa.texto}</span>
                 {alternativa.correta && (
                   <span className="flex items-center gap-1 text-xs font-semibold text-green-400">
                     <Check size={16} aria-hidden="true" />

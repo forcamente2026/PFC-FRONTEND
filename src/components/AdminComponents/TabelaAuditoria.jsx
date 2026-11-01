@@ -40,7 +40,7 @@ function TabelaAuditoria({ registros }) {
                   {fraseDoEvento(registro)}
                 </span>
               </td>
-              <td className={ESTILO_CELULA}>
+              <td className={`${ESTILO_CELULA} wrap-anywhere`}>
                 {registro.usuarioNome ? (
                   <>
                     <span className="block text-white">{registro.usuarioNome}</span>

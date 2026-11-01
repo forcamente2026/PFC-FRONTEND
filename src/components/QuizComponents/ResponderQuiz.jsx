@@ -89,8 +89,8 @@ function ResponderQuiz({ quiz, aoResponder }) {
       {quiz.questoes.map((questao, indice) => {
         const correcao = correcoes.get(questao.id);
         return (
-          <fieldset key={questao.id} className="flex flex-col gap-2">
-            <legend className="mb-2 font-semibold text-white">
+          <fieldset key={questao.id} className="flex min-w-0 flex-col gap-2">
+            <legend className="mb-2 w-full font-semibold text-white">
               {indice + 1}. {questao.enunciado}
             </legend>
 
@@ -110,7 +110,7 @@ function ResponderQuiz({ quiz, aoResponder }) {
                   disabled={Boolean(resultado)}
                   className="accent-red-500"
                 />
-                <span className="flex-1">{alternativa.texto}</span>
+                <span className="min-w-0 flex-1">{alternativa.texto}</span>
                 {correcao && alternativa.id === correcao.alternativaCorretaId && (
                   <Check size={18} className="text-green-400" aria-label="Alternativa correta" />
                 )}

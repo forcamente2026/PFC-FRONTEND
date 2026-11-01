@@ -100,8 +100,8 @@ function ArticlePages() {
                 </p>
               )}
 
-              <div className="flex justify-between text-xs uppercase tracking-[0.2em] text-gray-400">
-                <span>{artigo.tipoEstudo}</span>
+              <div className="flex justify-between gap-2 text-xs uppercase tracking-[0.2em] text-gray-400">
+                <span className="min-w-0">{artigo.tipoEstudo}</span>
                 {artigo.ano && <span>Ano de publicação: {artigo.ano}</span>}
               </div>
 
