@@ -2,6 +2,15 @@ import { useState } from "react";
 import { formatarCep, formatarCref, formatarDataCurta, somenteDigitos } from "../../utils/formatar";
 import { ESTADOS } from "../../utils/estados";
 import { rotuloDoPapel } from "../../utils/papeis";
+import {
+  LIMITE_BAIRRO,
+  LIMITE_CIDADE,
+  LIMITE_COMPLEMENTO,
+  LIMITE_EMAIL,
+  LIMITE_LOGRADOURO,
+  LIMITE_NOME_COMPLETO,
+  LIMITE_NUMERO,
+} from "../../utils/limites";
 
 const ESTILO_ROTULO = "text-sm text-gray-300";
 const ESTILO_CAMPO =
@@ -119,6 +128,7 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
           <input
             type="text"
             id="edicao-nome"
+            maxLength={LIMITE_NOME_COMPLETO}
             name="nomeCompleto"
             value={dados.nomeCompleto}
             onChange={alterar}
@@ -131,6 +141,7 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
           <input
             type="email"
             id="edicao-email"
+            maxLength={LIMITE_EMAIL}
             name="email"
             value={dados.email}
             onChange={alterar}
@@ -210,6 +221,7 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
               <input
                 type="text"
                 id="edicao-logradouro"
+                maxLength={LIMITE_LOGRADOURO}
                 name="logradouro"
                 value={dados.logradouro}
                 onChange={alterar}
@@ -221,6 +233,7 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
               <input
                 type="text"
                 id="edicao-numero"
+                maxLength={LIMITE_NUMERO}
                 name="numero"
                 value={dados.numero}
                 onChange={alterar}
@@ -232,6 +245,7 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
               <input
                 type="text"
                 id="edicao-complemento"
+                maxLength={LIMITE_COMPLEMENTO}
                 name="complemento"
                 value={dados.complemento}
                 onChange={alterar}
@@ -243,6 +257,7 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
               <input
                 type="text"
                 id="edicao-bairro"
+                maxLength={LIMITE_BAIRRO}
                 name="bairro"
                 value={dados.bairro}
                 onChange={alterar}
@@ -254,6 +269,7 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
               <input
                 type="text"
                 id="edicao-cidade"
+                maxLength={LIMITE_CIDADE}
                 name="cidade"
                 value={dados.cidade}
                 onChange={alterar}

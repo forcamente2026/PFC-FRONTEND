@@ -27,3 +27,13 @@
   --breakpoint-lp: 64rem;
   --breakpoint-lg: 80rem;
 }
+
+@layer base {
+  body {
+    overflow-wrap: break-word;
+  }
+
+  input[type="password"]::-ms-reveal {
+    display: none;
+  }
+}

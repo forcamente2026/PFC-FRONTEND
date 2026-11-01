@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CampoSenha from "./CampoSenha";
+import { LIMITE_EMAIL } from "../utils/limites";
 
 const ESTILO_ROTULO = "text-sm text-gray-300";
 const ESTILO_CAMPO =
@@ -160,6 +161,7 @@ function AlterarEmail({ emailAtual, aoSolicitar, aoConfirmar, aoFechar }) {
           <input
             type="text"
             id="email-novo"
+            maxLength={LIMITE_EMAIL}
             inputMode="email"
             autoComplete="email"
             value={novoEmail}

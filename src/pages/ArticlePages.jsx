@@ -23,7 +23,7 @@ function ArticlePages() {
   useEffect(() => {
     let ativo = true;
 
-    Promise.all([buscarArtigoPorId(id, usuario), listarCategorias()])
+    Promise.all([buscarArtigoPorId(id), listarCategorias()])
       .then(([dados, listaCategorias]) => {
         if (!ativo) return;
         setArtigo(dados);
@@ -100,8 +100,8 @@ function ArticlePages() {
                 </p>
               )}
 
-              <div className="flex justify-between text-xs uppercase tracking-[0.2em] text-gray-400">
-                <span>{artigo.tipoEstudo}</span>
+              <div className="flex justify-between gap-2 text-xs uppercase tracking-[0.2em] text-gray-400">
+                <span className="min-w-0">{artigo.tipoEstudo}</span>
                 {artigo.ano && <span>Ano de publicação: {artigo.ano}</span>}
               </div>
 
@@ -135,23 +135,21 @@ function ArticlePages() {
                     artigo={artigo}
                     categorias={categorias}
                     carregandoOpcoes={carregando}
-                    usuario={usuario}
                     aoEditar={setArtigo}
                   />
                   <ExcluirArtigo
                     artigo={artigo}
-                    usuario={usuario}
                     aoExcluir={() => navigate("/articles")}
                   />
                 </div>
               )}
 
               {artigo.podeAprovar && (
-                <AprovarArtigo artigo={artigo} usuario={usuario} aoAprovar={setArtigo} />
+                <AprovarArtigo artigo={artigo} aoAprovar={setArtigo} />
               )}
 
               {mostrarValidacao && (
-                <ValidacaoArtigo artigo={artigo} usuario={usuario} aoAlterarStatus={setArtigo} />
+                <ValidacaoArtigo artigo={artigo} aoAlterarStatus={setArtigo} />
               )}
             </Cartao>
           )}

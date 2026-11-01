@@ -103,18 +103,18 @@ function MinhaContaPages() {
   }
 
     async function salvarDados(dados) {
-    const atualizada = await atualizarMinhaConta(dados, conta);
+    const atualizada = await atualizarMinhaConta(dados);
     setConta(atualizada);
     setEdicaoAberta(false);
     aoRenomear(atualizada.nomeCompleto);
   }
 
   async function solicitarEmail(novoEmail, senhaAtual) {
-    await solicitarTrocaDeEmail(novoEmail, senhaAtual, conta);
+    await solicitarTrocaDeEmail(novoEmail, senhaAtual);
   }
 
   async function confirmarEmail(codigo) {
-    const atualizada = await confirmarTrocaDeEmail(codigo, conta);
+    const atualizada = await confirmarTrocaDeEmail(codigo);
     setConta(atualizada);
   }
 
@@ -163,7 +163,7 @@ function MinhaContaPages() {
               <Cartao className="space-y-5">
                 <h2 className={ESTILO_SUBTITULO}>Seus dados</h2>
 
-                <div className="grid gap-4 md:grid-cols-2 lp:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lp:grid-cols-3">
                   <Dado rotulo="Nome completo" valor={conta.nomeCompleto} />
                   <Dado rotulo="E-mail" valor={conta.email} />
                   <Dado rotulo="Perfil" valor={rotuloDoPapel(conta.papel)} />
@@ -184,7 +184,7 @@ function MinhaContaPages() {
                 {professor && (
                   <>
                     <h2 className={`${ESTILO_SUBTITULO} pt-2`}>Habilitação</h2>
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <Dado rotulo="CREF" valor={conta.cref} />
                       <Dado rotulo="Formação" valor={descricaoFormacao} />
                       {conta.situacaoCref && (<Dado rotulo="Verificação do CREF"
@@ -205,7 +205,7 @@ function MinhaContaPages() {
                     <h2 className={`${ESTILO_SUBTITULO} pt-2`}>
                       Endereço profissional
                     </h2>
-                    <div className="grid gap-4 md:grid-cols-2 lp:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lp:grid-cols-3">
                       <Dado rotulo="CEP" valor={formatarCep(conta.cep ?? "")} />
                       <Dado rotulo="Logradouro" valor={conta.logradouro} />
                       <Dado rotulo="Número" valor={conta.numero} />

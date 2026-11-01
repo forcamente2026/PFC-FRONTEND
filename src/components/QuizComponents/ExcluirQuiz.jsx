@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { excluirQuiz } from "../../services/quizService";
 
-function ExcluirQuiz({ quiz, usuario, aoExcluir }) {
+function ExcluirQuiz({ quiz, aoExcluir }) {
   const [modalAberto, setModalAberto] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
@@ -17,7 +17,7 @@ function ExcluirQuiz({ quiz, usuario, aoExcluir }) {
     setErro(null);
 
     try {
-      await excluirQuiz(quiz.id, usuario);
+      await excluirQuiz(quiz.id);
       aoExcluir();
     } catch (err) {
       setErro(err.mensagem || "Não foi possível excluir o quiz.");

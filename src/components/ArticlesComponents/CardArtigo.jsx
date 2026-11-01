@@ -25,8 +25,8 @@ function CardArtigo({ artigo }) {
 
       <div className="mt-auto pt-4">
         <div className="h-px bg-gray-700"></div>
-        <div className="mt-4 flex justify-between text-xs uppercase tracking-[0.2em] text-gray-400">
-          <span>{tipoEstudo}</span>
+        <div className="mt-4 flex justify-between gap-2 text-xs uppercase tracking-[0.2em] text-gray-400">
+          <span className="min-w-0">{tipoEstudo}</span>
           {ano && <span>Ano de publicação: {ano}</span>}
         </div>
       </div>

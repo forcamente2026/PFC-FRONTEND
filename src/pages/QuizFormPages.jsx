@@ -59,8 +59,8 @@ function QuizFormPages() {
     Promise.all([
       listarCategorias(),
       listarNiveisDoQuiz(),
-      listarArtigos(usuario),
-      editando ? buscarQuizParaEdicao(id, usuario) : novoQuiz(),
+      listarArtigos(),
+      editando ? buscarQuizParaEdicao(id) : novoQuiz(),
     ])
       .then(([categorias, niveis, artigos, quiz]) => {
         if (!ativo) return;
@@ -98,8 +98,8 @@ function QuizFormPages() {
     try {
       const corpo = { ...dados, categoria: dados.categoria || null, nivel: dados.nivel || null };
       const salvo = editando
-        ? await editarQuiz(id, corpo, usuario)
-        : await criarQuiz(corpo, usuario);
+        ? await editarQuiz(id, corpo)
+        : await criarQuiz(corpo);
       navigate(`/quiz/${salvo.id}`, { state: { aviso: avisoAoSalvar(salvo, editando) } });
     } catch (err) {
       setErro(err.mensagem || "Não foi possível salvar o quiz.");

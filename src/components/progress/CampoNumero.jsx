@@ -1,5 +1,7 @@
 import { somenteDigitos, somenteNumeroDecimal } from "../../utils/formatar";
 
+const LIMITE_CARACTERES = 6;
+
 function CampoNumero({
   id,
   rotulo,
@@ -26,6 +28,7 @@ function CampoNumero({
         id={id}
         type="text"
         inputMode={decimal ? "decimal" : "numeric"}
+        maxLength={LIMITE_CARACTERES}
         autoComplete="off"
         value={valor}
         placeholder={placeholder}

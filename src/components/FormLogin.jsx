@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../services/authService";
+import CampoSenha from "./CampoSenha";
+import { LIMITE_EMAIL } from "../utils/limites";
 
 const ESTILO_CAMPO =
   "text-2xl text-white font-light border p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20";
@@ -41,7 +43,7 @@ function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) 
     <form onSubmit={entrar} className="flex flex-col gap-3 items-center">
       <h1 className="font-montserrat text-center text-4xl">LOGIN</h1>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col self-stretch">
         <label htmlFor="email" className="text-2xl font-light">
           E-mail
         </label>
@@ -52,24 +54,25 @@ function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) 
           value={form.email}
           onChange={handleChange}
           required
+          maxLength={LIMITE_EMAIL}
           placeholder="nome@example.com"
           className={ESTILO_CAMPO}
         />
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col self-stretch">
         <label htmlFor="senha" className="text-2xl font-light">
           Senha
         </label>
-        <input
-          type="password"
+        <CampoSenha
           id="senha"
           name="senha"
-          value={form.senha}
-          onChange={handleChange}
+          valor={form.senha}
+          aoAlterar={handleChange}
+          autoComplete="current-password"
           required
           placeholder="Digite a senha"
-          className={`${ESTILO_CAMPO} m-2`}
+          className={ESTILO_CAMPO}
         />
       </div>
 

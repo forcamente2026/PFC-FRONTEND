@@ -84,7 +84,7 @@ function PedidosDeExclusao() {
             <tbody>
               {pedidos.map((pedido) => (
                 <tr key={pedido.id} className="border-b border-gray-700">
-                  <td className={ESTILO_CELULA}>
+                  <td className={`${ESTILO_CELULA} wrap-anywhere`}>
                     <span className="block text-white">{pedido.nomeCompleto}</span>
                     <span className="block text-xs text-gray-400">{pedido.email}</span>
                   </td>

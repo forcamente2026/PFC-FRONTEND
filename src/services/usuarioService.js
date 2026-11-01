@@ -1,26 +1,4 @@
 import api from "./api";
-import {
-  alterarMinhaSenhaMock,
-  atualizarMinhaContaMock,
-  confirmarTrocaDeEmailMock,
-  solicitarTrocaDeEmailMock,
-} from "./mocks/minhaContaMock";
-import {decidirVerificacaoCrefMock,listarVerificacoesPendentesMock,} from "./mocks/verificacaoCrefMock";
-
-const usarMockCref = import.meta.env.VITE_CREF_MOCK === "true";
-const usarMockMinhaConta = import.meta.env.VITE_MINHA_CONTA_MOCK === "true";
-
-function responderMock(executar) {
-  return new Promise((resolve, reject) =>
-    setTimeout(() => {
-      try {
-        resolve(executar());
-      } catch (falha) {
-        reject(falha);
-      }
-    }, 400),
-  );
-}
 
 function limparParametros(parametros) {
   return Object.fromEntries(
@@ -65,15 +43,11 @@ export async function listarAnonimizacoesPendentes() {
 }
 
 export async function listarVerificacoesPendentes() {
-  if (usarMockCref) return responderMock(() => listarVerificacoesPendentesMock());
   const { data } = await api.get("/usuarios/pendentes-verificacao");
   return data;
 }
 
 export async function decidirVerificacaoCref(id, status, motivo) {
-  if (usarMockCref) {
-    return responderMock(() => decidirVerificacaoCrefMock(id, status, motivo));
-  }
   const { data } = await api.patch(`/usuarios/${id}/verificacao`, { status, motivo });
   return data;
 }
@@ -96,32 +70,20 @@ export async function renovarCref(cref, formacao) {
   return data;
 }
 
-export async function atualizarMinhaConta(dados, contaAtual) {
-  if (usarMockMinhaConta) {
-    return responderMock(() => atualizarMinhaContaMock(dados, contaAtual));
-  }
+export async function atualizarMinhaConta(dados) {
   const { data } = await api.put("/usuarios/me", dados);
   return data;
 }
 
 export async function alterarMinhaSenha(senhaAtual, novaSenha) {
-  if (usarMockMinhaConta) {
-    return responderMock(() => alterarMinhaSenhaMock(senhaAtual, novaSenha));
-  }
   await api.patch("/usuarios/me/senha", { senhaAtual, novaSenha });
 }
 
-export async function solicitarTrocaDeEmail(novoEmail, senhaAtual, contaAtual) {
-  if (usarMockMinhaConta) {
-    return responderMock(() => solicitarTrocaDeEmailMock(novoEmail, senhaAtual, contaAtual));
-  }
+export async function solicitarTrocaDeEmail(novoEmail, senhaAtual) {
   await api.post("/usuarios/me/email", { novoEmail, senhaAtual });
 }
 
-export async function confirmarTrocaDeEmail(codigo, contaAtual) {
-  if (usarMockMinhaConta) {
-    return responderMock(() => confirmarTrocaDeEmailMock(codigo, contaAtual));
-  }
+export async function confirmarTrocaDeEmail(codigo) {
   const { data } = await api.post("/usuarios/me/email/confirmacao", { codigo });
   return data;
 }

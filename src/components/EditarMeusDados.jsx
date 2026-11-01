@@ -2,6 +2,14 @@ import { useRef, useState } from "react";
 import { buscarEnderecoPorCep } from "../services/enderecoService";
 import { formatarCep, somenteDigitos } from "../utils/formatar";
 import { ESTADOS } from "../utils/estados";
+import {
+  LIMITE_BAIRRO,
+  LIMITE_CIDADE,
+  LIMITE_COMPLEMENTO,
+  LIMITE_LOGRADOURO,
+  LIMITE_NOME_COMPLETO,
+  LIMITE_NUMERO,
+} from "../utils/limites";
 
 const ESTILO_ROTULO = "text-sm text-gray-300";
 const ESTILO_CAMPO =
@@ -12,11 +20,11 @@ const ESTILO_BOTAO_SECUNDARIO =
   "rounded-md border border-gray-600 px-4 py-2 text-red-200 hover:bg-white/10 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 
 const CAMPOS_DE_TEXTO = [
-  { nome: "logradouro", rotulo: "Logradouro", autoComplete: "address-line1" },
-  { nome: "numero", rotulo: "Número" },
-  { nome: "complemento", rotulo: "Complemento (opcional)", autoComplete: "address-line2" },
-  { nome: "bairro", rotulo: "Bairro" },
-  { nome: "cidade", rotulo: "Cidade", autoComplete: "address-level2" },
+  { nome: "logradouro", rotulo: "Logradouro", autoComplete: "address-line1", limite: LIMITE_LOGRADOURO },
+  { nome: "numero", rotulo: "Número", limite: LIMITE_NUMERO },
+  { nome: "complemento", rotulo: "Complemento (opcional)", autoComplete: "address-line2", limite: LIMITE_COMPLEMENTO },
+  { nome: "bairro", rotulo: "Bairro", limite: LIMITE_BAIRRO },
+  { nome: "cidade", rotulo: "Cidade", autoComplete: "address-level2", limite: LIMITE_CIDADE },
 ];
 
 function texto(valor) {
@@ -131,6 +139,7 @@ function EditarMeusDados({ conta, aoSalvar, aoCancelar }) {
         <input
           type="text"
           id="meus-dados-nome"
+          maxLength={LIMITE_NOME_COMPLETO}
           value={nomeCompleto}
           onChange={(evento) => setNomeCompleto(evento.target.value)}
           autoComplete="name"
@@ -174,6 +183,7 @@ function EditarMeusDados({ conta, aoSalvar, aoCancelar }) {
                   type="text"
                   id={`meus-dados-${campo.nome}`}
                   name={campo.nome}
+                  maxLength={campo.limite}
                   value={endereco[campo.nome]}
                   onChange={alterarEndereco}
                   autoComplete={campo.autoComplete}

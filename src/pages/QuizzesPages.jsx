@@ -25,7 +25,7 @@ function QuizzesPages() {
   useEffect(() => {
     let ativo = true;
 
-    Promise.all([listarQuizzes(usuario), listarCategorias(), listarNiveisDoQuiz()])
+    Promise.all([listarQuizzes(), listarCategorias(), listarNiveisDoQuiz()])
       .then(([lista, listaCategorias, listaNiveis]) => {
         if (!ativo) return;
         setQuizzes(lista);

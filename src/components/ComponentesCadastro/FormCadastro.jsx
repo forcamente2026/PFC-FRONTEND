@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import ForcaSenha from "./ForcaSenha";
+import CampoSenha from "../CampoSenha";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
@@ -9,6 +10,15 @@ import { ESTADOS } from "../../utils/estados";
 import { criarUsuario } from "../../services/usuarioService";
 import { buscarEnderecoPorCep } from "../../services/enderecoService";
 import { listarDocumentos } from "../../services/documentoLegalService";
+import {
+  LIMITE_BAIRRO,
+  LIMITE_CIDADE,
+  LIMITE_COMPLEMENTO,
+  LIMITE_EMAIL,
+  LIMITE_LOGRADOURO,
+  LIMITE_NOME_COMPLETO,
+  LIMITE_NUMERO,
+} from "../../utils/limites";
 
 const FORMACOES = [
     { valor: "BACHARELADO", rotulo: "Bacharelado em Educação Física"},
@@ -252,6 +262,7 @@ function FormCadastro() {
             <input
               type="text"
               id="nome_completo"
+              maxLength={LIMITE_NOME_COMPLETO}
               name="nomeCompleto"
               value={form.nomeCompleto}
               onChange={handleChange}
@@ -260,7 +271,7 @@ function FormCadastro() {
               className={styleInput}
             />
           </div>
-          <div className=" flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <div>
               <label htmlFor="dataNasc" className={styleLabel}>
                 Data de Nascimento*
@@ -283,6 +294,7 @@ function FormCadastro() {
               <input
                 type="email"
                 id="email"
+                maxLength={LIMITE_EMAIL}
                 name="email"
                 value={form.email}
                 onChange={handleChange}
@@ -297,13 +309,13 @@ function FormCadastro() {
               <label htmlFor="senha" className={styleLabel}>
                 Senha*
               </label>
-              <input
-                type="password"
+              <CampoSenha
                 id="senha"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
+                valor={senha}
+                aoAlterar={(e) => setSenha(e.target.value)}
                 onFocus={() => setSenhaFocada(true)}
                 onBlur={() => setSenhaFocada(false)}
+                autoComplete="new-password"
                 className={estiloSenha}
                 placeholder="senha"
               />
@@ -313,13 +325,13 @@ function FormCadastro() {
               <label htmlFor="confirmaSenha" className={styleLabel}>
                 Confirma senha*
               </label>
-              <input
-                type="password"
+              <CampoSenha
                 id="confirmaSenha"
-                value={confirmaSenha}
-                onChange={(e) => setConfirmaSenha(e.target.value)}
+                valor={confirmaSenha}
+                aoAlterar={(e) => setConfirmaSenha(e.target.value)}
                 aria-invalid={senhasDiferem}
                 aria-describedby="confirmaSenha-mensagem"
+                autoComplete="new-password"
                 className={estiloConfirmacao}
                 placeholder="Confirma senha"
               />
@@ -351,7 +363,7 @@ function FormCadastro() {
             <section className="py-6">
               <CabecalhoSecao rotulo="Profissional" titulo="Formação" />
               <Cartao className="space-y-2">
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <div>
                     <label htmlFor="cref" className={styleLabel}>
                       CREF *
@@ -380,7 +392,7 @@ function FormCadastro() {
                             name="formacao"
                             value={formacao.formacao}
                             onChange={handleFormacaoChange}
-                            className={`${styleInput} bg-slate-800`}
+                            className={`${styleInput} w-full bg-slate-800`}
                             >
                               <option value ="">Selecione uma formação:</option>
                               {FORMACOES.map((opcao) => (
@@ -442,6 +454,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="logradouro"
+                        maxLength={LIMITE_LOGRADOURO}
                         name="logradouro"
                         value={endereco.logradouro}
                         onChange={handleEnderecoChange}
@@ -458,6 +471,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="numero"
+                        maxLength={LIMITE_NUMERO}
                         ref={campoNumero}
                         name="numero"
                         value={endereco.numero}
@@ -475,6 +489,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="complemento"
+                        maxLength={LIMITE_COMPLEMENTO}
                         name="complemento"
                         value={endereco.complemento}
                         onChange={handleEnderecoChange}
@@ -490,6 +505,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="bairro"
+                        maxLength={LIMITE_BAIRRO}
                         name="bairro"
                         value={endereco.bairro}
                         onChange={handleEnderecoChange}
@@ -506,6 +522,7 @@ function FormCadastro() {
                       <input
                         type="text"
                         id="cidade"
+                        maxLength={LIMITE_CIDADE}
                         name="cidade"
                         value={endereco.cidade}
                         onChange={handleEnderecoChange}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import ForcaSenha from "./ComponentesCadastro/ForcaSenha";
 import { avaliarSenha } from "./ComponentesCadastro/senhaRegras";
 import { redefinirSenha } from "../services/authService";
+import CampoSenha from "./CampoSenha";
 
 const ESTILO_CAMPO =
   "text-2xl text-white font-light border p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20";
@@ -42,7 +43,7 @@ function FormRedefinirSenha({ email, aoConcluir, aoVoltar }) {
         cadastrado, enviamos um código de 4 dígitos. Ele vale por 15 minutos.
       </p>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col self-stretch">
         <label htmlFor="codigoRedefinicao" className="text-2xl font-light">
           Código
         </label>
@@ -61,31 +62,31 @@ function FormRedefinirSenha({ email, aoConcluir, aoVoltar }) {
         />
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col self-stretch">
         <label htmlFor="novaSenha" className="text-2xl font-light">
           Nova senha
         </label>
-        <input
-          type="password"
+        <CampoSenha
           id="novaSenha"
           name="novaSenha"
-          value={novaSenha}
-          onChange={(evento) => setNovaSenha(evento.target.value)}
+          valor={novaSenha}
+          aoAlterar={(evento) => setNovaSenha(evento.target.value)}
+          autoComplete="new-password"
           className={ESTILO_CAMPO}
         />
         {novaSenha.length > 0 && <ForcaSenha avaliacao={avaliacao} />}
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col self-stretch">
         <label htmlFor="confirmacaoSenha" className="text-2xl font-light">
           Confirmar senha
         </label>
-        <input
-          type="password"
+        <CampoSenha
           id="confirmacaoSenha"
           name="confirmacaoSenha"
-          value={confirmacao}
-          onChange={(evento) => setConfirmacao(evento.target.value)}
+          valor={confirmacao}
+          aoAlterar={(evento) => setConfirmacao(evento.target.value)}
+          autoComplete="new-password"
           className={ESTILO_CAMPO}
         />
         {confirmacao.length > 0 && !senhasCoincidem && (

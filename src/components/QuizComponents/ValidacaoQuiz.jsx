@@ -6,7 +6,7 @@ import { STATUS_ARTIGO } from "../ArticlesComponents/artigoCampos";
 const LIMITE_MOTIVO = 500;
 const SITUACOES_EM_ANALISE = ["PENDENTE", "APROVADO_PELOS_PROFESSORES"];
 
-function ValidacaoQuiz({ quiz, usuario, aoAlterarStatus }) {
+function ValidacaoQuiz({ quiz, aoAlterarStatus }) {
   const [rejeitando, setRejeitando] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -26,7 +26,6 @@ function ValidacaoQuiz({ quiz, usuario, aoAlterarStatus }) {
         quiz.id,
         status,
         status === "REJEITADO" ? motivo : undefined,
-        usuario,
       );
       setRejeitando(false);
       setMotivo("");

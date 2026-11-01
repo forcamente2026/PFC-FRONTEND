@@ -124,7 +124,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
               <NavLink
                 to="/minha-conta"
                 onClick={fecharMenu}
-                className="font-bold underline-offset-4 hover:text-red-200 hover:underline"
+                className="min-w-0 font-bold underline-offset-4 hover:text-red-200 hover:underline"
               >
                 {usuario.nomeCompleto}
               </NavLink>
