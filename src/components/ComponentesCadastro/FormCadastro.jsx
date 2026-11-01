@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import ForcaSenha from "./ForcaSenha";
+import CampoSenha from "../CampoSenha";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
@@ -297,13 +298,13 @@ function FormCadastro() {
               <label htmlFor="senha" className={styleLabel}>
                 Senha*
               </label>
-              <input
-                type="password"
+              <CampoSenha
                 id="senha"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
+                valor={senha}
+                aoAlterar={(e) => setSenha(e.target.value)}
                 onFocus={() => setSenhaFocada(true)}
                 onBlur={() => setSenhaFocada(false)}
+                autoComplete="new-password"
                 className={estiloSenha}
                 placeholder="senha"
               />
@@ -313,13 +314,13 @@ function FormCadastro() {
               <label htmlFor="confirmaSenha" className={styleLabel}>
                 Confirma senha*
               </label>
-              <input
-                type="password"
+              <CampoSenha
                 id="confirmaSenha"
-                value={confirmaSenha}
-                onChange={(e) => setConfirmaSenha(e.target.value)}
+                valor={confirmaSenha}
+                aoAlterar={(e) => setConfirmaSenha(e.target.value)}
                 aria-invalid={senhasDiferem}
                 aria-describedby="confirmaSenha-mensagem"
+                autoComplete="new-password"
                 className={estiloConfirmacao}
                 placeholder="Confirma senha"
               />

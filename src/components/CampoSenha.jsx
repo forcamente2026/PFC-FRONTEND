@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-function CampoSenha({ id, name, valor, aoAlterar, autoComplete, className }) {
+function CampoSenha({ id, name, valor, aoAlterar, autoComplete, className, ...outras }) {
   const [visivel, setVisivel] = useState(false);
 
   return (
     <div className="relative">
       <input
+        {...outras}
         type={visivel ? "text" : "password"}
         id={id}
         name={name}
         value={valor}
         onChange={aoAlterar}
         autoComplete={autoComplete}
-        className={`${className} pr-11`}
+        className={`${className} w-full pr-11`}
       />
       <button
         type="button"
