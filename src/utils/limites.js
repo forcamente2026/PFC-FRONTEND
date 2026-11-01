@@ -6,3 +6,5 @@ export const LIMITE_COMPLEMENTO = 100;
 export const LIMITE_BAIRRO = 100;
 export const LIMITE_CIDADE = 100;
 export const LIMITE_BUSCA = 100;
+export const LIMITE_SENHA = 64;
+export const LIMITE_SENHA_CADASTRADA = 72;

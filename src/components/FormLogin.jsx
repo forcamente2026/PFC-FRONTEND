@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../services/authService";
 import CampoSenha from "./CampoSenha";
+import { LIMITE_EMAIL } from "../utils/limites";
 
 const ESTILO_CAMPO =
   "text-2xl text-white font-light border p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20";
@@ -53,6 +54,7 @@ function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) 
           value={form.email}
           onChange={handleChange}
           required
+          maxLength={LIMITE_EMAIL}
           placeholder="nome@example.com"
           className={ESTILO_CAMPO}
         />
