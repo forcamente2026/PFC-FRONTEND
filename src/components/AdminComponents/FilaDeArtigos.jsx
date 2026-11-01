@@ -22,7 +22,7 @@ function situacaoDoArtigo(artigo) {
   return `${descricao} · ${artigo.aprovacoesDeProfessores} de ${artigo.aprovacoesNecessarias}`;
 }
 
-function FilaDeArtigos({ usuario }) {
+function FilaDeArtigos() {
   const [artigos, setArtigos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
@@ -32,7 +32,7 @@ function FilaDeArtigos({ usuario }) {
   useEffect(() => {
     let ativo = true;
 
-    listarArtigosPendentes(usuario)
+    listarArtigosPendentes()
       .then((lista) => {
         if (!ativo) return;
         setArtigos(lista);
@@ -49,7 +49,7 @@ function FilaDeArtigos({ usuario }) {
     return () => {
       ativo = false;
     };
-  }, [usuario]);
+  }, []);
 
   function alternar(id) {
     setIdAberto((atual) => (atual === id ? null : id));
@@ -144,7 +144,6 @@ function FilaDeArtigos({ usuario }) {
                         <td colSpan={4} className="pr-4 pb-6">
                           <ArtigoNaFila
                             artigo={artigo}
-                            usuario={usuario}
                             aoAlterarStatus={retirarDaFila}
                           />
                         </td>

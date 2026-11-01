@@ -23,7 +23,7 @@ function ArticlePages() {
   useEffect(() => {
     let ativo = true;
 
-    Promise.all([buscarArtigoPorId(id, usuario), listarCategorias()])
+    Promise.all([buscarArtigoPorId(id), listarCategorias()])
       .then(([dados, listaCategorias]) => {
         if (!ativo) return;
         setArtigo(dados);
@@ -135,23 +135,21 @@ function ArticlePages() {
                     artigo={artigo}
                     categorias={categorias}
                     carregandoOpcoes={carregando}
-                    usuario={usuario}
                     aoEditar={setArtigo}
                   />
                   <ExcluirArtigo
                     artigo={artigo}
-                    usuario={usuario}
                     aoExcluir={() => navigate("/articles")}
                   />
                 </div>
               )}
 
               {artigo.podeAprovar && (
-                <AprovarArtigo artigo={artigo} usuario={usuario} aoAprovar={setArtigo} />
+                <AprovarArtigo artigo={artigo} aoAprovar={setArtigo} />
               )}
 
               {mostrarValidacao && (
-                <ValidacaoArtigo artigo={artigo} usuario={usuario} aoAlterarStatus={setArtigo} />
+                <ValidacaoArtigo artigo={artigo} aoAlterarStatus={setArtigo} />
               )}
             </Cartao>
           )}

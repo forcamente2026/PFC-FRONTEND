@@ -33,7 +33,7 @@ function QuizPages() {
   useEffect(() => {
     let ativo = true;
 
-    buscarQuiz(id, usuario)
+    buscarQuiz(id)
       .then((dados) => {
         if (!ativo) return;
         setQuiz(dados);
@@ -54,7 +54,7 @@ function QuizPages() {
   }, [id, usuario]);
 
   function atualizarEmSegundoPlano() {
-    buscarQuiz(id, usuario)
+    buscarQuiz(id)
       .then(setQuiz)
       .catch(() => {});
   }
@@ -166,18 +166,17 @@ function QuizPages() {
                   </Link>
                   <ExcluirQuiz
                     quiz={quiz}
-                    usuario={usuario}
                     aoExcluir={() => aoExcluir(quiz.titulo)}
                   />
                 </div>
               )}
 
               {quiz.podeAprovar && (
-                <AprovarQuiz quiz={quiz} usuario={usuario} aoAprovar={aoAprovar} />
+                <AprovarQuiz quiz={quiz} aoAprovar={aoAprovar} />
               )}
 
               {mostrarValidacao && (
-                <ValidacaoQuiz quiz={quiz} usuario={usuario} aoAlterarStatus={aoAlterarStatus} />
+                <ValidacaoQuiz quiz={quiz} aoAlterarStatus={aoAlterarStatus} />
               )}
 
               <div className="h-px bg-gray-700"></div>
@@ -187,7 +186,6 @@ function QuizPages() {
               ) : (
                 <ResponderQuiz
                   quiz={quiz}
-                  usuario={usuario}
                   aoResponder={atualizarEmSegundoPlano}
                 />
               )}

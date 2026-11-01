@@ -25,7 +25,7 @@ function situacaoDoQuiz(quiz) {
   return `${descricao} · ${quiz.aprovacoesDeProfessores} de ${quiz.aprovacoesNecessarias}`;
 }
 
-function FilaDeQuizzes({ usuario }) {
+function FilaDeQuizzes() {
   const [quizzes, setQuizzes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
@@ -35,7 +35,7 @@ function FilaDeQuizzes({ usuario }) {
   useEffect(() => {
     let ativo = true;
 
-    listarQuizzesPendentes(usuario)
+    listarQuizzesPendentes()
       .then((lista) => {
         if (!ativo) return;
         setQuizzes(lista);
@@ -52,7 +52,7 @@ function FilaDeQuizzes({ usuario }) {
     return () => {
       ativo = false;
     };
-  }, [usuario]);
+  }, []);
 
   function alternar(id) {
     setIdAberto((atual) => (atual === id ? null : id));
@@ -152,7 +152,6 @@ function FilaDeQuizzes({ usuario }) {
                             </Link>
                             <ValidacaoQuiz
                               quiz={quiz}
-                              usuario={usuario}
                               aoAlterarStatus={retirarDaFila}
                             />
                           </div>

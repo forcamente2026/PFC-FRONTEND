@@ -4,7 +4,7 @@ import { LIMITE_MOTIVO, STATUS_ARTIGO } from "./artigoCampos";
 
 const SITUACOES_EM_ANALISE = ["PENDENTE", "APROVADO_PELOS_PROFESSORES"];
 
-function ValidacaoArtigo({ artigo, usuario, aoAlterarStatus }) {
+function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
   const [rejeitando, setRejeitando] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -22,7 +22,6 @@ function ValidacaoArtigo({ artigo, usuario, aoAlterarStatus }) {
         artigo.id,
         status,
         status === "REJEITADO" ? motivo : undefined,
-        usuario,
       );
       setRejeitando(false);
       setMotivo("");

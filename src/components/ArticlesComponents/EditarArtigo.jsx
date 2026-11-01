@@ -16,7 +16,7 @@ function valoresDoArtigo(artigo) {
   };
 }
 
-function EditarArtigo({ artigo, categorias, carregandoOpcoes, usuario, aoEditar }) {
+function EditarArtigo({ artigo, categorias, carregandoOpcoes, aoEditar }) {
   const [modalAberto, setModalAberto] = useState(false);
   const [form, setForm] = useState(() => valoresDoArtigo(artigo));
   const [enviando, setEnviando] = useState(false);
@@ -55,7 +55,7 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, usuario, aoEditar 
     setErro(null);
 
     try {
-      const atualizado = await editarArtigo(artigo.id, artigoParaEnvio(form), usuario);
+      const atualizado = await editarArtigo(artigo.id, artigoParaEnvio(form));
       aoEditar(atualizado);
       fecharModal();
       alert(

@@ -5,7 +5,7 @@ import ValidacaoArtigo from "../ArticlesComponents/ValidacaoArtigo";
 const ESTILO_LINK =
   "inline-flex items-center gap-2 rounded-md border border-gray-600 px-3 py-1 text-xs text-red-200 hover:bg-white/10";
 
-function ArtigoNaFila({ artigo, usuario, aoAlterarStatus }) {
+function ArtigoNaFila({ artigo, aoAlterarStatus }) {
   return (
     <div className="flex flex-col gap-3 pt-1">
       <p className="text-sm leading-relaxed text-gray-300">{artigo.resumo}</p>
@@ -28,7 +28,6 @@ function ArtigoNaFila({ artigo, usuario, aoAlterarStatus }) {
 
       <ValidacaoArtigo
         artigo={artigo}
-        usuario={usuario}
         aoAlterarStatus={aoAlterarStatus}
       />
     </div>

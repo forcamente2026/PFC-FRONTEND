@@ -103,18 +103,18 @@ function MinhaContaPages() {
   }
 
     async function salvarDados(dados) {
-    const atualizada = await atualizarMinhaConta(dados, conta);
+    const atualizada = await atualizarMinhaConta(dados);
     setConta(atualizada);
     setEdicaoAberta(false);
     aoRenomear(atualizada.nomeCompleto);
   }
 
   async function solicitarEmail(novoEmail, senhaAtual) {
-    await solicitarTrocaDeEmail(novoEmail, senhaAtual, conta);
+    await solicitarTrocaDeEmail(novoEmail, senhaAtual);
   }
 
   async function confirmarEmail(codigo) {
-    const atualizada = await confirmarTrocaDeEmail(codigo, conta);
+    const atualizada = await confirmarTrocaDeEmail(codigo);
     setConta(atualizada);
   }
 

@@ -1,4 +1,4 @@
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import FiltroItensPendentes from "../components/AdminComponents/FiltroItensPendentes";
@@ -10,7 +10,6 @@ import VerificacoesCref from "../components/AdminComponents/VerificacoesCref";
 const TIPOS_FILTRADOS = ["artigos", "quizzes", "professores", "exclusoes"];
 
 function ItensPendentesPages() {
-  const { usuario } = useOutletContext();
   const [parametros, setParametros] = useSearchParams();
   const tipoNoEndereco = parametros.get("tipo");
   const tipo = TIPOS_FILTRADOS.includes(tipoNoEndereco) ? tipoNoEndereco : "todos";
@@ -35,8 +34,8 @@ function ItensPendentesPages() {
       <FiltroItensPendentes tipo={tipo} aoMudar={mudarTipo} />
 
       <div className="flex flex-col gap-12">
-        {mostrar("artigos") && <FilaDeArtigos usuario={usuario} />}
-        {mostrar("quizzes") && <FilaDeQuizzes usuario={usuario} />}
+        {mostrar("artigos") && <FilaDeArtigos />}
+        {mostrar("quizzes") && <FilaDeQuizzes />}
         {mostrar("professores") && <VerificacoesCref />}
         {mostrar("exclusoes") && <PedidosDeExclusao />}
       </div>

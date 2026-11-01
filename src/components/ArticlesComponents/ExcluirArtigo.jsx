@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { excluirArtigo } from "../../services/artigoService";
 
-function ExcluirArtigo({ artigo, usuario, aoExcluir }) {
+function ExcluirArtigo({ artigo, aoExcluir }) {
   const [modalAberto, setModalAberto] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
@@ -17,7 +17,7 @@ function ExcluirArtigo({ artigo, usuario, aoExcluir }) {
     setErro(null);
 
     try {
-      await excluirArtigo(artigo.id, usuario);
+      await excluirArtigo(artigo.id);
       aoExcluir();
     } catch (err) {
       setErro(err.mensagem || "Não foi possível excluir o artigo.");

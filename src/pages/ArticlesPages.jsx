@@ -21,7 +21,7 @@ function ArticlesPages() {
   useEffect(() => {
     let ativo = true;
 
-    Promise.all([listarArtigos(usuario), listarCategorias()])
+    Promise.all([listarArtigos(), listarCategorias()])
       .then(([lista, listaCategorias]) => {
         if (!ativo) return;
         setArtigos(lista);
@@ -65,7 +65,6 @@ function ArticlesPages() {
         <NovoArtigo
           categorias={categorias}
           carregandoOpcoes={carregando}
-          usuario={usuario}
           aoCriar={adicionarArtigo}
         />
       )}

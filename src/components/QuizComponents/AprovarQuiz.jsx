@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { aprovarQuiz } from "../../services/quizService";
 
-function AprovarQuiz({ quiz, usuario, aoAprovar }) {
+function AprovarQuiz({ quiz, aoAprovar }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
 
@@ -10,7 +10,7 @@ function AprovarQuiz({ quiz, usuario, aoAprovar }) {
     setErro(null);
 
     try {
-      const atualizado = await aprovarQuiz(quiz.id, usuario);
+      const atualizado = await aprovarQuiz(quiz.id);
       aoAprovar(atualizado);
     } catch (err) {
       setErro(err.mensagem || "Não foi possível registrar a aprovação.");

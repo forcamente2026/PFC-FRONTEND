@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { aprovarArtigo } from "../../services/artigoService";
 
-function AprovarArtigo({ artigo, usuario, aoAprovar }) {
+function AprovarArtigo({ artigo, aoAprovar }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
 
@@ -10,7 +10,7 @@ function AprovarArtigo({ artigo, usuario, aoAprovar }) {
     setErro(null);
 
     try {
-      const atualizado = await aprovarArtigo(artigo.id, usuario);
+      const atualizado = await aprovarArtigo(artigo.id);
       alert(
         atualizado.status === "APROVADO_PELOS_PROFESSORES"
           ? "Aprovação registrada! Com ela, o artigo entrou no site."

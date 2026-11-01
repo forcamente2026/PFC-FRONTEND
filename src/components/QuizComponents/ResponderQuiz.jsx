@@ -15,7 +15,7 @@ function estiloDaAlternativa(correcao, alternativaId) {
   return "border-gray-700 opacity-70";
 }
 
-function ResponderQuiz({ quiz, usuario, aoResponder }) {
+function ResponderQuiz({ quiz, aoResponder }) {
   const [respostas, setRespostas] = useState({});
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
@@ -45,7 +45,7 @@ function ResponderQuiz({ quiz, usuario, aoResponder }) {
         questaoId,
         alternativaId,
       }));
-      const devolvido = await responderQuiz(quiz.id, lista, usuario);
+      const devolvido = await responderQuiz(quiz.id, lista);
       setResultado(devolvido);
       aoResponder();
     } catch (err) {
