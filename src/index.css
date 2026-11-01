@@ -32,4 +32,8 @@
   body {
     overflow-wrap: break-word;
   }
+
+  input[type="password"]::-ms-reveal {
+    display: none;
+  }
 }

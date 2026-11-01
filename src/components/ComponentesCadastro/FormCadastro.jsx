@@ -271,7 +271,7 @@ function FormCadastro() {
               className={styleInput}
             />
           </div>
-          <div className=" flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <div>
               <label htmlFor="dataNasc" className={styleLabel}>
                 Data de Nascimento*
@@ -363,7 +363,7 @@ function FormCadastro() {
             <section className="py-6">
               <CabecalhoSecao rotulo="Profissional" titulo="Formação" />
               <Cartao className="space-y-2">
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <div>
                     <label htmlFor="cref" className={styleLabel}>
                       CREF *
@@ -392,7 +392,7 @@ function FormCadastro() {
                             name="formacao"
                             value={formacao.formacao}
                             onChange={handleFormacaoChange}
-                            className={`${styleInput} bg-slate-800`}
+                            className={`${styleInput} w-full bg-slate-800`}
                             >
                               <option value ="">Selecione uma formação:</option>
                               {FORMACOES.map((opcao) => (
