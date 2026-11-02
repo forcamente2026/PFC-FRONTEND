@@ -27,7 +27,7 @@ function FormEsqueciSenha({ aoCodigoEnviado, aoVoltar }) {
 
   return (
     <form onSubmit={enviar} className="flex flex-col gap-3 items-center">
-      <h1 className="font-montserrat text-center text-4xl">RECUPERAR SENHA</h1>
+      <h2 className="font-montserrat text-center text-4xl">RECUPERAR SENHA</h2>
 
       <p className="max-w-sm text-center text-sm text-gray-300">
         Informe o e-mail da sua conta e enviaremos um código para você criar uma

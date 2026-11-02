@@ -31,7 +31,7 @@ function ArtigoForm({
   return (
     <form onSubmit={aoEnviar} className="p-4 text-2xl space-y-2">
       <div className="text-red-200 text-center font-montserrat">
-        <h1>{titulo}</h1>
+        <h2>{titulo}</h2>
       </div>
       <div className="w-full h-px bg-gray-300 mb-3"></div>
 

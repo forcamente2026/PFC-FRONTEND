@@ -70,10 +70,10 @@ function FilaDeArtigos() {
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h3 className="text-sm font-semibold tracking-[0.25em] text-red-200 uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.25em] text-red-200 uppercase">
           Artigos para revisar
           {!carregando && !erro && ` (${artigos.length})`}
-        </h3>
+        </h2>
         <p className="mt-1 text-sm text-gray-400">
           Artigos que esperam a decisão do administrador.
         </p>

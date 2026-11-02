@@ -361,7 +361,7 @@ function FormCadastro() {
           {profissional && (
             <>
             <section className="py-6">
-              <CabecalhoSecao rotulo="Profissional" titulo="Formação" />
+              <CabecalhoSecao rotulo="Profissional" titulo="Formação" nivel={2} />
               <Cartao className="space-y-2">
                 <div className="flex flex-wrap gap-3">
                   <div>
@@ -406,7 +406,7 @@ function FormCadastro() {
                     </Cartao>
                     </section>
             <section className="py-6">
-              <CabecalhoSecao rotulo="Localização" titulo="Endereço profissional" />
+              <CabecalhoSecao rotulo="Localização" titulo="Endereço profissional" nivel={2} />
               <Cartao className="space-y-4">
                 <p className="text-lg text-gray-300">
                   Comece pelo <strong className="text-red-200">CEP</strong>: o
