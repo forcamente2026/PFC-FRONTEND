@@ -6,7 +6,6 @@ import TabelaAuditoria from "../components/AdminComponents/TabelaAuditoria";
 import Paginacao from "../components/AdminComponents/Paginacao";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import {
-  EXPORTACAO_DISPONIVEL,
   buscarAuditoria,
   exportarCsv,
   listarAcoes,
@@ -109,15 +108,10 @@ function AuditoriaPages() {
       />
 
       <div className="mb-4 flex items-center justify-end gap-3">
-        {!EXPORTACAO_DISPONIVEL && (
-          <span className="text-sm text-gray-400">
-            Exportação disponível quando a API de auditoria estiver no ar.
-          </span>
-        )}
         <button
           type="button"
           onClick={exportar}
-          disabled={!EXPORTACAO_DISPONIVEL || exportando || registros.length === 0}
+          disabled={exportando || registros.length === 0}
           className="rounded-md bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {exportando ? "Exportando..." : "Exportar CSV"}

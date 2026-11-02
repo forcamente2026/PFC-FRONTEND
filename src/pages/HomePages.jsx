@@ -4,7 +4,7 @@ import { proposta } from "../components/ComponentesHome/dadosHome";
 function HomePages() {
   return (
     <div className="flex flex-col items-center p-1">
-      <img src="/images/logo_ofcial.png" alt="Logo" />
+      <img src="/images/logo_oficial.png" alt="Logo" />
 
       <div className="text-center font-montserrat text-white text-5xl">
         <h1>
