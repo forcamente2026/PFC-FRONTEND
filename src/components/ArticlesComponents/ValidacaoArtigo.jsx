@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ListaDeErros from "../QuizComponents/ListaDeErros";
 import { alterarStatusArtigo } from "../../services/artigoService";
 import { LIMITE_MOTIVO, STATUS_ARTIGO } from "./artigoCampos";
 
@@ -9,6 +10,7 @@ function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
   const [motivo, setMotivo] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
+  const [camposComErro, setCamposComErro] = useState([]);
 
   const emAnalise = SITUACOES_EM_ANALISE.includes(artigo.status);
   const quemAprovou = artigo.professoresQueAprovaram ?? [];
@@ -16,6 +18,7 @@ function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
   async function alterar(status) {
     setEnviando(true);
     setErro(null);
+    setCamposComErro([]);
 
     try {
       const atualizado = await alterarStatusArtigo(
@@ -28,6 +31,7 @@ function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
       aoAlterarStatus(atualizado);
     } catch (err) {
       setErro(err.mensagem || "Não foi possível alterar o status.");
+      setCamposComErro(err.campos ?? []);
     } finally {
       setEnviando(false);
     }
@@ -37,6 +41,7 @@ function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
     setRejeitando(false);
     setMotivo("");
     setErro(null);
+    setCamposComErro([]);
   }
 
   return (
@@ -56,11 +61,9 @@ function ValidacaoArtigo({ artigo, aoAlterarStatus }) {
         {quemAprovou.length > 0 && ` (${quemAprovou.join(", ")})`}
       </p>
 
-      {erro && (
-        <p role="alert" className="mt-2 text-sm text-red-500">
-          {erro}
-        </p>
-      )}
+      <div className="mt-2">
+        <ListaDeErros erro={erro} campos={camposComErro} />
+      </div>
 
       {emAnalise && !rejeitando && (
         <div className="mt-3 flex flex-wrap gap-3">

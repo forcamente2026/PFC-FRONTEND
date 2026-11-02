@@ -38,6 +38,7 @@ const ROTULOS_DE_CAMPO = {
   questoes: "Perguntas",
   artigos: "Leitura sugerida",
   respostas: "Respostas",
+  motivo: "Motivo da rejeição",
 };
 
 export function descreverCampo(campo) {

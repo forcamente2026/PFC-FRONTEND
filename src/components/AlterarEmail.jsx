@@ -132,7 +132,11 @@ function AlterarEmail({ emailAtual, aoSolicitar, aoConfirmar, aoFechar }) {
           >
             Voltar
           </button>
-          <button type="submit" disabled={enviando} className={ESTILO_BOTAO_PRIMARIO}>
+          <button
+            type="submit"
+            disabled={enviando || codigo.length < 4}
+            className={ESTILO_BOTAO_PRIMARIO}
+          >
             {enviando ? "Confirmando..." : "Confirmar"}
           </button>
         </div>
