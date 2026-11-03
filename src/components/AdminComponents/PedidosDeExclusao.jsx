@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import Modal from "../Modal";
 import EstadoRequisicao from "../progress/EstadoRequisicao";
 import ConfirmarAnonimizacao from "./ConfirmarAnonimizacao";
@@ -16,6 +17,7 @@ const ESTILO_ACAO_GRAVE =
   "rounded-md border border-red-500 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300 hover:bg-red-500/25 cursor-pointer";
 
 function PedidosDeExclusao() {
+  const { avisar } = useOutletContext();
   const [pedidos, setPedidos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
@@ -48,6 +50,11 @@ function PedidosDeExclusao() {
     setPedidos((atuais) =>
       atuais.filter((pedido) => pedido.id !== pedidoEscolhido.id),
     );
+    avisar({
+      tipo: "sucesso",
+      titulo: "Conta anonimizada",
+      mensagem: `Os dados pessoais de ${pedidoEscolhido.nomeCompleto} foram apagados.`,
+    });
     setPedidoEmAnonimizacao(null);
   }
 

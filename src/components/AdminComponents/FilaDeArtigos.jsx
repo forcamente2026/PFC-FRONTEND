@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import EstadoRequisicao from "../progress/EstadoRequisicao";
 import ArtigoNaFila from "./ArtigoNaFila";
 import { STATUS_ARTIGO } from "../ArticlesComponents/artigoCampos";
@@ -23,10 +24,10 @@ function situacaoDoArtigo(artigo) {
 }
 
 function FilaDeArtigos() {
+  const { avisar } = useOutletContext();
   const [artigos, setArtigos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
-  const [aviso, setAviso] = useState(null);
   const [idAberto, setIdAberto] = useState(null);
 
   useEffect(() => {
@@ -60,11 +61,14 @@ function FilaDeArtigos() {
       atuais.filter((artigo) => artigo.id !== atualizado.id),
     );
     setIdAberto(null);
-    setAviso(
-      atualizado.status === "APROVADO"
-        ? `"${atualizado.titulo}" foi aprovado.`
-        : `"${atualizado.titulo}" foi rejeitado.`,
-    );
+    avisar({
+      tipo: "sucesso",
+      titulo: atualizado.status === "APROVADO" ? "Artigo aprovado" : "Artigo rejeitado",
+      mensagem:
+        atualizado.status === "APROVADO"
+          ? `"${atualizado.titulo}" está publicado no site.`
+          : `"${atualizado.titulo}" foi rejeitado, e o autor vê o motivo.`,
+    });
   }
 
   return (
@@ -78,12 +82,6 @@ function FilaDeArtigos() {
           Artigos que esperam a decisão do administrador.
         </p>
       </div>
-
-      {aviso && (
-        <p role="status" className="text-sm text-green-400">
-          {aviso}
-        </p>
-      )}
 
       <EstadoRequisicao
         carregando={carregando}

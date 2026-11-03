@@ -4,14 +4,12 @@ import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroQuizzes from "../components/QuizComponents/FiltroQuizzes";
 import CardQuiz from "../components/QuizComponents/CardQuiz";
-import useAvisoDaNavegacao from "../hooks/useAvisoDaNavegacao";
 import { listarCategorias } from "../services/artigoService";
 import { listarNiveisDoQuiz, listarQuizzes } from "../services/quizService";
 import { podeEditar } from "../utils/papeis";
 
 function QuizzesPages() {
   const { usuario } = useOutletContext();
-  const aviso = useAvisoDaNavegacao();
   const podeCriar = podeEditar(usuario);
   const [quizzes, setQuizzes] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -62,12 +60,6 @@ function QuizzesPages() {
         titulo="Teste o que você aprendeu"
         descricao="Perguntas escritas pelos professores, com a leitura sugerida nos artigos do acervo."
       />
-
-      {aviso && (
-        <p role="status" className="mb-6 text-sm text-green-400">
-          {aviso}
-        </p>
-      )}
 
       {podeCriar && (
         <div className="mb-6 flex justify-end">

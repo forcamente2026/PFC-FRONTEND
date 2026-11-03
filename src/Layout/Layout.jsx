@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Modal from "../components/Modal";
 import AvisoCrefNoLogin from "../components/AvisoCrefNoLogin";
+import AvisoDeAcao from "../components/AvisoDeAcao";
 import Footer from "./Footer";
 import { lerSessao, gravarSessao, limparSessao, atualizarNomeDaSessao } from "../utils/sessao";
 import { buscarMinhaConta } from "../services/usuarioService";
@@ -12,6 +13,7 @@ const SITUACOES_COM_AVISO = ["PENDENTE", "REJEITADO"];
 function Layout () {
   const [usuario, setUsuario] = useState(lerSessao);
   const [avisoCref, setAvisoCref] = useState(null);
+  const [avisoDeAcao, setAvisoDeAcao] = useState(null);
   const navigate = useNavigate();
 
   function conferirVerificacaoDoCref() {
@@ -50,7 +52,7 @@ function Layout () {
     <div className="min-h-screen flex flex-col bg-slate-950">
       <NavBar usuario={usuario} aoEntrar={entrar} aoSair={sair} />
       <main className="flex-1">
-        <Outlet context ={{ usuario, aoRenomear: renomear }} />
+        <Outlet context ={{ usuario, aoRenomear: renomear, avisar: setAvisoDeAcao }} />
       </main>
       <Footer />
 
@@ -62,6 +64,12 @@ function Layout () {
             aoVerConta={verMinhaConta}
             aoFechar={() => setAvisoCref(null)}
           />
+        )}
+      </Modal>
+
+      <Modal isOpen={avisoDeAcao !== null} setCloseModal={() => setAvisoDeAcao(null)}>
+        {avisoDeAcao && (
+          <AvisoDeAcao {...avisoDeAcao} aoFechar={() => setAvisoDeAcao(null)} />
         )}
       </Modal>
     </div>

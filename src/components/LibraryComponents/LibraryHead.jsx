@@ -37,7 +37,6 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, pode
       const novo = await criarExercicio(exercicioParaEnvio(form));
       aoCriar(novo);
       fecharModal();
-      alert("Exercício cadastrado com sucesso!");
     } catch (err) {
       setErro(err.mensagem || "Não foi possível cadastrar o exercício.");
     } finally {

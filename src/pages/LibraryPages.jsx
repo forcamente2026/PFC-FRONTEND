@@ -17,7 +17,7 @@ function LibraryPages() {
   const [niveis, setNiveis] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
-  const { usuario } = useOutletContext();
+  const { usuario, avisar } = useOutletContext();
   const podeEditar = PAPEIS_EDITORES.includes(usuario?.papel);
 
   useEffect(() => {
@@ -60,6 +60,11 @@ function LibraryPages() {
   }
 
   function adicionarExercicio(novo) {
+    avisar({
+      tipo: "sucesso",
+      titulo: "Exercício cadastrado",
+      mensagem: "O exercício já aparece na biblioteca.",
+    });
     if (!novo?.id) {
       recarregarLista();
       return;
@@ -71,10 +76,21 @@ function LibraryPages() {
     setExercicios((prev) =>
       prev.map((item) => (item.id === atualizado.id ? atualizado : item)),
     );
+    avisar({
+      tipo: "sucesso",
+      titulo: "Exercício alterado",
+      mensagem: `"${atualizado.nome}" foi salvo com as alterações.`,
+    });
   }
 
   function removerExercicio(id) {
+    const nome = exercicios.find((item) => item.id === id)?.nome;
     setExercicios((prev) => prev.filter((item) => item.id !== id));
+    avisar({
+      tipo: "sucesso",
+      titulo: "Exercício excluído",
+      mensagem: nome ? `"${nome}" foi excluído da biblioteca.` : "O exercício foi excluído da biblioteca.",
+    });
   }
 
   return (

@@ -8,7 +8,6 @@ import AprovarQuiz from "../components/QuizComponents/AprovarQuiz";
 import ValidacaoQuiz from "../components/QuizComponents/ValidacaoQuiz";
 import ExcluirQuiz from "../components/QuizComponents/ExcluirQuiz";
 import { etiquetaDoArtigo } from "../components/ArticlesComponents/artigoCampos";
-import useAvisoDaNavegacao from "../hooks/useAvisoDaNavegacao";
 import { buscarQuiz } from "../services/quizService";
 import { podeValidar } from "../utils/papeis";
 
@@ -22,13 +21,11 @@ function textoDaNota(nota) {
 
 function QuizPages() {
   const { id } = useParams();
-  const { usuario } = useOutletContext();
+  const { usuario, avisar } = useOutletContext();
   const navigate = useNavigate();
-  const avisoDaNavegacao = useAvisoDaNavegacao();
   const [quiz, setQuiz] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
-  const [aviso, setAviso] = useState(avisoDaNavegacao);
 
   useEffect(() => {
     let ativo = true;
@@ -61,16 +58,35 @@ function QuizPages() {
 
   function aoAprovar(atualizado) {
     setQuiz(atualizado);
-    setAviso("Sua aprovação foi registrada.");
+    avisar({
+      tipo: "sucesso",
+      titulo: "Aprovação registrada",
+      mensagem:
+        atualizado.status === "APROVADO_PELOS_PROFESSORES"
+          ? "Com a sua aprovação, o quiz entrou no site."
+          : `O quiz tem agora ${atualizado.aprovacoesDeProfessores} de ${atualizado.aprovacoesNecessarias} aprovações.`,
+    });
   }
 
   function aoAlterarStatus(atualizado) {
     setQuiz(atualizado);
-    setAviso(atualizado.status === "APROVADO" ? "Quiz aprovado." : "Quiz rejeitado.");
+    avisar({
+      tipo: "sucesso",
+      titulo: atualizado.status === "APROVADO" ? "Quiz aprovado" : "Quiz rejeitado",
+      mensagem:
+        atualizado.status === "APROVADO"
+          ? `"${atualizado.titulo}" está publicado no site.`
+          : `"${atualizado.titulo}" foi rejeitado, e o autor vê o motivo.`,
+    });
   }
 
   function aoExcluir(titulo) {
-    navigate("/quiz", { state: { aviso: `"${titulo}" foi excluído.` } });
+    avisar({
+      tipo: "sucesso",
+      titulo: "Quiz excluído",
+      mensagem: `"${titulo}" foi excluído.`,
+    });
+    navigate("/quiz");
   }
 
   const etiquetaStatus = quiz ? etiquetaDoArtigo(quiz) : null;
@@ -150,11 +166,6 @@ function QuizPages() {
                 </div>
               )}
 
-              {aviso && (
-                <p role="status" className="text-sm text-green-400">
-                  {aviso}
-                </p>
-              )}
 
               {quiz.podeEditar && (
                 <div className="flex flex-wrap gap-3">

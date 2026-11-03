@@ -34,23 +34,28 @@ function valoresDoQuiz(quiz, idsPublicados) {
 
 function avisoAoSalvar(quiz, editando) {
   if (quiz.status === "PENDENTE") {
-    return editando
-      ? "Quiz atualizado! Ele aparece no site depois de aprovado."
-      : "Quiz enviado! Ele aparece no site depois de aprovado.";
+    return {
+      tipo: "sucesso",
+      titulo: editando ? "Quiz atualizado" : "Quiz enviado",
+      mensagem: `"${quiz.titulo}" aparece no site depois de aprovado.`,
+    };
   }
-  return editando ? "Quiz atualizado!" : "Quiz publicado!";
+  return {
+    tipo: "sucesso",
+    titulo: editando ? "Quiz atualizado" : "Quiz publicado",
+    mensagem: `"${quiz.titulo}" já está no site.`,
+  };
 }
 
 function QuizFormPages() {
   const { id } = useParams();
   const editando = Boolean(id);
-  const { usuario } = useOutletContext();
+  const { usuario, avisar } = useOutletContext();
   const navigate = useNavigate();
   const [opcoes, setOpcoes] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [erroAoCarregar, setErroAoCarregar] = useState(null);
   const [enviando, setEnviando] = useState(false);
-  const [erro, setErro] = useState(null);
   const [camposComErro, setCamposComErro] = useState([]);
 
   useEffect(() => {
@@ -92,7 +97,6 @@ function QuizFormPages() {
 
   async function salvar(dados) {
     setEnviando(true);
-    setErro(null);
     setCamposComErro([]);
 
     try {
@@ -100,10 +104,18 @@ function QuizFormPages() {
       const salvo = editando
         ? await editarQuiz(id, corpo)
         : await criarQuiz(corpo);
-      navigate(`/quiz/${salvo.id}`, { state: { aviso: avisoAoSalvar(salvo, editando) } });
+      avisar(avisoAoSalvar(salvo, editando));
+      navigate(`/quiz/${salvo.id}`);
     } catch (err) {
-      setErro(err.mensagem || "Não foi possível salvar o quiz.");
-      setCamposComErro(err.campos ?? []);
+      const campos = err.campos ?? [];
+      setCamposComErro(campos);
+      avisar({
+        tipo: "erro",
+        titulo: "Quiz não salvo",
+        mensagem: campos.length
+          ? campos.map((campo) => campo.mensagem).join(" ")
+          : err.mensagem || "Não foi possível salvar o quiz.",
+      });
     } finally {
       setEnviando(false);
     }
@@ -159,7 +171,6 @@ function QuizFormPages() {
                   niveis={opcoes.niveis}
                   artigos={opcoes.artigos}
                   enviando={enviando}
-                  erro={erro}
                   camposComErro={camposComErro}
                   textoBotao={textoBotao}
                   textoBotaoEnviando={editando ? "Salvando..." : "Enviando..."}

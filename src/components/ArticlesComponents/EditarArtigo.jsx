@@ -58,11 +58,6 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, aoEditar }) {
       const atualizado = await editarArtigo(artigo.id, artigoParaEnvio(form));
       aoEditar(atualizado);
       fecharModal();
-      alert(
-        atualizado.status === "PENDENTE"
-          ? "Artigo atualizado! Ele aparece no site depois de aprovado."
-          : "Artigo atualizado!",
-      );
     } catch (err) {
       setErro(err.mensagem || "Não foi possível salvar o artigo.");
       setCamposComErro(err.campos ?? []);

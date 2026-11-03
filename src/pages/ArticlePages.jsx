@@ -13,7 +13,7 @@ import { podeValidar } from "../utils/papeis";
 
 function ArticlePages() {
   const { id } = useParams();
-  const { usuario } = useOutletContext();
+  const { usuario, avisar } = useOutletContext();
   const navigate = useNavigate();
   const [artigo, setArtigo] = useState(null);
   const [categorias, setCategorias] = useState([]);
@@ -44,7 +44,51 @@ function ArticlePages() {
     };
   }, [id, usuario]);
 
-  
+  function aoEditar(atualizado) {
+    setArtigo(atualizado);
+    avisar({
+      tipo: "sucesso",
+      titulo: "Artigo atualizado",
+      mensagem:
+        atualizado.status === "PENDENTE"
+          ? "As alterações foram salvas. O artigo aparece no site depois de aprovado."
+          : "As alterações foram salvas.",
+    });
+  }
+
+  function aoAprovar(atualizado) {
+    setArtigo(atualizado);
+    avisar({
+      tipo: "sucesso",
+      titulo: "Aprovação registrada",
+      mensagem:
+        atualizado.status === "APROVADO_PELOS_PROFESSORES"
+          ? "Com a sua aprovação, o artigo entrou no site."
+          : `O artigo tem agora ${atualizado.aprovacoesDeProfessores} de ${atualizado.aprovacoesNecessarias} aprovações.`,
+    });
+  }
+
+  function aoAlterarStatus(atualizado) {
+    setArtigo(atualizado);
+    avisar({
+      tipo: "sucesso",
+      titulo: atualizado.status === "APROVADO" ? "Artigo aprovado" : "Artigo rejeitado",
+      mensagem:
+        atualizado.status === "APROVADO"
+          ? `"${atualizado.titulo}" está publicado no site.`
+          : `"${atualizado.titulo}" foi rejeitado, e o autor vê o motivo.`,
+    });
+  }
+
+  function aoExcluir() {
+    avisar({
+      tipo: "sucesso",
+      titulo: "Artigo excluído",
+      mensagem: `"${artigo?.titulo}" foi excluído.`,
+    });
+    navigate("/articles");
+  }
+
   const etiquetaStatus = artigo ? etiquetaDoArtigo(artigo) : null;
   const mostrarValidacao = Boolean(artigo) && podeValidar(usuario);
 
@@ -128,28 +172,27 @@ function ArticlePages() {
                 </div>
               )}
 
-              
               {artigo.podeEditar && (
                 <div className="flex flex-wrap gap-3">
                   <EditarArtigo
                     artigo={artigo}
                     categorias={categorias}
                     carregandoOpcoes={carregando}
-                    aoEditar={setArtigo}
+                    aoEditar={aoEditar}
                   />
                   <ExcluirArtigo
                     artigo={artigo}
-                    aoExcluir={() => navigate("/articles")}
+                    aoExcluir={aoExcluir}
                   />
                 </div>
               )}
 
               {artigo.podeAprovar && (
-                <AprovarArtigo artigo={artigo} aoAprovar={setArtigo} />
+                <AprovarArtigo artigo={artigo} aoAprovar={aoAprovar} />
               )}
 
               {mostrarValidacao && (
-                <ValidacaoArtigo artigo={artigo} aoAlterarStatus={setArtigo} />
+                <ValidacaoArtigo artigo={artigo} aoAlterarStatus={aoAlterarStatus} />
               )}
             </Cartao>
           )}

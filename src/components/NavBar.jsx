@@ -138,14 +138,23 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
               </button>
             </div>
           ) : (
-            <button
-              type="button"
-              onClick={abrirLogin}
-              className="bg-red-500 rounded-md py-2 px-4 font-bold flex items-center justify-center gap-2 hover:bg-red-900 cursor-pointer"
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+              <NavLink
+                to="/cadastro"
+                onClick={fecharMenu}
+                className="rounded-md border-2 border-red-500 py-2 px-4 font-bold text-center hover:bg-red-500 hover:text-white"
               >
-                Login
-                <UserKey />
-            </button>
+                Cadastre-se
+              </NavLink>
+              <button
+                type="button"
+                onClick={abrirLogin}
+                className="bg-red-500 rounded-md py-2 px-4 font-bold flex items-center justify-center gap-2 hover:bg-red-900 cursor-pointer"
+                >
+                  Login
+                  <UserKey />
+              </button>
+            </div>
           )}
         </div>
       </div>

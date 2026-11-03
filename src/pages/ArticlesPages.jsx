@@ -9,7 +9,7 @@ import { listarArtigos, listarCategorias } from "../services/artigoService";
 import { PAPEIS_EDITORES } from "../utils/papeis";
 
 function ArticlesPages() {
-  const { usuario } = useOutletContext();
+  const { usuario, avisar } = useOutletContext();
   const podeEditar = PAPEIS_EDITORES.includes(usuario?.papel);
   const [artigos, setArtigos] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -42,6 +42,19 @@ function ArticlesPages() {
 
   function adicionarArtigo(novo) {
     setArtigos((prev) => [...prev, novo]);
+    avisar(
+      novo.status === "PENDENTE"
+        ? {
+            tipo: "sucesso",
+            titulo: "Artigo enviado",
+            mensagem: `"${novo.titulo}" aparece no site depois de aprovado.`,
+          }
+        : {
+            tipo: "sucesso",
+            titulo: "Artigo publicado",
+            mensagem: `"${novo.titulo}" já está no site.`,
+          },
+    );
   }
 
   const buscaNormalizada = busca.trim().toLowerCase();

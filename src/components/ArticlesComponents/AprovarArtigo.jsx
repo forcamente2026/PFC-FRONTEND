@@ -1,24 +1,23 @@
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { aprovarArtigo } from "../../services/artigoService";
 
 function AprovarArtigo({ artigo, aoAprovar }) {
+  const { avisar } = useOutletContext();
   const [enviando, setEnviando] = useState(false);
-  const [erro, setErro] = useState(null);
 
   async function aprovar() {
     setEnviando(true);
-    setErro(null);
 
     try {
       const atualizado = await aprovarArtigo(artigo.id);
-      alert(
-        atualizado.status === "APROVADO_PELOS_PROFESSORES"
-          ? "Aprovação registrada! Com ela, o artigo entrou no site."
-          : "Aprovação registrada!",
-      );
       aoAprovar(atualizado);
     } catch (err) {
-      setErro(err.mensagem || "Não foi possível registrar a aprovação.");
+      avisar({
+        tipo: "erro",
+        titulo: "Aprovação não registrada",
+        mensagem: err.mensagem || "Não foi possível registrar a aprovação.",
+      });
     } finally {
       setEnviando(false);
     }
@@ -35,12 +34,6 @@ function AprovarArtigo({ artigo, aoAprovar }) {
         completar as {artigo.aprovacoesNecessarias} ou quando o administrador
         aprovar.
       </p>
-
-      {erro && (
-        <p role="alert" className="mt-2 text-sm text-red-500">
-          {erro}
-        </p>
-      )}
 
       <button
         type="button"

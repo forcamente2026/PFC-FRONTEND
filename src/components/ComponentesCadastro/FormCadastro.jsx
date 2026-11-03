@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import ForcaSenha from "./ForcaSenha";
 import CampoSenha from "../CampoSenha";
 import { avaliarSenha } from "./senhaRegras";
@@ -93,6 +93,7 @@ function FormCadastro() {
   const [erro, setErro] = useState(null);
   const [camposComErro, setCamposComErro] = useState([]);
   const [versoes, setVersoes] = useState(null);
+  const { avisar } = useOutletContext();
 
   const ultimoCepBuscado = useRef("");
 
@@ -239,11 +240,24 @@ function FormCadastro() {
 
     try {
       await criarUsuario(usuario);
-      alert("Cadastro realizado com sucesso");
+      avisar({
+        tipo: "sucesso",
+        titulo: "Cadastro realizado",
+        mensagem: profissional
+          ? `Sua conta foi criada com o e-mail ${form.email.trim().toLowerCase()}. Até um administrador conferir o seu CREF, ela tem as permissões de aluno. Para entrar, use o botão Login no topo da página.`
+          : `Sua conta foi criada com o e-mail ${form.email.trim().toLowerCase()}. Para entrar, use o botão Login no topo da página.`,
+      });
       limparFormulario();
     } catch (err) {
-      setErro(err.mensagem || "Erro ao realizar cadastro. Tente novamente mais tarde.");
-      setCamposComErro(err.campos ?? []);
+      const campos = err.campos ?? [];
+      setCamposComErro(campos);
+      avisar({
+        tipo: "erro",
+        titulo: "Cadastro não realizado",
+        mensagem: campos.length
+          ? campos.map((campo) => campo.mensagem).join(" ")
+          : err.mensagem || "Erro ao realizar cadastro. Tente novamente mais tarde.",
+      });
     } finally {
       setEnviando(false);
     }
