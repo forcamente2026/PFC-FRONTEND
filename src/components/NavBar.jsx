@@ -35,6 +35,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
   const [menuAberto, setMenuAberto] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
   const [avisoAberto, setAvisoAberto] = useState(false);
+  const [destinoDoLogin, setDestinoDoLogin] = useState(null);
 
   useEffect(() => {
     if (!menuAberto) return;
@@ -62,6 +63,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
 
   function abrirLogin() {
     setMenuAberto(false);
+    setDestinoDoLogin(null);
     setModalAberto(true);
   }
 
@@ -78,9 +80,10 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
     setAvisoAberto(false);
   }
 
-  function aoClicarLink(evento, protegida) {
+  function aoClicarLink(evento, protegida, para) {
     if (protegida && !usuario) {
       evento.preventDefault();
+      setDestinoDoLogin(para);
       setAvisoAberto(true);
       return;
     }
@@ -118,10 +121,10 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
             ).map(({ para, rotulo, exato, protegida }) => (
               <NavLink
                 key={para}
-                to={para}
+                to={para === "/" && usuario ? "/inicio" : para}
                 end={exato}
                 className={linkClass}
-                onClick={(evento) => aoClicarLink(evento, protegida)}
+                onClick={(evento) => aoClicarLink(evento, protegida, para)}
               >
                 {rotulo}
               </NavLink>
@@ -164,7 +167,10 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
       </div>
 
       <ModalLogin isOpen={modalAberto} setCloseModal={fecharLogin}>
-        <Autenticacao aoFechar={fecharLogin} aoEntrar={aoEntrar} />
+        <Autenticacao
+          aoFechar={fecharLogin}
+          aoEntrar={(sessao) => aoEntrar(sessao, destinoDoLogin)}
+        />
       </ModalLogin>
 
       <ModalLogin isOpen={avisoAberto} setCloseModal={fecharAviso}>
