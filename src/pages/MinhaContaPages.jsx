@@ -10,6 +10,7 @@ import RenovarCref from "../components/RenovarCref";
 import EditarMeusDados from "../components/EditarMeusDados";
 import AlterarSenha from "../components/AlterarSenha";
 import AlterarEmail from "../components/AlterarEmail";
+import BaixarMeusDados from "../components/BaixarMeusDados";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
@@ -274,6 +275,24 @@ function MinhaContaPages() {
 
               </Cartao>
             </section>
+
+            {!anonimizada && (
+              <section className="py-4">
+                <Cartao className="space-y-4">
+                  <h2 className={ESTILO_SUBTITULO}>Portabilidade dos dados</h2>
+                  <p className="text-sm text-gray-300">
+                    Baixe uma cópia dos seus dados para guardar ou levar a outro serviço.
+                    É o seu direito de portabilidade, previsto no art. 18 da LGPD.
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    O arquivo vem em JSON, um formato aberto, com os dados da sua conta e
+                    os seus resultados nos quizzes. Para o professor, vêm também os artigos
+                    e os quizzes que ele enviou.
+                  </p>
+                  <BaixarMeusDados formacoes={formacoes} className={ESTILO_BOTAO_SECUNDARIO} />
+                </Cartao>
+              </section>
+            )}
 
             {!administrador && !anonimizada && (
               <section className="py-4">
