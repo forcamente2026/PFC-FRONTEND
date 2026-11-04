@@ -135,6 +135,7 @@ function MinhaContaPages() {
   const professor = conta?.papel === "PROFESSOR";
   const administrador = conta?.papel === "ADMINISTRADOR";
   const pedidoPendente = Boolean(conta?.anonimizacaoSolicitadaEm);
+  const anonimizada = Boolean(conta?.anonimizadoEm);
   const descricaoFormacao =
     formacoes.find((opcao) => opcao.codigo === conta?.formacao)?.descricao ??
     conta?.formacao;
@@ -217,34 +218,41 @@ function MinhaContaPages() {
                   </>
                 )}
 
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setEdicaoAberta(true)}
-                    className={ESTILO_BOTAO_SECUNDARIO}
-                  >
-                    Editar meus dados
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSenhaAberta(true)}
-                    className={ESTILO_BOTAO_SECUNDARIO}
-                  >
-                    Alterar senha
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEmailAberto(true)}
-                    className={ESTILO_BOTAO_SECUNDARIO}
-                  >
-                    Alterar e-mail
-                  </button>
-                </div>
+                {anonimizada ? (
+                  <p className="rounded-md border border-red-500 p-3 text-sm text-red-200">
+                    Conta anonimizada em {formatarDataCurta(conta.anonimizadoEm)}. Os
+                    dados pessoais foram apagados e não podem mais ser alterados.
+                  </p>
+                ) : (
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setEdicaoAberta(true)}
+                      className={ESTILO_BOTAO_SECUNDARIO}
+                    >
+                      Editar meus dados
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSenhaAberta(true)}
+                      className={ESTILO_BOTAO_SECUNDARIO}
+                    >
+                      Alterar senha
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEmailAberto(true)}
+                      className={ESTILO_BOTAO_SECUNDARIO}
+                    >
+                      Alterar e-mail
+                    </button>
+                  </div>
+                )}
 
               </Cartao>
             </section>
 
-            {!administrador && (
+            {!administrador && !anonimizada && (
               <section className="py-4">
                 <Cartao className="space-y-4 border-red-900">
                   <h2 className={ESTILO_SUBTITULO}>Excluir minha conta</h2>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "../Modal";
 import ExercicioForm from "./ExercicioForm";
-import { EXERCICIO_VAZIO, validarExercicio } from "./exercicioCampos";
+import { EXERCICIO_VAZIO, exercicioParaEnvio, validarExercicio } from "./exercicioCampos";
 import { criarExercicio } from "../../services/exercicioService";
 
 function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, podeEditar }) {
@@ -34,7 +34,7 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, pode
     setErro(null);
 
     try {
-      const novo = await criarExercicio(form);
+      const novo = await criarExercicio(exercicioParaEnvio(form));
       aoCriar(novo);
       fecharModal();
       alert("Exercício cadastrado com sucesso!");

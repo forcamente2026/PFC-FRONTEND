@@ -5,6 +5,7 @@ import Modal from "../Modal";
 import ExercicioForm from "./ExercicioForm";
 import {
   EXERCICIO_VAZIO,
+  exercicioParaEnvio,
   exercicioParaFormulario,
   validarExercicio,
 } from "./exercicioCampos";
@@ -116,8 +117,9 @@ function CardsLibrary({
     setErroAcao(null);
 
     try {
-      const resposta = await atualizarExercicio(exercicioEmEdicao.id, form);
-      aoAtualizar(resposta?.id ? resposta : { ...exercicioEmEdicao, ...form });
+      const enviado = exercicioParaEnvio(form);
+      const resposta = await atualizarExercicio(exercicioEmEdicao.id, enviado);
+      aoAtualizar(resposta?.id ? resposta : { ...exercicioEmEdicao, ...enviado });
       fecharEdicao();
       alert("Alterado com sucesso!")
     } catch (err) {
@@ -203,9 +205,9 @@ function CardsLibrary({
         setCloseModal={fecharExclusao}
       >
         <div className="p-4 max-w-md space-y-4">
-          <h1 className="text-red-200 text-center font-montserrat text-2xl">
+          <h2 className="text-red-200 text-center font-montserrat text-2xl">
             EXCLUIR EXERCICIO
-          </h1>
+          </h2>
           <div className="w-full h-px bg-gray-300"></div>
 
           <p className="text-white">

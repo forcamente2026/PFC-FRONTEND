@@ -71,10 +71,10 @@ function VerificacoesCref() {
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h3 className="text-sm font-semibold tracking-[0.25em] text-red-200 uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.25em] text-red-200 uppercase">
           Professores aguardando verificação
           {!carregando && !erro && ` (${professores.length})`}
-        </h3>
+        </h2>
         <p className="mt-1 text-sm text-gray-400">
           Contas de professor com o CREF ainda não conferido. Até a aprovação, elas
           têm as permissões de aluno.

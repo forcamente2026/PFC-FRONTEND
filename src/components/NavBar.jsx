@@ -82,7 +82,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
         className="flex flex-wrap items-center px-6 py-4 lg:flex-nowrap lg:px-4"
         onMouseDown={(evento) => evento.stopPropagation()}
       >
-        <h1 className="text-3xl p-4 lg:pl-0 lg:pr-2">FORÇAMENTE</h1>
+        <p className="text-3xl p-4 lg:pl-0 lg:pr-2">FORÇAMENTE</p>
 
         <button
           type="button"

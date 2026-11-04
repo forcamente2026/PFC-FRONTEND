@@ -54,10 +54,10 @@ function PedidosDeExclusao() {
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h3 className="text-sm font-semibold tracking-[0.25em] text-red-200 uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.25em] text-red-200 uppercase">
           Pedidos de exclusão de conta
             {!carregando && !erro && ` (${pedidos.length})`}
-        </h3>
+        </h2>
         <p className="mt-1 text-sm text-gray-400">
           Contas cujo dono pediu a exclusão. Anonimizar apaga os dados pessoais
           e não pode ser desfeito.

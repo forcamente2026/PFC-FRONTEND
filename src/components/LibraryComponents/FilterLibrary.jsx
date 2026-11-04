@@ -21,7 +21,7 @@ function FilterLibrary({ grupoSelecionado, aoSelecionar }) {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 flex flex-wrap items-center justify-center gap-4 mb-15">
-      <h1 className="font-medium text-2xl text-red-200">Grupos Musculares:</h1>
+      <h2 className="font-medium text-2xl text-red-200">Grupos Musculares:</h2>
 
       <button
         type="button"

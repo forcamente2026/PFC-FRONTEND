@@ -23,6 +23,10 @@ export function exercicioParaFormulario(exercicio) {
   );
 }
 
+export function exercicioParaEnvio(form) {
+  return { ...form, nome: form.nome.trim() };
+}
+
 export function validarExercicio(form) {
   if (
     !form.nome.trim() ||

@@ -41,7 +41,7 @@ function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) 
   }
   return (
     <form onSubmit={entrar} className="flex flex-col gap-3 items-center">
-      <h1 className="font-montserrat text-center text-4xl">LOGIN</h1>
+      <h2 className="font-montserrat text-center text-4xl">LOGIN</h2>
 
       <div className="flex flex-col self-stretch">
         <label htmlFor="email" className="text-2xl font-light">

@@ -36,7 +36,7 @@ function FormRedefinirSenha({ email, aoConcluir, aoVoltar }) {
 
   return (
     <form onSubmit={enviar} className="flex flex-col gap-3 items-center">
-      <h1 className="font-montserrat text-center text-4xl">NOVA SENHA</h1>
+      <h2 className="font-montserrat text-center text-4xl">NOVA SENHA</h2>
 
       <p className="max-w-sm text-center text-sm text-gray-300">
         Se <span className="font-semibold text-red-200">{email}</span> estiver
