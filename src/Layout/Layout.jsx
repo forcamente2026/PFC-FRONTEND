@@ -26,10 +26,11 @@ function Layout () {
       .catch(() => {});
   }
 
-  function entrar(resposta) {
+  function entrar(resposta, destino) {
     gravarSessao(resposta);
     setUsuario({ id: resposta.id, nomeCompleto: resposta.nomeCompleto, papel: resposta.papel });
     if (resposta.papel === "ALUNO") conferirVerificacaoDoCref();
+    navigate(destino ?? "/inicio");
   }
 
   function renomear(nomeCompleto) {

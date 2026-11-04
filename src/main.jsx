@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource/montserrat/900.css";
 import "./index.css";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, redirect, RouterProvider } from "react-router-dom";
 import HomePages from "./pages/HomePages.jsx";
 import AboutPages from "./pages/AboutPages.jsx";
 import LibraryPages from "./pages/LibraryPages.jsx";
@@ -22,13 +22,16 @@ import QuizzesPages from "./pages/QuizzesPages.jsx";
 import QuizPages from "./pages/QuizPages.jsx";
 import QuizFormPages from "./pages/QuizFormPages.jsx";
 import RotaPorPapel from "./components/RotaPorPapel.jsx";
+import InicioPages from "./pages/InicioPages.jsx";
 import { PAPEIS_EDITORES, PAPEIS_VALIDADORES } from "./utils/papeis.js";
+import { lerSessao } from "./utils/sessao.js";
 
 const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: "/", element: <HomePages /> },
+      { path: "/", element: <HomePages />, loader: () => (lerSessao() ? redirect("/inicio") : null) },
+      { path: "/inicio", element: <RotaProtegida><InicioPages /></RotaProtegida> },
       { path: "/cadastro", element: <Cadastro /> },
       { path: "/termos-de-uso", element: <TermosPages /> },
       { path: "/politica-de-privacidade", element: <PoliticaPages /> },
