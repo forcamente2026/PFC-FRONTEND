@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import Modal from "../Modal";
 import EstadoRequisicao from "../progress/EstadoRequisicao";
 import DecidirVerificacaoCref from "./DecidirVerificacaoCref";
@@ -20,11 +21,11 @@ function descricaoDaFormacao(codigo, formacoes) {
 }
 
 function VerificacoesCref() {
+  const { avisar } = useOutletContext();
   const [professores, setProfessores] = useState([]);
   const [formacoes, setFormacoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
-  const [aviso, setAviso] = useState(null);
   const [professorEmVerificacao, setProfessorEmVerificacao] = useState(null);
 
   useEffect(() => {
@@ -61,11 +62,14 @@ function VerificacoesCref() {
     await decidirVerificacaoCref(professor.id, status, motivo);
     setProfessores((atuais) => atuais.filter((item) => item.id !== professor.id));
     setProfessorEmVerificacao(null);
-    setAviso(
-      status === "APROVADO"
-        ? `O CREF de ${professor.nomeCompleto} foi aprovado.`
-        : `O CREF de ${professor.nomeCompleto} foi rejeitado.`,
-    );
+    avisar({
+      tipo: "sucesso",
+      titulo: status === "APROVADO" ? "CREF aprovado" : "CREF rejeitado",
+      mensagem:
+        status === "APROVADO"
+          ? `O CREF de ${professor.nomeCompleto} foi aprovado. As permissões de professor valem a partir do próximo login.`
+          : `O CREF de ${professor.nomeCompleto} foi rejeitado. O professor vê o motivo ao entrar.`,
+    });
   }
 
   return (
@@ -80,12 +84,6 @@ function VerificacoesCref() {
           têm as permissões de aluno.
         </p>
       </div>
-
-      {aviso && (
-        <p role="status" className="text-sm text-green-400">
-          {aviso}
-        </p>
-      )}
 
       <EstadoRequisicao
         carregando={carregando}

@@ -7,6 +7,7 @@ import FiltroUsuarios from "../components/AdminComponents/FiltroUsuarios";
 import TabelaUsuarios from "../components/AdminComponents/TabelaUsuarios";
 import FormEdicaoUsuario from "../components/AdminComponents/FormEdicaoUsuario";
 import ConfirmarAnonimizacao from "../components/AdminComponents/ConfirmarAnonimizacao";
+import ConfirmarSituacao from "../components/AdminComponents/ConfirmarSituacao";
 import Paginacao from "../components/AdminComponents/Paginacao";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import {
@@ -24,7 +25,7 @@ const FILTROS_VAZIOS = { busca: "", papel: "", ativo: "" };
 const ESPERA_DA_BUSCA = 400;
 
 function UsuariosPages() {
-  const { usuario } = useOutletContext();
+  const { usuario, avisar } = useOutletContext();
 
   const [filtros, setFiltros] = useState(FILTROS_VAZIOS);
   const [buscaAplicada, setBuscaAplicada] = useState("");
@@ -35,6 +36,7 @@ function UsuariosPages() {
   const [erro, setErro] = useState(null);
   const [usuarioEmEdicao, setUsuarioEmEdicao] = useState(null);
   const [usuarioEmAnonimizacao, setUsuarioEmAnonimizacao] = useState(null);
+  const [usuarioEmAlteracao, setUsuarioEmAlteracao] = useState(null);
   const [idEmOperacao, setIdEmOperacao] = useState(null);
 
   const [versao, setVersao] = useState(0);
@@ -106,33 +108,46 @@ function UsuariosPages() {
 
   async function salvar(dados) {
     await atualizarUsuario(usuarioEmEdicao.id, dados);
+    avisar({
+      tipo: "sucesso",
+      titulo: "Dados salvos",
+      mensagem: `Os dados de ${usuarioEmEdicao.nomeCompleto} foram atualizados.`,
+    });
     setUsuarioEmEdicao(null);
     setVersao((atual) => atual + 1);
   }
 
   async function anonimizar() {
     await anonimizarUsuario(usuarioEmAnonimizacao.id);
+    avisar({
+      tipo: "sucesso",
+      titulo: "Conta anonimizada",
+      mensagem: `Os dados pessoais de ${usuarioEmAnonimizacao.nomeCompleto} foram apagados.`,
+    });
     setUsuarioEmAnonimizacao(null);
     setVersao((atual) => atual + 1);
   }
 
-  async function alternarAtivo(usuario) {
-    const confirmado = window.confirm(
-      usuario.ativo
-        ? `Inativar a conta de ${usuario.nomeCompleto}?\n\nA pessoa deixa de conseguir entrar a partir do próximo login. Nenhum dado é apagado — isto não é a exclusão da LGPD.`
-        : `Reativar a conta de ${usuario.nomeCompleto}?`,
-    );
-
-    if (!confirmado) return;
-
-    setIdEmOperacao(usuario.id);
-    setErro(null);
+  async function alterarSituacao() {
+    setIdEmOperacao(usuarioEmAlteracao.id);
 
     try {
-      await alterarAtivo(usuario.id, !usuario.ativo);
+      await alterarAtivo(usuarioEmAlteracao.id, !usuarioEmAlteracao.ativo);
+      avisar(
+        usuarioEmAlteracao.ativo
+          ? {
+              tipo: "sucesso",
+              titulo: "Conta inativada",
+              mensagem: `${usuarioEmAlteracao.nomeCompleto} não consegue mais entrar a partir do próximo login.`,
+            }
+          : {
+              tipo: "sucesso",
+              titulo: "Conta reativada",
+              mensagem: `${usuarioEmAlteracao.nomeCompleto} já pode entrar de novo.`,
+            },
+      );
+      setUsuarioEmAlteracao(null);
       setVersao((atual) => atual + 1);
-    } catch (err) {
-      setErro(err.mensagem || "Não foi possível alterar a situação desta conta.");
     } finally {
       setIdEmOperacao(null);
     }
@@ -173,7 +188,7 @@ function UsuariosPages() {
           usuarios={usuarios}
           formacoes={formacoes}
           aoEditar={setUsuarioEmEdicao}
-          aoAlternarAtivo={alternarAtivo}
+          aoAlternarAtivo={setUsuarioEmAlteracao}
           aoAnonimizar={setUsuarioEmAnonimizacao}
           idEmOperacao={idEmOperacao}
           idDoLogado={usuario?.id}
@@ -211,6 +226,20 @@ function UsuariosPages() {
             usuario={usuarioEmAnonimizacao}
             aoConfirmar={anonimizar}
             aoCancelar={() => setUsuarioEmAnonimizacao(null)}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={usuarioEmAlteracao !== null}
+        setCloseModal={() => setUsuarioEmAlteracao(null)}
+      >
+        {usuarioEmAlteracao && (
+          <ConfirmarSituacao
+            key={usuarioEmAlteracao.id}
+            usuario={usuarioEmAlteracao}
+            aoConfirmar={alterarSituacao}
+            aoCancelar={() => setUsuarioEmAlteracao(null)}
           />
         )}
       </Modal>

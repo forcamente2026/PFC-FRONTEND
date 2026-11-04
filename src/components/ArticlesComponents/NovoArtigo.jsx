@@ -40,11 +40,6 @@ function NovoArtigo({ categorias, carregandoOpcoes, aoCriar }) {
       const novo = await criarArtigo(artigoParaEnvio(form));
       aoCriar(novo);
       fecharModal();
-      alert(
-        novo.status === "PENDENTE"
-          ? "Artigo enviado! Ele aparece no site depois de aprovado."
-          : "Artigo publicado!",
-      );
     } catch (err) {
       setErro(err.mensagem || "Não foi possível enviar o artigo.");
       setCamposComErro(err.campos ?? []);

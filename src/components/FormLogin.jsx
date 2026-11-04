@@ -89,7 +89,7 @@ function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) 
           className="font-light hover:underline hover:text-red-300"
           onClick={aoFechar}
         >
-          Cadastra-se
+          Cadastre-se
         </NavLink>
       </div>
 

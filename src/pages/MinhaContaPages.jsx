@@ -10,6 +10,7 @@ import RenovarCref from "../components/RenovarCref";
 import EditarMeusDados from "../components/EditarMeusDados";
 import AlterarSenha from "../components/AlterarSenha";
 import AlterarEmail from "../components/AlterarEmail";
+import BaixarMeusDados from "../components/BaixarMeusDados";
 import { formatarCep, formatarDataCurta } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
@@ -38,7 +39,7 @@ function Dado({ rotulo, valor }) {
 }
 
 function MinhaContaPages() {
-  const { aoRenomear } = useOutletContext();
+  const { aoRenomear, avisar } = useOutletContext();
   const [conta, setConta] = useState(null);
   const [formacoes, setFormacoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -92,18 +93,33 @@ function MinhaContaPages() {
 
   async function solicitar() {
     await solicitarExclusaoDaMinhaConta();
+    avisar({
+      tipo: "sucesso",
+      titulo: "Pedido de exclusão registrado",
+      mensagem: "Um administrador vai cumprir o pedido. Até lá, sua conta continua funcionando e você pode desistir.",
+    });
     setModalAberto(false);
     setVersao((atual) => atual + 1);
   }
 
     async function renovar(cref, formacao) {
     await renovarCref(cref, formacao);
+    avisar({
+      tipo: "sucesso",
+      titulo: "CREF enviado para verificação",
+      mensagem: "A partir do próximo login, sua conta fica com as permissões de aluno até um administrador conferir o CREF.",
+    });
     setRenovacaoAberta(false);
     setVersao((atual) => atual + 1);
   }
 
     async function salvarDados(dados) {
     const atualizada = await atualizarMinhaConta(dados);
+    avisar({
+      tipo: "sucesso",
+      titulo: "Dados atualizados",
+      mensagem: "As alterações nos seus dados foram salvas.",
+    });
     setConta(atualizada);
     setEdicaoAberta(false);
     aoRenomear(atualizada.nomeCompleto);
@@ -120,13 +136,21 @@ function MinhaContaPages() {
 
   async function cancelarPedido() {
     setCancelando(true);
-    setErro(null);
 
     try {
       await cancelarExclusaoDaMinhaConta();
+      avisar({
+        tipo: "sucesso",
+        titulo: "Pedido de exclusão cancelado",
+        mensagem: "Sua conta continua ativa, com todos os dados.",
+      });
       setVersao((atual) => atual + 1);
     } catch (err) {
-      setErro(err.mensagem || "Não foi possível cancelar o pedido.");
+      avisar({
+        tipo: "erro",
+        titulo: "Pedido não cancelado",
+        mensagem: err.mensagem || "Não foi possível cancelar o pedido.",
+      });
     } finally {
       setCancelando(false);
     }
@@ -251,6 +275,24 @@ function MinhaContaPages() {
 
               </Cartao>
             </section>
+
+            {!anonimizada && (
+              <section className="py-4">
+                <Cartao className="space-y-4">
+                  <h2 className={ESTILO_SUBTITULO}>Portabilidade dos dados</h2>
+                  <p className="text-sm text-gray-300">
+                    Baixe uma cópia dos seus dados para guardar ou levar a outro serviço.
+                    É o seu direito de portabilidade, previsto no art. 18 da LGPD.
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    O arquivo vem em JSON, um formato aberto, com os dados da sua conta e
+                    os seus resultados nos quizzes. Para o professor, vêm também os artigos
+                    e os quizzes que ele enviou.
+                  </p>
+                  <BaixarMeusDados formacoes={formacoes} className={ESTILO_BOTAO_SECUNDARIO} />
+                </Cartao>
+              </section>
+            )}
 
             {!administrador && !anonimizada && (
               <section className="py-4">

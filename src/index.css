@@ -26,6 +26,7 @@
   --breakpoint-md: 40rem;
   --breakpoint-lp: 64rem;
   --breakpoint-lg: 80rem;
+  --breakpoint-xl: 96rem;
 }
 
 @layer base {
