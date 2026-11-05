@@ -3,6 +3,7 @@ import CardExercicio from "./CardExercicio";
 import CarrosselCards from "./CarrosselCards";
 import Modal from "../Modal";
 import ExercicioForm from "./ExercicioForm";
+import DetalheExercicio from "./DetalheExercicio";
 import {
   EXERCICIO_VAZIO,
   exercicioParaEnvio,
@@ -45,6 +46,7 @@ function CardsLibrary({
   const [menuAbertoId, setMenuAbertoId] = useState(null);
   const [exercicioEmEdicao, setExercicioEmEdicao] = useState(null);
   const [exercicioParaExcluir, setExercicioParaExcluir] = useState(null);
+  const [exercicioEmDetalhe, setExercicioEmDetalhe] = useState(null);
   const [form, setForm] = useState(EXERCICIO_VAZIO);
   const [enviando, setEnviando] = useState(false);
   const [erroAcao, setErroAcao] = useState(null);
@@ -97,6 +99,15 @@ function CardsLibrary({
   function fecharExclusao() {
     setExercicioParaExcluir(null);
     setErroAcao(null);
+  }
+
+  function abrirDetalhe(exercicio) {
+    setMenuAbertoId(null);
+    setExercicioEmDetalhe(exercicio);
+  }
+
+  function fecharDetalhe() {
+    setExercicioEmDetalhe(null);
   }
 
   function handleChange(evento) {
@@ -174,14 +185,31 @@ function CardsLibrary({
             }
             aoEditar={() => abrirEdicao(item)}
             aoExcluir={() => abrirExclusao(item)}
+            aoVerTecnica={() => abrirDetalhe(item)}
             podeEditar={podeEditar}
           />
         ))}
       </CarrosselCards>
 
       <Modal
+        isOpen={Boolean(exercicioEmDetalhe)}
+        setCloseModal={fecharDetalhe}
+        largo
+      >
+        {exercicioEmDetalhe && (
+          <DetalheExercicio
+            exercicio={exercicioEmDetalhe}
+            rotuloGrupo={rotulosGrupos[exercicioEmDetalhe.grupoMuscular] ?? exercicioEmDetalhe.grupoMuscular}
+            rotuloNivel={rotulosNiveis[exercicioEmDetalhe.nivel] ?? exercicioEmDetalhe.nivel}
+            aoFechar={fecharDetalhe}
+          />
+        )}
+      </Modal>
+
+      <Modal
         isOpen={Boolean(exercicioEmEdicao)}
         setCloseModal={fecharEdicao}
+        largo
       >
         <ExercicioForm
           titulo="EDITAR EXERCICIO"

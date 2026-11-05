@@ -1,36 +1,8 @@
-import { useState } from "react";
-import { ImageOff, Menu, Pencil, Trash2 } from "lucide-react";
+import { Menu, Pencil, Trash2 } from "lucide-react";
+import ImagemExercicio from "./ImagemExercicio";
 
 const ESTILO_ITEM_MENU =
   "flex w-full items-center gap-2 px-3 py-2 text-sm text-red-200 hover:bg-red-500 hover:text-white cursor-pointer";
-
-
-const ESTILO_CAIXA_IMAGEM = "h-40 w-full";
-
-function ImagemExercicio({ src, alt }) {
-  const [quebrada, setQuebrada] = useState(false);
-
-  if (!src || quebrada) {
-    return (
-      <div
-        className={`${ESTILO_CAIXA_IMAGEM} flex items-center justify-center text-gray-500`}
-      >
-        <ImageOff size={32} />
-      </div>
-    );
-  }
-
-  return (
-    <div className={ESTILO_CAIXA_IMAGEM}>
-      <img
-        src={src}
-        alt={alt}
-        onError={() => setQuebrada(true)}
-        className="h-full w-full object-contain"
-      />
-    </div>
-  );
-}
 
 function CardExercicio({
   exercicio,
@@ -40,6 +12,7 @@ function CardExercicio({
   aoAlternarMenu,
   aoEditar,
   aoExcluir,
+  aoVerTecnica,
   podeEditar,
 }) {
   const { nome, gifUrl, equipamento } = exercicio;
@@ -98,7 +71,7 @@ function CardExercicio({
 
       <ImagemExercicio src={gifUrl} alt={nome} />
 
-      <div className="flex flex-col gap-1">
+      <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
         <span className="font-montserrat text-red-200 wrap-break-word">
           {nome}
         </span>
@@ -107,8 +80,13 @@ function CardExercicio({
         <span className="font-semibold text-white">{rotuloNivel}</span>
       </div>
 
-      <div className="mt-auto text-center">
-        <button className="bg-red-500 py-1 px-4 font-medium text-white max-w-2/3 hover:bg-red-900 cursor-pointer">
+      <div className="mt-auto shrink-0 text-center">
+        <button
+          type="button"
+          aria-label={`Ver técnica de ${nome}`}
+          onClick={aoVerTecnica}
+          className="bg-red-500 py-1 px-4 font-medium text-white max-w-2/3 hover:bg-red-900 cursor-pointer"
+        >
           VER TÉCNICA
         </button>
       </div>

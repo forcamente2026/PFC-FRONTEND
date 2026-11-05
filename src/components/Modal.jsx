@@ -2,10 +2,13 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 
 const ESTILO_FUNDO = "fixed inset-0 bg-black/75 z-50";
+const ESTILO_TAMANHO_PADRAO = "max-w-2/3 max-h-2/3";
+const ESTILO_TAMANHO_LARGO =
+  "w-[calc(100%_-_2rem)] max-w-2xl max-h-[85%] [scrollbar-color:var(--color-gray-600)_transparent]";
 const ESTILO_CAIXA =
-  "max-w-2/3 max-h-2/3 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-5 py-2 overflow-auto border bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20";
+  "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-5 py-2 overflow-auto border bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20";
 
-function Modal({ isOpen, children, setCloseModal }) {
+function Modal({ isOpen, children, setCloseModal, largo = false }) {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -21,7 +24,11 @@ function Modal({ isOpen, children, setCloseModal }) {
 
   return (
     <div className={ESTILO_FUNDO}>
-      <div role="dialog" aria-modal="true" className={ESTILO_CAIXA}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        className={`${ESTILO_CAIXA} ${largo ? ESTILO_TAMANHO_LARGO : ESTILO_TAMANHO_PADRAO}`}
+      >
         {children}
         <button
           type="button"
