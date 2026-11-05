@@ -32,6 +32,7 @@ function VolumeTreino() {
   const [exercicios, setExercicios] = useState([]);
   const [carregandoExercicios, setCarregandoExercicios] = useState(true);
   const [erroExercicios, setErroExercicios] = useState(null);
+  const [erroPreenchimento, setErroPreenchimento] = useState(null);
 
   const { resultado, carregando, erro, executar } =
     useCalculo(calcularVolumeTreino);
@@ -63,6 +64,7 @@ function VolumeTreino() {
   }, []);
 
   function alterarLinha(id, campo, valor) {
+    setErroPreenchimento(null);
     setLinhas((atual) =>
       atual.map((linha) =>
         linha.id === id ? { ...linha, [campo]: valor } : linha,
@@ -75,20 +77,37 @@ function VolumeTreino() {
   }
 
   function removerLinha(id) {
+    setErroPreenchimento(null);
     setLinhas((atual) => atual.filter((linha) => linha.id !== id));
   }
 
-  const linhasPreenchidas = linhas.filter(
-    (linha) =>
-      linha.exercicioId && linha.series && linha.repeticoes && linha.cargaKg,
+  const camposDaLinha = [
+    ["exercicioId", "exercício", "exercicio"],
+    ["series", "séries", "series"],
+    ["repeticoes", "repetições", "reps"],
+    ["cargaKg", "carga (kg)", "carga"],
+  ];
+  const linhasIniciadas = linhas.filter((linha) =>
+    camposDaLinha.some(([campo]) => linha[campo] !== ""),
   );
 
   function aoEnviar(evento) {
     evento.preventDefault();
-    if (!linhasPreenchidas.length) return;
+    if (!linhasIniciadas.length || carregando) return;
+    const incompleta = linhas.findIndex((linha) =>
+      camposDaLinha.some(([campo]) => linha[campo] !== "") &&
+      camposDaLinha.some(([campo]) => linha[campo] === ""),
+    );
+    if (incompleta !== -1) {
+      const faltantes = camposDaLinha.filter(([campo]) => linhas[incompleta][campo] === "");
+      setErroPreenchimento(`Complete a linha ${incompleta + 1}: ${faltantes.map(([, rotulo]) => rotulo).join(", ")}.`);
+      document.getElementById(`${faltantes[0][2]}-${linhas[incompleta].id}`)?.focus();
+      return;
+    }
+    setErroPreenchimento(null);
 
     executar({
-      series: linhasPreenchidas.map((linha) => ({
+      series: linhasIniciadas.map((linha) => ({
         exercicioId: linha.exercicioId,
         series: paraNumero(linha.series),
         repeticoes: paraNumero(linha.repeticoes),
@@ -210,6 +229,12 @@ function VolumeTreino() {
           + ADICIONAR EXERCÍCIO
         </button>
 
+        {erroPreenchimento && (
+          <p role="alert" className="rounded-md border border-red-500 p-3 text-sm text-red-200">
+            {erroPreenchimento}
+          </p>
+        )}
+
         {erroExercicios ? (
           <p className="rounded-md border border-red-500 p-3 text-sm text-red-200">
             {erroExercicios}
@@ -218,7 +243,7 @@ function VolumeTreino() {
 
         <button
           type="submit"
-          disabled={!linhasPreenchidas.length || carregando}
+          disabled={!linhasIniciadas.length || carregando}
           className="self-start bg-red-500 py-1 px-4 font-medium text-white hover:bg-red-900 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-700 disabled:text-gray-300"
         >
           {carregando ? "CALCULANDO..." : "CALCULAR"}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroAuditoria from "../components/AdminComponents/FiltroAuditoria";
@@ -21,9 +21,12 @@ function AuditoriaPages() {
   const [pagina, setPagina] = useState(0);
   const [resultado, setResultado] = useState(null);
   const [acoes, setAcoes] = useState([]);
-  const [carregando, setCarregando] = useState(true);
+  const [consultaConcluida, setConsultaConcluida] = useState(null);
+  const consultaAtual = JSON.stringify([pagina, filtros]);
+  const carregando = consultaAtual !== consultaConcluida;
   const [erro, setErro] = useState(null);
   const [exportando, setExportando] = useState(false);
+  const [erroExportacao, setErroExportacao] = useState(null);
 
   useEffect(() => {
     let ativo = true;
@@ -56,33 +59,35 @@ function AuditoriaPages() {
         setErro(err.mensagem || "Não foi possível carregar a auditoria.");
       })
       .finally(() => {
-        if (ativo) setCarregando(false);
+        if (ativo) setConsultaConcluida(consultaAtual);
       });
 
     return () => {
       ativo = false;
     };
-  }, [pagina, filtros]);
+  }, [pagina, filtros, consultaAtual]);
 
-  const alterarFiltro = useCallback((campo, valor) => {
+  function alterarFiltro(campo, valor) {
     setFiltros((anterior) => ({ ...anterior, [campo]: valor }));
     setPagina(0);
-  }, []);
+  }
 
   function limparFiltros() {
+    if (pagina === 0 && Object.values(filtros).every((valor) => valor === "")) return;
     setFiltros(FILTROS_VAZIOS);
     setPagina(0);
   }
 
   async function exportar() {
     setExportando(true);
+    setErroExportacao(null);
 
     try {
       const arquivo = await exportarCsv(filtros);
       const dia = new Date().toISOString().slice(0, 10);
       baixarArquivo(`auditoria-${dia}.csv`, arquivo);
     } catch (err) {
-      setErro(err.mensagem || "Não foi possível exportar os registros.");
+      setErroExportacao(err.mensagem || "Não foi possível exportar os registros.");
     } finally {
       setExportando(false);
     }
@@ -111,12 +116,18 @@ function AuditoriaPages() {
         <button
           type="button"
           onClick={exportar}
-          disabled={exportando || registros.length === 0}
+          disabled={exportando || carregando || Boolean(erro) || registros.length === 0}
           className="rounded-md bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {exportando ? "Exportando..." : "Exportar CSV"}
         </button>
       </div>
+
+      {erroExportacao && (
+        <p role="alert" className="mb-4 rounded-md border border-red-500 p-3 text-sm text-red-200">
+          {erroExportacao}
+        </p>
+      )}
 
       <EstadoRequisicao
         carregando={carregando}

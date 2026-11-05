@@ -5,10 +5,10 @@ import CampoSenha from "../CampoSenha";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
-import { formatarCep, formatarCref, somenteDigitos } from "../../utils/formatar";
+import { formatarCref, somenteDigitos } from "../../utils/formatar";
 import { ESTADOS } from "../../utils/estados";
 import { criarUsuario } from "../../services/usuarioService";
-import { buscarEnderecoPorCep } from "../../services/enderecoService";
+import useConsultaCep from "../../hooks/useConsultaCep";
 import { listarDocumentos } from "../../services/documentoLegalService";
 import {
   LIMITE_BAIRRO,
@@ -87,17 +87,15 @@ function FormCadastro() {
   const [formacao, setFormacao] = useState(FORMACAO_VAZIA);
   const [form, setForm] = useState(CADASTRO_VAZIO);
   const [endereco, setEndereco] = useState(ENDERECO_VAZIO);
-  const [buscandoCep, setBuscandoCep] = useState(false);
-  const [erroCep, setErroCep] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
   const [camposComErro, setCamposComErro] = useState([]);
   const [versoes, setVersoes] = useState(null);
   const { avisar } = useOutletContext();
 
-  const ultimoCepBuscado = useRef("");
-
   const campoNumero = useRef(null);
+  const { alterarCep: handleCepChange, buscandoCep, erroCep, limparConsulta } =
+    useConsultaCep(setEndereco, "", () => campoNumero.current?.focus());
 
   useEffect(() => {
     let ativo = true;
@@ -144,47 +142,6 @@ function FormCadastro() {
     setForm((anterior) => ({ ...anterior, [name]: value }));
   }
 
-  async function buscarCep(cepLimpo) {
-    if (ultimoCepBuscado.current === cepLimpo) return;
-    ultimoCepBuscado.current = cepLimpo;
-
-    setBuscandoCep(true);
-    setErroCep(null);
-
-    try {
-      const dados = await buscarEnderecoPorCep(cepLimpo);
-
-      setEndereco((anterior) => ({
-        ...anterior,
-        logradouro: dados.logradouro ?? "",
-        bairro: dados.bairro ?? "",
-        cidade: dados.cidade ?? "",
-        estado: dados.estado ?? "",
-      }));
-
-      campoNumero.current?.focus();
-    } catch (err) {
-      setErroCep(err.mensagem || "Não foi possível buscar este CEP. Preencha o endereço à mão.");
-    } finally {
-      setBuscandoCep(false);
-    }
-  }
-
-  function handleCepChange(evento) {
-    const mascarado = formatarCep(evento.target.value);
-    setEndereco((anterior) => ({ ...anterior, cep: mascarado }));
-
-    const limpo = somenteDigitos(mascarado);
-
-    if (limpo.length === 8) {
-      buscarCep(limpo);
-      return;
-    }
-
-    ultimoCepBuscado.current = "";
-    setErroCep(null);
-  }
-
   function handleEnderecoChange(evento) {
     const { name, value } = evento.target;
     setEndereco((anterior) => ({ ...anterior, [name]: value }));
@@ -194,8 +151,7 @@ function FormCadastro() {
     setForm(CADASTRO_VAZIO);
     setEndereco(ENDERECO_VAZIO);
     setFormacao(FORMACAO_VAZIA);
-    setErroCep(null);
-    ultimoCepBuscado.current = "";
+    limparConsulta();
     setDataNascimento("");
     setSenha("");
     setConfirmaSenha("");

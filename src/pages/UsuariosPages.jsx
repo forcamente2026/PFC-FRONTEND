@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
@@ -32,7 +32,7 @@ function UsuariosPages() {
   const [pagina, setPagina] = useState(0);
   const [resultado, setResultado] = useState(null);
   const [formacoes, setFormacoes] = useState([]);
-  const [carregando, setCarregando] = useState(true);
+  const [consultaConcluida, setConsultaConcluida] = useState(null);
   const [erro, setErro] = useState(null);
   const [usuarioEmEdicao, setUsuarioEmEdicao] = useState(null);
   const [usuarioEmAnonimizacao, setUsuarioEmAnonimizacao] = useState(null);
@@ -40,6 +40,8 @@ function UsuariosPages() {
   const [idEmOperacao, setIdEmOperacao] = useState(null);
 
   const [versao, setVersao] = useState(0);
+  const consultaAtual = JSON.stringify([pagina, buscaAplicada, filtros.papel, filtros.ativo, versao]);
+  const carregando = consultaAtual !== consultaConcluida || filtros.busca.trim() !== buscaAplicada;
 
   useEffect(() => {
     let ativo = true;
@@ -87,19 +89,19 @@ function UsuariosPages() {
         setErro(err.mensagem || "Não foi possível carregar os usuários.");
       })
       .finally(() => {
-        if (ativo) setCarregando(false);
+        if (ativo) setConsultaConcluida(consultaAtual);
       });
 
     return () => {
       ativo = false;
     };
-  }, [pagina, buscaAplicada, filtros.papel, filtros.ativo, versao]);
+  }, [pagina, buscaAplicada, filtros.papel, filtros.ativo, versao, consultaAtual]);
 
-  const alterarFiltro = useCallback((campo, valor) => {
+  function alterarFiltro(campo, valor) {
     setFiltros((anterior) => ({ ...anterior, [campo]: valor }));
 
     if (campo !== "busca") setPagina(0);
-  }, []);
+  }
 
   function limparFiltros() {
     setFiltros(FILTROS_VAZIOS);

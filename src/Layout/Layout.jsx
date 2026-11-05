@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Modal from "../components/Modal";
 import AvisoCrefNoLogin from "../components/AvisoCrefNoLogin";
 import AvisoDeAcao from "../components/AvisoDeAcao";
 import Footer from "./Footer";
-import { lerSessao, gravarSessao, limparSessao, atualizarNomeDaSessao } from "../utils/sessao";
+import { lerSessao, gravarSessao, limparSessao, atualizarNomeDaSessao, EVENTO_SESSAO_EXPIRADA } from "../utils/sessao";
 import { buscarMinhaConta } from "../services/usuarioService";
 
 const SITUACOES_COM_AVISO = ["PENDENTE", "REJEITADO"];
@@ -15,6 +15,31 @@ function Layout () {
   const [avisoCref, setAvisoCref] = useState(null);
   const [avisoDeAcao, setAvisoDeAcao] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    function aoExpirar() {
+      setUsuario(null);
+      setAvisoCref(null);
+      setAvisoDeAcao({
+        tipo: "erro", titulo: "Sessão expirada",
+        mensagem: "Entre novamente para continuar usando sua conta.",
+      });
+      navigate("/", { replace: true });
+    }
+
+    function sincronizarSessao(evento) {
+      if (evento.key === null || evento.key === "forcamente:usuario" || evento.key === "token") {
+        setUsuario(lerSessao());
+      }
+    }
+
+    window.addEventListener(EVENTO_SESSAO_EXPIRADA, aoExpirar);
+    window.addEventListener("storage", sincronizarSessao);
+    return () => {
+      window.removeEventListener(EVENTO_SESSAO_EXPIRADA, aoExpirar);
+      window.removeEventListener("storage", sincronizarSessao);
+    };
+  }, [navigate]);
 
   function conferirVerificacaoDoCref() {
     buscarMinhaConta()
@@ -53,7 +78,9 @@ function Layout () {
     <div className="min-h-screen flex flex-col bg-slate-950">
       <NavBar usuario={usuario} aoEntrar={entrar} aoSair={sair} />
       <main className="flex-1">
-        <Outlet context ={{ usuario, aoRenomear: renomear, avisar: setAvisoDeAcao }} />
+        <Suspense fallback={<p role="status" className="p-8 text-center text-gray-300">Carregando página...</p>}>
+          <Outlet context ={{ usuario, aoRenomear: renomear, avisar: setAvisoDeAcao }} />
+        </Suspense>
       </main>
       <Footer />
 
