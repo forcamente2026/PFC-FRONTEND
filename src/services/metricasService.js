@@ -1,5 +1,5 @@
 import api from "./api";
-import { listarExercicios } from "./exercicioService";
+import { listarExerciciosPublicados } from "./exercicioService";
 
 export async function listarNiveisAtividade() {
   const { data } = await api.get("/metricas/niveis-atividade");
@@ -22,7 +22,7 @@ export async function calcularHidratacao(dados) {
 }
 
 export async function listarExerciciosParaVolume() {
-  return listarExercicios();
+  return listarExerciciosPublicados();
 }
 
 export async function consultarConsumoAgua(dados) {

@@ -5,9 +5,11 @@ import FiltroItensPendentes from "../components/AdminComponents/FiltroItensPende
 import PedidosDeExclusao from "../components/AdminComponents/PedidosDeExclusao";
 import FilaDeArtigos from "../components/AdminComponents/FilaDeArtigos";
 import FilaDeQuizzes from "../components/AdminComponents/FilaDeQuizzes";
+import FilaDeExercicios from "../components/AdminComponents/FilaDeExercicios";
 import VerificacoesCref from "../components/AdminComponents/VerificacoesCref";
+import { MODERACAO_DE_EXERCICIOS_SIMULADA } from "../services/exercicioService";
 
-const TIPOS_FILTRADOS = ["artigos", "quizzes", "professores", "exclusoes"];
+const TIPOS_FILTRADOS = ["artigos", "quizzes", "exercicios", "professores", "exclusoes"];
 
 function ItensPendentesPages() {
   const [parametros, setParametros] = useSearchParams();
@@ -36,6 +38,7 @@ function ItensPendentesPages() {
       <div className="flex flex-col gap-12">
         {mostrar("artigos") && <FilaDeArtigos />}
         {mostrar("quizzes") && <FilaDeQuizzes />}
+        {MODERACAO_DE_EXERCICIOS_SIMULADA && mostrar("exercicios") && <FilaDeExercicios />}
         {mostrar("professores") && <VerificacoesCref />}
         {mostrar("exclusoes") && <PedidosDeExclusao />}
       </div>

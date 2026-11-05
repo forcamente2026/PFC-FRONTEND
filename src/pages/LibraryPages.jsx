@@ -3,12 +3,44 @@ import { useOutletContext } from "react-router-dom";
 import FilterLibrary from "../components/LibraryComponents/FilterLibrary";
 import CardsLibrary from "../components/LibraryComponents/CardsLibrary";
 import LibraryHead from "../components/LibraryComponents/LibraryHead";
+import AvisoDeSimulacao from "../components/LibraryComponents/AvisoDeSimulacao";
 import {
   listarExercicios,
   listarGruposMusculares,
   listarNiveis,
+  MODERACAO_DE_EXERCICIOS_SIMULADA,
 } from "../services/exercicioService";
 import { PAPEIS_EDITORES } from "../utils/papeis";
+
+function avisoAoCriar(exercicio) {
+  if (exercicio?.status === "PENDENTE") {
+    return {
+      tipo: "sucesso",
+      titulo: "Exercício enviado",
+      mensagem: `"${exercicio.nome}" aparece no site depois de aprovado.`,
+    };
+  }
+  return {
+    tipo: "sucesso",
+    titulo: "Exercício cadastrado",
+    mensagem: "O exercício já aparece na biblioteca.",
+  };
+}
+
+function avisoAoAlterar(exercicio) {
+  if (exercicio.status === "PENDENTE") {
+    return {
+      tipo: "sucesso",
+      titulo: "Exercício alterado",
+      mensagem: "As alterações foram salvas. O exercício aparece no site depois de aprovado.",
+    };
+  }
+  return {
+    tipo: "sucesso",
+    titulo: "Exercício alterado",
+    mensagem: `"${exercicio.nome}" foi salvo com as alterações.`,
+  };
+}
 
 function LibraryPages() {
   const [grupoSelecionado, setGrupoSelecionado] = useState("");
@@ -60,11 +92,7 @@ function LibraryPages() {
   }
 
   function adicionarExercicio(novo) {
-    avisar({
-      tipo: "sucesso",
-      titulo: "Exercício cadastrado",
-      mensagem: "O exercício já aparece na biblioteca.",
-    });
+    avisar(avisoAoCriar(novo));
     if (!novo?.id) {
       recarregarLista();
       return;
@@ -72,14 +100,38 @@ function LibraryPages() {
     setExercicios((prev) => [...prev, novo]);
   }
 
-  function substituirExercicio(atualizado) {
+  function trocarNaLista(atualizado) {
     setExercicios((prev) =>
       prev.map((item) => (item.id === atualizado.id ? atualizado : item)),
     );
+  }
+
+  function substituirExercicio(atualizado) {
+    trocarNaLista(atualizado);
+    avisar(avisoAoAlterar(atualizado));
+  }
+
+  function registrarAprovacao(atualizado) {
+    trocarNaLista(atualizado);
     avisar({
       tipo: "sucesso",
-      titulo: "Exercício alterado",
-      mensagem: `"${atualizado.nome}" foi salvo com as alterações.`,
+      titulo: "Aprovação registrada",
+      mensagem:
+        atualizado.status === "APROVADO_PELOS_PROFESSORES"
+          ? "Com a sua aprovação, o exercício entrou no site."
+          : `O exercício tem agora ${atualizado.aprovacoesDeProfessores} de ${atualizado.aprovacoesNecessarias} aprovações.`,
+    });
+  }
+
+  function registrarDecisao(atualizado) {
+    trocarNaLista(atualizado);
+    avisar({
+      tipo: "sucesso",
+      titulo: atualizado.status === "APROVADO" ? "Exercício aprovado" : "Exercício rejeitado",
+      mensagem:
+        atualizado.status === "APROVADO"
+          ? `"${atualizado.nome}" está publicado no site.`
+          : `"${atualizado.nome}" foi rejeitado, e o autor vê o motivo.`,
     });
   }
 
@@ -102,6 +154,11 @@ function LibraryPages() {
         aoCriar={adicionarExercicio}
         podeEditar={podeEditar}
       />
+      {MODERACAO_DE_EXERCICIOS_SIMULADA && (
+        <div className="mb-4 px-4">
+          <AvisoDeSimulacao />
+        </div>
+      )}
       <FilterLibrary
         grupoSelecionado={grupoSelecionado}
         aoSelecionar={setGrupoSelecionado}
@@ -115,6 +172,8 @@ function LibraryPages() {
         grupoSelecionado={grupoSelecionado}
         aoAtualizar={substituirExercicio}
         aoExcluir={removerExercicio}
+        aoAprovar={registrarAprovacao}
+        aoDecidir={registrarDecisao}
         podeEditar={podeEditar}
       />
     </div>

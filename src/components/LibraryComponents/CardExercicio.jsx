@@ -1,5 +1,6 @@
 import { Menu, Pencil, Trash2 } from "lucide-react";
 import ImagemExercicio from "./ImagemExercicio";
+import { etiquetaDoArtigo } from "../ArticlesComponents/artigoCampos";
 
 const ESTILO_ITEM_MENU =
   "flex w-full items-center gap-2 px-3 py-2 text-sm text-red-200 hover:bg-red-500 hover:text-white cursor-pointer";
@@ -16,6 +17,7 @@ function CardExercicio({
   podeEditar,
 }) {
   const { nome, gifUrl, equipamento } = exercicio;
+  const etiquetaDaSituacao = etiquetaDoArtigo(exercicio);
 
   return (
     <div
@@ -69,7 +71,14 @@ function CardExercicio({
         <span>{rotuloGrupo}</span>
       </div>
 
-      <ImagemExercicio src={gifUrl} alt={nome} />
+      <div className="relative">
+        <ImagemExercicio src={gifUrl} alt={nome} />
+        {etiquetaDaSituacao && (
+          <span className="absolute bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-700 px-2 py-1 text-xs font-medium text-gray-200">
+            {etiquetaDaSituacao}
+          </span>
+        )}
+      </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
         <span className="font-montserrat text-red-200 wrap-break-word">

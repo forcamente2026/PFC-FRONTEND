@@ -1,4 +1,5 @@
 import { STATUS_ARTIGO } from "../ArticlesComponents/artigoCampos";
+import { estaPublicado } from "../../utils/moderacao";
 import { rotuloDoPapel } from "../../utils/papeis";
 
 function doMaiorParaOMenor(dados) {
@@ -96,7 +97,7 @@ export function exerciciosPorGrupo(exercicios, grupos) {
   );
 
   return contarPor(
-    exercicios,
+    exercicios.filter(estaPublicado),
     (exercicio) => nomes[exercicio.grupoMuscular] ?? exercicio.grupoMuscular,
   );
 }

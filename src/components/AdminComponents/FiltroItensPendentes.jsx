@@ -1,7 +1,10 @@
+import { MODERACAO_DE_EXERCICIOS_SIMULADA } from "../../services/exercicioService";
+
 const FILTROS = [
   { valor: "todos", rotulo: "Todos" },
   { valor: "artigos", rotulo: "Artigos" },
   { valor: "quizzes", rotulo: "Quizzes" },
+  ...(MODERACAO_DE_EXERCICIOS_SIMULADA ? [{ valor: "exercicios", rotulo: "Exercícios" }] : []),
   { valor: "professores", rotulo: "Professores" },
   { valor: "exclusoes", rotulo: "Pedidos de exclusão" },
 ];
