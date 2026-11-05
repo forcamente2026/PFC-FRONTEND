@@ -9,6 +9,8 @@ import {
   listarExerciciosPendentesMock,
 } from "./mocks/exercicioMock";
 import { estaPublicado } from "../utils/moderacao";
+import { lerSessao } from "../utils/sessao";
+import { exigirVagaParaCriar } from "../utils/limiteCriacao";
 
 export const MODERACAO_DE_EXERCICIOS_SIMULADA = import.meta.env.VITE_EXERCICIOS_MOCK === "true";
 
@@ -47,7 +49,12 @@ export async function listarExerciciosPublicados() {
 }
 
 export async function criarExercicio(exercicio) {
-  if (MODERACAO_DE_EXERCICIOS_SIMULADA) return responderMock(() => criarExercicioMock(exercicio));
+  if (MODERACAO_DE_EXERCICIOS_SIMULADA) {
+    return responderMock(() => {
+      exigirVagaParaCriar(listarExerciciosMock(), lerSessao());
+      return criarExercicioMock(exercicio);
+    });
+  }
 
   const { data } = await api.post("/exercicios", exercicio);
   return data;

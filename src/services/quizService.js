@@ -1,4 +1,7 @@
 import api from "./api";
+import { lerSessao } from "../utils/sessao";
+import { exigirVagaParaCriar } from "../utils/limiteCriacao";
+import { estaEmAnalise } from "../utils/moderacao";
 
 export async function listarQuizzes() {
   const { data } = await api.get("/quizzes");
@@ -16,6 +19,10 @@ export async function buscarQuizParaEdicao(id) {
 }
 
 export async function criarQuiz(dados) {
+  const usuario = lerSessao();
+  if (usuario?.papel === "PROFESSOR") {
+    exigirVagaParaCriar(await listarQuizzes(), usuario);
+  }
   const { data } = await api.post("/quizzes", dados);
   return data;
 }
@@ -40,8 +47,8 @@ export async function alterarStatusQuiz(id, status, motivo) {
 }
 
 export async function listarQuizzesPendentes() {
-  const { data } = await api.get("/quizzes/pendentes");
-  return data;
+  const lista = await listarQuizzes();
+  return lista.filter(estaEmAnalise);
 }
 
 export async function responderQuiz(id, respostas) {

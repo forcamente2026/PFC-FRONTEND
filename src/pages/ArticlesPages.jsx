@@ -5,8 +5,10 @@ import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FilterArticles from "../components/ArticlesComponents/FilterArticles";
 import CardArtigo from "../components/ArticlesComponents/CardArtigo";
 import NovoArtigo from "../components/ArticlesComponents/NovoArtigo";
+import LimiteDeCriacao from "../components/LimiteDeCriacao";
 import { listarArtigos, listarCategorias } from "../services/artigoService";
 import { PAPEIS_EDITORES } from "../utils/papeis";
+import { limiteDeCriacao } from "../utils/limiteCriacao";
 
 function ArticlesPages() {
   const { usuario, avisar } = useOutletContext();
@@ -17,6 +19,7 @@ function ArticlesPages() {
   const [busca, setBusca] = useState("");
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
+  const { bloqueado } = limiteDeCriacao(artigos, usuario);
 
   useEffect(() => {
     let ativo = true;
@@ -75,11 +78,18 @@ function ArticlesPages() {
       />
 
       {podeEditar && (
-        <NovoArtigo
-          categorias={categorias}
-          carregandoOpcoes={carregando}
-          aoCriar={adicionarArtigo}
-        />
+        <>
+          {!carregando && !erro && (
+            <LimiteDeCriacao itens={artigos} usuario={usuario} tipo="artigos" />
+          )}
+          <NovoArtigo
+            categorias={categorias}
+            carregandoOpcoes={carregando || Boolean(erro)}
+            criacaoBloqueada={bloqueado}
+            aoCriar={adicionarArtigo}
+            aoConferirLimite={setArtigos}
+          />
+        </>
       )}
 
       <FilterArticles

@@ -4,6 +4,7 @@ import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import QuizForm from "../components/QuizComponents/QuizForm";
+import LimiteDeCriacao from "../components/LimiteDeCriacao";
 import { novoQuiz, SITUACOES_PUBLICADAS } from "../components/QuizComponents/quizCampos";
 import { listarArtigos, listarCategorias } from "../services/artigoService";
 import {
@@ -11,8 +12,10 @@ import {
   criarQuiz,
   editarQuiz,
   listarNiveisDoQuiz,
+  listarQuizzes,
 } from "../services/quizService";
 import { podeValidar } from "../utils/papeis";
+import { limiteDeCriacao } from "../utils/limiteCriacao";
 
 function valoresDoQuiz(quiz, idsPublicados) {
   return {
@@ -57,6 +60,8 @@ function QuizFormPages() {
   const [erroAoCarregar, setErroAoCarregar] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [camposComErro, setCamposComErro] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
+  const criacaoBloqueada = !editando && limiteDeCriacao(quizzes, usuario).bloqueado;
 
   useEffect(() => {
     let ativo = true;
@@ -66,8 +71,9 @@ function QuizFormPages() {
       listarNiveisDoQuiz(),
       listarArtigos(),
       editando ? buscarQuizParaEdicao(id) : novoQuiz(),
+      !editando && usuario?.papel === "PROFESSOR" ? listarQuizzes() : [],
     ])
-      .then(([categorias, niveis, artigos, quiz]) => {
+      .then(([categorias, niveis, artigos, quiz, listaQuizzes]) => {
         if (!ativo) return;
         const publicados = artigos.filter((artigo) =>
           SITUACOES_PUBLICADAS.includes(artigo.status),
@@ -80,6 +86,7 @@ function QuizFormPages() {
           valoresIniciais: valoresDoQuiz(quiz, idsPublicados),
         });
         setErroAoCarregar(null);
+        setQuizzes(listaQuizzes);
       })
       .catch((err) => {
         if (!ativo) return;
@@ -107,6 +114,7 @@ function QuizFormPages() {
       avisar(avisoAoSalvar(salvo, editando));
       navigate(`/quiz/${salvo.id}`);
     } catch (err) {
+      if (err.itensDoLimite) setQuizzes(err.itensDoLimite);
       const campos = err.campos ?? [];
       setCamposComErro(campos);
       avisar({
@@ -154,6 +162,9 @@ function QuizFormPages() {
         >
           {opcoes && (
             <>
+              {!editando && (
+                <LimiteDeCriacao itens={quizzes} usuario={usuario} tipo="quizzes" />
+              )}
               {voltaParaModeracao && (
                 <p
                   role="note"
@@ -164,20 +175,22 @@ function QuizFormPages() {
                   apagadas.
                 </p>
               )}
-              <Cartao>
-                <QuizForm
-                  valoresIniciais={opcoes.valoresIniciais}
-                  categorias={opcoes.categorias}
-                  niveis={opcoes.niveis}
-                  artigos={opcoes.artigos}
-                  enviando={enviando}
-                  camposComErro={camposComErro}
-                  textoBotao={textoBotao}
-                  textoBotaoEnviando={editando ? "Salvando..." : "Enviando..."}
-                  destinoAoCancelar={destinoAoCancelar}
-                  aoEnviar={salvar}
-                />
-              </Cartao>
+              {!criacaoBloqueada && (
+                <Cartao>
+                  <QuizForm
+                    valoresIniciais={opcoes.valoresIniciais}
+                    categorias={opcoes.categorias}
+                    niveis={opcoes.niveis}
+                    artigos={opcoes.artigos}
+                    enviando={enviando}
+                    camposComErro={camposComErro}
+                    textoBotao={textoBotao}
+                    textoBotaoEnviando={editando ? "Salvando..." : "Enviando..."}
+                    destinoAoCancelar={destinoAoCancelar}
+                    aoEnviar={salvar}
+                  />
+                </Cartao>
+              )}
             </>
           )}
         </EstadoRequisicao>
