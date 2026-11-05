@@ -52,6 +52,10 @@ const IDADE_MINIMA = 18;
     return hoje.toISOString().slice(0, 10);
   }
 
+function normalizarEmail(email) {
+  return email.trim().toLowerCase();
+}
+
 function FormCadastro() {
 
   const styleLabel = "text-2xl text-slate-500 flex flex-col m-1";
@@ -74,11 +78,13 @@ function FormCadastro() {
   const estiloSenha = senha
     ? `${styleInputBase} ${avaliacaoSenha.borda} ${avaliacaoSenha.brilho}`
     : styleInput;
-  const estiloConfirmacao = senhasDiferem
-    ? `${styleInputBase} border-red-500 neon-red-500`
-    : senhasCoincidem
-      ? `${styleInputBase} border-green-500 neon-green-500`
-      : styleInput;
+  function estiloDaConfirmacao(diferem, coincidem) {
+    if (diferem) return `${styleInputBase} border-red-500 neon-red-500`;
+    if (coincidem) return `${styleInputBase} border-green-500 neon-green-500`;
+    return styleInput;
+  }
+
+  const estiloConfirmacao = estiloDaConfirmacao(senhasDiferem, senhasCoincidem);
 
   const [aceitouTermos, setAceitouTermos] = useState(false);
   const [aceitouPolitica, setAceitouPolitica] = useState(false);
@@ -86,6 +92,7 @@ function FormCadastro() {
   const [profissional, setProfissional] = useState(false);
   const [formacao, setFormacao] = useState(FORMACAO_VAZIA);
   const [form, setForm] = useState(CADASTRO_VAZIO);
+  const [confirmaEmail, setConfirmaEmail] = useState("");
   const [endereco, setEndereco] = useState(ENDERECO_VAZIO);
   const [buscandoCep, setBuscandoCep] = useState(false);
   const [erroCep, setErroCep] = useState(null);
@@ -122,6 +129,11 @@ function FormCadastro() {
   }, []);
 
   
+  const confirmacaoEmailPreenchida = confirmaEmail.length > 0;
+  const emailsCoincidem =
+    confirmacaoEmailPreenchida && normalizarEmail(confirmaEmail) === normalizarEmail(form.email);
+  const emailsDiferem = confirmacaoEmailPreenchida && !emailsCoincidem;
+
   const enderecoLiberado = somenteDigitos(endereco.cep).length === 8;
 
   const enderecoEncontrado =
@@ -130,6 +142,7 @@ function FormCadastro() {
   const formularioValido =
     aceitouTermos &&
     aceitouPolitica &&
+    emailsCoincidem &&
     avaliacaoSenha.valida &&
     senhasCoincidem &&
     versoes !== null;
@@ -192,6 +205,7 @@ function FormCadastro() {
 
   function limparFormulario() {
     setForm(CADASTRO_VAZIO);
+    setConfirmaEmail("");
     setEndereco(ENDERECO_VAZIO);
     setFormacao(FORMACAO_VAZIA);
     setErroCep(null);
@@ -244,8 +258,8 @@ function FormCadastro() {
         tipo: "sucesso",
         titulo: "Cadastro realizado",
         mensagem: profissional
-          ? `Sua conta foi criada com o e-mail ${form.email.trim().toLowerCase()}. Até um administrador conferir o seu CREF, ela tem as permissões de aluno. Para entrar, use o botão Login no topo da página.`
-          : `Sua conta foi criada com o e-mail ${form.email.trim().toLowerCase()}. Para entrar, use o botão Login no topo da página.`,
+          ? `Sua conta foi criada com o e-mail ${normalizarEmail(form.email)}. Até um administrador conferir o seu CREF, ela tem as permissões de aluno. Para entrar, use o botão Login no topo da página.`
+          : `Sua conta foi criada com o e-mail ${normalizarEmail(form.email)}. Para entrar, use o botão Login no topo da página.`,
       });
       limparFormulario();
     } catch (err) {
@@ -301,6 +315,8 @@ function FormCadastro() {
                 className={styleInput}
               />
             </div>
+          </div>
+          <div className="flex flex-wrap gap-3">
             <div>
               <label htmlFor="email" className={styleLabel}>
                 Email *
@@ -316,6 +332,33 @@ function FormCadastro() {
                 className={styleInput}
                 placeholder="nome@example.com"
               />
+            </div>
+            <div>
+              <label htmlFor="confirmaEmail" className={styleLabel}>
+                Confirma email *
+              </label>
+              <input
+                type="email"
+                id="confirmaEmail"
+                maxLength={LIMITE_EMAIL}
+                name="confirmaEmail"
+                value={confirmaEmail}
+                onChange={(evento) => setConfirmaEmail(evento.target.value)}
+                required
+                autoComplete="off"
+                aria-invalid={emailsDiferem}
+                aria-describedby="confirmaEmail-mensagem"
+                className={estiloDaConfirmacao(emailsDiferem, emailsCoincidem)}
+                placeholder="Confirma email"
+              />
+              <p
+                id="confirmaEmail-mensagem"
+                aria-live="polite"
+                className={`mt-2 text-sm ${emailsDiferem ? "text-red-400" : "text-green-400"}`}
+              >
+                {emailsDiferem && "Os e-mails não coincidem"}
+                {emailsCoincidem && "E-mails coincidem"}
+              </p>
             </div>
           </div>
           <div className="flex gap-3">
