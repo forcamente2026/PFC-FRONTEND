@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import CardExercicio from "./CardExercicio";
 import CarrosselCards from "./CarrosselCards";
 import Modal from "../Modal";
@@ -51,11 +51,8 @@ function CardsLibrary({
   const [enviando, setEnviando] = useState(false);
   const [erroAcao, setErroAcao] = useState(null);
 
-  const rotulosGrupos = useMemo(
-    () => montarDicionario(gruposMusculares),
-    [gruposMusculares],
-  );
-  const rotulosNiveis = useMemo(() => montarDicionario(niveis), [niveis]);
+  const rotulosGrupos = montarDicionario(gruposMusculares);
+  const rotulosNiveis = montarDicionario(niveis);
 
   useEffect(() => {
     if (menuAbertoId === null) return;

@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { buscarEnderecoPorCep } from "../services/enderecoService";
+import { useState } from "react";
+import useConsultaCep from "../hooks/useConsultaCep";
 import { formatarCep, somenteDigitos } from "../utils/formatar";
 import { ESTADOS } from "../utils/estados";
 import {
@@ -54,49 +54,10 @@ function EditarMeusDados({ conta, aoSalvar, aoCancelar }) {
     cidade: texto(conta.cidade),
     estado: texto(conta.estado),
   });
-  const ultimoCepBuscado = useRef(somenteDigitos(texto(conta.cep)));
-  const [buscandoCep, setBuscandoCep] = useState(false);
-  const [erroCep, setErroCep] = useState(null);
+  const { alterarCep, buscandoCep, erroCep } = useConsultaCep(setEndereco, texto(conta.cep));
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
   const [camposComErro, setCamposComErro] = useState([]);
-
-  async function buscarCep(cepLimpo) {
-    if (ultimoCepBuscado.current === cepLimpo) return;
-    ultimoCepBuscado.current = cepLimpo;
-
-    setBuscandoCep(true);
-    setErroCep(null);
-
-    try {
-      const dados = await buscarEnderecoPorCep(cepLimpo);
-      setEndereco((anterior) => ({
-        ...anterior,
-        logradouro: dados.logradouro ?? "",
-        bairro: dados.bairro ?? "",
-        cidade: dados.cidade ?? "",
-        estado: dados.estado ?? "",
-      }));
-    } catch (err) {
-      setErroCep(err.mensagem || "Não foi possível buscar este CEP.");
-    } finally {
-      setBuscandoCep(false);
-    }
-  }
-
-  function alterarCep(evento) {
-    const mascarado = formatarCep(evento.target.value);
-    setEndereco((anterior) => ({ ...anterior, cep: mascarado }));
-
-    const limpo = somenteDigitos(mascarado);
-    if (limpo.length === 8) {
-      buscarCep(limpo);
-      return;
-    }
-
-    ultimoCepBuscado.current = "";
-    setErroCep(null);
-  }
 
   function alterarEndereco(evento) {
     const { name, value } = evento.target;

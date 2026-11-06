@@ -1,5 +1,6 @@
 const CHAVE_TOKEN = "token";
 const CHAVE_USUARIO = "forcamente:usuario";
+export const EVENTO_SESSAO_EXPIRADA = "forcamente:sessao-expirada";
 
 export function lerSessao() {
     try {
@@ -35,4 +36,9 @@ export function atualizarNomeDaSessao(nomeCompleto) {
 export function limparSessao() {
     localStorage.removeItem(CHAVE_TOKEN);
     localStorage.removeItem(CHAVE_USUARIO);
+}
+
+export function expirarSessao() {
+    limparSessao();
+    window.dispatchEvent(new Event(EVENTO_SESSAO_EXPIRADA));
 }
