@@ -4,6 +4,7 @@ import FilterLibrary from "../components/LibraryComponents/FilterLibrary";
 import CardsLibrary from "../components/LibraryComponents/CardsLibrary";
 import LibraryHead from "../components/LibraryComponents/LibraryHead";
 import AvisoDeSimulacao from "../components/LibraryComponents/AvisoDeSimulacao";
+import LimiteDeCriacao from "../components/LimiteDeCriacao";
 import {
   listarExercicios,
   listarGruposMusculares,
@@ -11,6 +12,7 @@ import {
   MODERACAO_DE_EXERCICIOS_SIMULADA,
 } from "../services/exercicioService";
 import { PAPEIS_EDITORES } from "../utils/papeis";
+import { limiteDeCriacao } from "../utils/limiteCriacao";
 
 function avisoAoCriar(exercicio) {
   if (exercicio?.status === "PENDENTE") {
@@ -51,6 +53,7 @@ function LibraryPages() {
   const [erro, setErro] = useState(null);
   const { usuario, avisar } = useOutletContext();
   const podeEditar = PAPEIS_EDITORES.includes(usuario?.papel);
+  const criacaoBloqueada = MODERACAO_DE_EXERCICIOS_SIMULADA && limiteDeCriacao(exercicios, usuario).bloqueado;
 
   useEffect(() => {
     let ativo = true;
@@ -150,10 +153,17 @@ function LibraryPages() {
       <LibraryHead
         gruposMusculares={gruposMusculares}
         niveis={niveis}
-        carregandoOpcoes={carregando}
+        carregandoOpcoes={carregando || Boolean(erro)}
+        criacaoBloqueada={criacaoBloqueada}
         aoCriar={adicionarExercicio}
+        aoConferirLimite={setExercicios}
         podeEditar={podeEditar}
       />
+      {MODERACAO_DE_EXERCICIOS_SIMULADA && !carregando && !erro && (
+        <div className="px-4">
+          <LimiteDeCriacao itens={exercicios} usuario={usuario} tipo="exercícios" />
+        </div>
+      )}
       {MODERACAO_DE_EXERCICIOS_SIMULADA && (
         <div className="mb-4 px-4">
           <AvisoDeSimulacao />

@@ -1,4 +1,6 @@
 import api from "./api";
+import { lerSessao } from "../utils/sessao";
+import { exigirVagaParaCriar } from "../utils/limiteCriacao";
 
 export async function listarArtigos() {
   const { data } = await api.get("/artigos");
@@ -16,6 +18,10 @@ export async function listarCategorias() {
 }
 
 export async function criarArtigo(dados) {
+  const usuario = lerSessao();
+  if (usuario?.papel === "PROFESSOR") {
+    exigirVagaParaCriar(await listarArtigos(), usuario);
+  }
   const { data } = await api.post("/artigos", dados);
   return data;
 }

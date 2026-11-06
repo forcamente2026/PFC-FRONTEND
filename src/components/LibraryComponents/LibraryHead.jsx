@@ -4,7 +4,7 @@ import ExercicioForm from "./ExercicioForm";
 import { EXERCICIO_VAZIO, exercicioParaEnvio, validarExercicio } from "./exercicioCampos";
 import { criarExercicio } from "../../services/exercicioService";
 
-function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, podeEditar }) {
+function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, criacaoBloqueada = false, aoCriar, aoConferirLimite, podeEditar }) {
   const [openModal, setOpenModaL] = useState(false);
   const [form, setForm] = useState(EXERCICIO_VAZIO);
   const [enviando, setEnviando] = useState(false);
@@ -38,6 +38,7 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, pode
       aoCriar(novo);
       fecharModal();
     } catch (err) {
+      if (err.itensDoLimite) aoConferirLimite?.(err.itensDoLimite);
       setErro(err.mensagem || "Não foi possível cadastrar o exercício.");
     } finally {
       setEnviando(false);
@@ -61,7 +62,8 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, pode
       <div className="gap-2 flex px-2 py-3 font-bold">
         <button 
           onClick={() => setOpenModaL(true)}
-          className=" bg-red-500 text-red-200 rounded-md cursor-pointer hover:bg-red-900 hover:text-white p-2"
+          disabled={carregandoOpcoes || criacaoBloqueada}
+          className=" bg-red-500 text-red-200 rounded-md cursor-pointer hover:bg-red-900 hover:text-white p-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {" "}
           Adicionar exercicio

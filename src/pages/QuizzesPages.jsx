@@ -4,9 +4,11 @@ import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroQuizzes from "../components/QuizComponents/FiltroQuizzes";
 import CardQuiz from "../components/QuizComponents/CardQuiz";
+import LimiteDeCriacao from "../components/LimiteDeCriacao";
 import { listarCategorias } from "../services/artigoService";
 import { listarNiveisDoQuiz, listarQuizzes } from "../services/quizService";
 import { podeEditar } from "../utils/papeis";
+import { limiteDeCriacao } from "../utils/limiteCriacao";
 
 function QuizzesPages() {
   const { usuario } = useOutletContext();
@@ -19,6 +21,7 @@ function QuizzesPages() {
   const [busca, setBusca] = useState("");
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
+  const { bloqueado } = limiteDeCriacao(quizzes, usuario);
 
   useEffect(() => {
     let ativo = true;
@@ -62,14 +65,29 @@ function QuizzesPages() {
       />
 
       {podeCriar && (
-        <div className="mb-6 flex justify-end">
-          <Link
-            to="/quiz/novo"
-            className="bg-red-500 rounded-md py-2 px-4 font-bold text-white hover:bg-red-900"
-          >
-            Novo quiz
-          </Link>
-        </div>
+        <>
+          {!carregando && !erro && (
+            <LimiteDeCriacao itens={quizzes} usuario={usuario} tipo="quizzes" />
+          )}
+          <div className="mb-6 flex justify-end">
+            {carregando || erro || bloqueado ? (
+              <button
+                type="button"
+                disabled
+                className="bg-red-500 rounded-md py-2 px-4 font-bold text-white opacity-50 cursor-not-allowed"
+              >
+                Novo quiz
+              </button>
+            ) : (
+              <Link
+                to="/quiz/novo"
+                className="bg-red-500 rounded-md py-2 px-4 font-bold text-white hover:bg-red-900"
+              >
+                Novo quiz
+              </Link>
+            )}
+          </div>
+        </>
       )}
 
       <FiltroQuizzes

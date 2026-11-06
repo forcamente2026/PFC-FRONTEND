@@ -4,7 +4,7 @@ import ArtigoForm from "./ArtigoForm";
 import { ARTIGO_VAZIO, artigoParaEnvio, validarArtigo } from "./artigoCampos";
 import { criarArtigo } from "../../services/artigoService";
 
-function NovoArtigo({ categorias, carregandoOpcoes, aoCriar }) {
+function NovoArtigo({ categorias, carregandoOpcoes, criacaoBloqueada = false, aoCriar, aoConferirLimite }) {
   const [modalAberto, setModalAberto] = useState(false);
   const [form, setForm] = useState(ARTIGO_VAZIO);
   const [enviando, setEnviando] = useState(false);
@@ -41,6 +41,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, aoCriar }) {
       aoCriar(novo);
       fecharModal();
     } catch (err) {
+      if (err.itensDoLimite) aoConferirLimite?.(err.itensDoLimite);
       setErro(err.mensagem || "Não foi possível enviar o artigo.");
       setCamposComErro(err.campos ?? []);
     } finally {
@@ -53,7 +54,8 @@ function NovoArtigo({ categorias, carregandoOpcoes, aoCriar }) {
       <button
         type="button"
         onClick={() => setModalAberto(true)}
-        className="bg-red-500 rounded-md py-2 px-4 font-bold text-white hover:bg-red-900 cursor-pointer"
+        disabled={carregandoOpcoes || criacaoBloqueada}
+        className="bg-red-500 rounded-md py-2 px-4 font-bold text-white hover:bg-red-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Novo artigo
       </button>
