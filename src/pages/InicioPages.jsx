@@ -5,7 +5,12 @@ import CardFuncionalidade from "../components/ComponentesInicio/CardFuncionalida
 import NumeroRapido from "../components/ComponentesInicio/NumeroRapido";
 import { FUNCIONALIDADES, SAUDACOES } from "../components/ComponentesInicio/dadosInicio";
 import { listarArtigos, listarArtigosPendentes } from "../services/artigoService";
-import { listarExercicios, listarGruposMusculares } from "../services/exercicioService";
+import {
+  listarExercicios,
+  listarExerciciosPendentes,
+  listarGruposMusculares,
+  MODERACAO_DE_EXERCICIOS_SIMULADA,
+} from "../services/exercicioService";
 import { listarQuizzes, listarQuizzesPendentes } from "../services/quizService";
 import {
   listarAnonimizacoesPendentes,
@@ -43,10 +48,11 @@ function numerosDoProfessor(artigos, quizzes) {
   ];
 }
 
-function numerosDoAdministrador(artigos, quizzes, professores, pedidos) {
+function numerosDoAdministrador(artigos, quizzes, professores, pedidos, exercicios) {
   return [
     { rotulo: "Artigos para revisar", valor: artigos.length },
     { rotulo: "Quizzes para revisar", valor: quizzes.length },
+    ...(exercicios ? [{ rotulo: "Exercícios para revisar", valor: exercicios.length }] : []),
     { rotulo: "Professores a verificar", valor: professores.length },
     { rotulo: "Pedidos de exclusão", valor: pedidos.length },
   ];
@@ -61,6 +67,7 @@ function buscarDados(papel) {
       listarQuizzesPendentes(),
       listarVerificacoesPendentes(),
       listarAnonimizacoesPendentes(),
+      MODERACAO_DE_EXERCICIOS_SIMULADA ? listarExerciciosPendentes() : null,
     ]).then(([exercicios, grupos, ...pendencias]) => ({ exercicios, grupos, pendencias }));
   }
 

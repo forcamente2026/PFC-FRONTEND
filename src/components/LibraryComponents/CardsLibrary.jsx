@@ -4,20 +4,18 @@ import CarrosselCards from "./CarrosselCards";
 import Modal from "../Modal";
 import ExercicioForm from "./ExercicioForm";
 import DetalheExercicio from "./DetalheExercicio";
+import ModeracaoExercicio from "./ModeracaoExercicio";
 import {
   EXERCICIO_VAZIO,
   exercicioParaEnvio,
   exercicioParaFormulario,
+  montarDicionario,
   validarExercicio,
 } from "./exercicioCampos";
 import {
   atualizarExercicio,
   excluirExercicio,
 } from "../../services/exercicioService";
-
-function montarDicionario(lista) {
-  return Object.fromEntries(lista.map((item) => [item.codigo, item.descricao]));
-}
 
 function Mensagem({ children, variante }) {
   const estilo =
@@ -41,6 +39,8 @@ function CardsLibrary({
   grupoSelecionado,
   aoAtualizar,
   aoExcluir,
+  aoAprovar,
+  aoDecidir,
   podeEditar,
 }) {
   const [menuAbertoId, setMenuAbertoId] = useState(null);
@@ -108,6 +108,16 @@ function CardsLibrary({
 
   function fecharDetalhe() {
     setExercicioEmDetalhe(null);
+  }
+
+  function aprovarNoDetalhe(atualizado) {
+    fecharDetalhe();
+    aoAprovar(atualizado);
+  }
+
+  function decidirNoDetalhe(atualizado) {
+    fecharDetalhe();
+    aoDecidir(atualizado);
   }
 
   function handleChange(evento) {
@@ -186,7 +196,7 @@ function CardsLibrary({
             aoEditar={() => abrirEdicao(item)}
             aoExcluir={() => abrirExclusao(item)}
             aoVerTecnica={() => abrirDetalhe(item)}
-            podeEditar={podeEditar}
+            podeEditar={item.podeEditar ?? podeEditar}
           />
         ))}
       </CarrosselCards>
@@ -202,7 +212,13 @@ function CardsLibrary({
             rotuloGrupo={rotulosGrupos[exercicioEmDetalhe.grupoMuscular] ?? exercicioEmDetalhe.grupoMuscular}
             rotuloNivel={rotulosNiveis[exercicioEmDetalhe.nivel] ?? exercicioEmDetalhe.nivel}
             aoFechar={fecharDetalhe}
-          />
+          >
+            <ModeracaoExercicio
+              exercicio={exercicioEmDetalhe}
+              aoAprovar={aprovarNoDetalhe}
+              aoDecidir={decidirNoDetalhe}
+            />
+          </DetalheExercicio>
         )}
       </Modal>
 

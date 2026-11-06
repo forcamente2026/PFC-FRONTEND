@@ -18,6 +18,10 @@ export const EXERCICIO_VAZIO = {
 };
 
 
+export function montarDicionario(lista) {
+  return Object.fromEntries(lista.map((item) => [item.codigo, item.descricao]));
+}
+
 export function etapasDaDescricao(descricao) {
   const etapas = (descricao ?? "")
     .split(/\r?\n/)
