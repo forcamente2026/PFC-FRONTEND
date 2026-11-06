@@ -1,7 +1,7 @@
 import { useId } from "react";
+import EditorDeEtapas from "./EditorDeEtapas";
 import {
   LIMITE_AQUECIMENTO,
-  LIMITE_DESCRICAO_EXECUCAO,
   LIMITE_EQUIPAMENTO,
   LIMITE_ERROS_COMUNS,
   LIMITE_GIF_URL,
@@ -35,15 +35,6 @@ function ExercicioForm({
         <h2>{titulo}</h2>
       </div>
       <div className="w-full h-px bg-gray-300 mb-3"></div>
-
-      {erro && (
-        <p
-          role="alert"
-          className="text-red-500 text-sm font-normal text-center"
-        >
-          {erro}
-        </p>
-      )}
 
       <div className="flex flex-col text-red-200 gap-2 mb-6">
         <label htmlFor={campoId("nome")}>Nome do Exercicio</label>
@@ -109,20 +100,10 @@ function ExercicioForm({
       <div className="w-full h-px bg-gray-300 mb-3"></div>
 
       <div className="flex flex-col text-red-200 gap-2 mb-6">
-        <label htmlFor={campoId("descricaoExecucao")}>Descrição execução</label>
-        <textarea
-          id={campoId("descricaoExecucao")}
-          name="descricaoExecucao"
-          value={valores.descricaoExecucao}
-          onChange={aoAlterar}
-          rows={4}
-          maxLength={LIMITE_DESCRICAO_EXECUCAO}
-          placeholder="Digite"
-          className={`${ESTILO_CAMPO} text-lg`}
+        <EditorDeEtapas
+          etapas={valores.etapas}
+          aoMudar={(etapas) => aoAlterar({ target: { name: "etapas", value: etapas } })}
         />
-        <span className="self-end text-sm text-gray-300">
-          {valores.descricaoExecucao.length}/{LIMITE_DESCRICAO_EXECUCAO}
-        </span>
 
         <label htmlFor={campoId("errosComuns")}>Erros comuns</label>
         <textarea
@@ -180,6 +161,15 @@ function ExercicioForm({
           className={ESTILO_CAMPO}
         />
       </div>
+
+      {erro && (
+        <p
+          role="alert"
+          className="text-red-500 text-sm font-normal text-center"
+        >
+          {erro}
+        </p>
+      )}
 
       <button
         type="submit"

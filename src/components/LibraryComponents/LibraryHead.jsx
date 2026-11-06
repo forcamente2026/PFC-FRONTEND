@@ -66,7 +66,7 @@ function LibraryHead({ gruposMusculares, niveis, carregandoOpcoes, aoCriar, pode
           {" "}
           Adicionar exercicio
         </button>
-        <Modal isOpen={openModal} setCloseModal={fecharModal}>
+        <Modal isOpen={openModal} setCloseModal={fecharModal} largo>
           <ExercicioForm
             titulo="CRIAR EXERCICIO"
             valores={form}
