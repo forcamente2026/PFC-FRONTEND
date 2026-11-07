@@ -4,6 +4,7 @@ import Modal from "../Modal";
 import EstadoRequisicao from "../progress/EstadoRequisicao";
 import DecidirVerificacaoCref from "./DecidirVerificacaoCref";
 import {
+  buscarDadosCompletos,
   decidirVerificacaoCref,
   listarFormacoes,
   listarVerificacoesPendentes,
@@ -13,7 +14,7 @@ import { formatarDataCurta } from "../../utils/formatar";
 const ESTILO_CABECALHO = "py-2 pr-4 font-semibold text-red-200 whitespace-nowrap";
 const ESTILO_CELULA = "py-2 pr-4 text-gray-300 align-top";
 const ESTILO_ACAO =
-  "rounded-md border border-gray-600 px-3 py-1 text-xs text-red-200 hover:bg-white/10 cursor-pointer whitespace-nowrap";
+  "rounded-md border border-gray-600 px-3 py-1 text-xs text-red-200 hover:bg-white/10 cursor-pointer whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed";
 
 function descricaoDaFormacao(codigo, formacoes) {
   if (!codigo) return null;
@@ -27,6 +28,7 @@ function VerificacoesCref() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [professorEmVerificacao, setProfessorEmVerificacao] = useState(null);
+  const [idEmOperacao, setIdEmOperacao] = useState(null);
 
   useEffect(() => {
     let ativo = true;
@@ -57,6 +59,21 @@ function VerificacoesCref() {
       ativo = false;
     };
   }, []);
+
+  async function abrirVerificacao(professor) {
+    setIdEmOperacao(professor.id);
+    try {
+      setProfessorEmVerificacao(await buscarDadosCompletos(professor.id));
+    } catch (err) {
+      avisar({
+        tipo: "erro",
+        titulo: "Não foi possível abrir a verificação",
+        mensagem: err.mensagem || "Tente novamente.",
+      });
+    } finally {
+      setIdEmOperacao(null);
+    }
+  }
 
   async function decidir(professor, status, motivo) {
     await decidirVerificacaoCref(professor.id, status, motivo);
@@ -120,7 +137,8 @@ function VerificacoesCref() {
                   <td className={ESTILO_CELULA}>
                     <button
                       type="button"
-                      onClick={() => setProfessorEmVerificacao(professor)}
+                      onClick={() => abrirVerificacao(professor)}
+                      disabled={idEmOperacao === professor.id}
                       className={ESTILO_ACAO}
                     >
                       Verificar

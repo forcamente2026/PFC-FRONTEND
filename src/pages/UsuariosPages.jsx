@@ -14,6 +14,7 @@ import {
   alterarAtivo,
   anonimizarUsuario,
   atualizarUsuario,
+  buscarDadosCompletos,
   buscarUsuarios,
   listarFormacoes,
 } from "../services/usuarioService";
@@ -108,6 +109,21 @@ function UsuariosPages() {
     setPagina(0);
   }
 
+  async function abrirEdicao(usuarioDaLista) {
+    setIdEmOperacao(usuarioDaLista.id);
+    try {
+      setUsuarioEmEdicao(await buscarDadosCompletos(usuarioDaLista.id));
+    } catch (err) {
+      avisar({
+        tipo: "erro",
+        titulo: "Não foi possível abrir a edição",
+        mensagem: err.mensagem || "Tente novamente.",
+      });
+    } finally {
+      setIdEmOperacao(null);
+    }
+  }
+
   async function salvar(dados) {
     await atualizarUsuario(usuarioEmEdicao.id, dados);
     avisar({
@@ -189,7 +205,7 @@ function UsuariosPages() {
         <TabelaUsuarios
           usuarios={usuarios}
           formacoes={formacoes}
-          aoEditar={setUsuarioEmEdicao}
+          aoEditar={abrirEdicao}
           aoAlternarAtivo={setUsuarioEmAlteracao}
           aoAnonimizar={setUsuarioEmAnonimizacao}
           idEmOperacao={idEmOperacao}

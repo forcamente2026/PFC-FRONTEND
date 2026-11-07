@@ -23,6 +23,11 @@ export async function buscarUsuarios(parametros) {
   return data;
 }
 
+export async function buscarDadosCompletos(id) {
+  const { data } = await api.get(`/usuarios/${id}/dados-completos`);
+  return data;
+}
+
 export async function atualizarUsuario(id, dados) {
   const { data } = await api.put(`/usuarios/${id}`, dados);
   return data;

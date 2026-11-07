@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { formatarCep, formatarCref, formatarDataCurta, somenteDigitos } from "../../utils/formatar";
+import {
+  formatarCep,
+  formatarCref,
+  formatarDataCurta,
+  formatarNascimento,
+  somenteDigitos,
+} from "../../utils/formatar";
 import { ESTADOS } from "../../utils/estados";
 import { rotuloDoPapel } from "../../utils/papeis";
 import {
@@ -110,14 +116,14 @@ function FormEdicaoUsuario({ usuario, formacoes, aoSalvar, aoCancelar }) {
     <form onSubmit={enviar} className="w-full max-w-2xl pr-8">
       <h2 className="mb-1 text-xl font-bold text-white">Editar usuário</h2>
       <p className="mb-5 text-sm text-gray-400">
-        Alterações entram na trilha de auditoria.
+        A abertura e as alterações entram na trilha de auditoria.
       </p>
 
       <div className="mb-5 grid grid-cols-2 gap-4 rounded-xl border border-gray-700 p-4 lp:grid-cols-4">
         <Leitura rotulo="Perfil" valor={rotuloDoPapel(usuario.papel)} />
         <Leitura
           rotulo="Nascimento"
-          valor={formatarDataCurta(usuario.dataNascimento)}
+          valor={formatarNascimento(usuario.dataNascimento)}
         />
         <Leitura rotulo="Cadastrado em" valor={formatarDataCurta(usuario.criadoEm)} />
         <Leitura rotulo="Situação" valor={usuario.ativo ? "Ativo" : "Inativo"} />
