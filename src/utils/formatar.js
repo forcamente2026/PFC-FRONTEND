@@ -62,6 +62,12 @@ export function formatarDataCurta(valor) {
   });
 }
 
+export function formatarNascimento(valor) {
+  if (!valor) return "—";
+  if (valor.includes("/")) return valor;
+  return formatarDataCurta(valor);
+}
+
 export function formatarDataExtenso(valor) {
   if (!valor) return "";
 

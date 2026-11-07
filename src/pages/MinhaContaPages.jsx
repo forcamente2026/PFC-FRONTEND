@@ -11,7 +11,7 @@ import EditarMeusDados from "../components/EditarMeusDados";
 import AlterarSenha from "../components/AlterarSenha";
 import AlterarEmail from "../components/AlterarEmail";
 import BaixarMeusDados from "../components/BaixarMeusDados";
-import { formatarCep, formatarDataCurta } from "../utils/formatar";
+import { formatarCep, formatarDataCurta, formatarNascimento } from "../utils/formatar";
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
 import { EMAIL_CONTATO } from "../utils/contato";
@@ -194,7 +194,7 @@ function MinhaContaPages() {
                   <Dado rotulo="Perfil" valor={rotuloDoPapel(conta.papel)} />
                   <Dado
                     rotulo="Data de nascimento"
-                    valor={formatarDataCurta(conta.dataNascimento)}
+                    valor={formatarNascimento(conta.dataNascimento)}
                   />
                   <Dado
                     rotulo="Cadastrado em"

@@ -44,6 +44,7 @@ function DecidirVerificacaoCref({ professor, formacao, aoDecidir, aoCancelar }) 
       <p className="mb-5 text-sm text-gray-400">
         Confira o registro no conselho antes de decidir. A aprovação vale a partir
         do próximo login do professor; até lá, ele continua com as permissões de aluno.
+        A abertura desta tela fica registrada na trilha de auditoria.
       </p>
 
       <div className="mb-5 rounded-xl border border-gray-700 p-4">
