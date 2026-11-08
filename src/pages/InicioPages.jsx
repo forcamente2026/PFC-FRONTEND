@@ -35,15 +35,23 @@ function numerosDoAluno(quizzes) {
   ];
 }
 
-function numerosDoProfessor(artigos, quizzes) {
+function numerosDoProfessor(artigos, quizzes, exercicios) {
   const meusArtigos = artigos.filter((artigo) => artigo.podeEditar);
   const meusQuizzes = quizzes.filter((quiz) => quiz.podeEditar);
-  const aguardando = [...meusArtigos, ...meusQuizzes].filter((item) => item.status === "PENDENTE");
+  const meusExercicios = exercicios.filter((exercicio) => exercicio.podeEditar);
+  const aguardando = [...meusArtigos, ...meusQuizzes, ...meusExercicios].filter(
+    (item) => item.status === "PENDENTE",
+  );
 
   return [
     { rotulo: "Artigos enviados", valor: meusArtigos.length },
     { rotulo: "Quizzes enviados", valor: meusQuizzes.length },
-    { rotulo: "Aguardando aprovação", valor: aguardando.length, detalhe: "entre os seus artigos e quizzes" },
+    { rotulo: "Exercícios enviados", valor: meusExercicios.length },
+    {
+      rotulo: "Aguardando aprovação",
+      valor: aguardando.length,
+      detalhe: "entre os seus artigos, quizzes e exercícios",
+    },
   ];
 }
 
@@ -71,10 +79,9 @@ function buscarDados(papel) {
   }
 
   if (papel === "PROFESSOR") {
-    return Promise.all([listarArtigos(), listarQuizzes()]).then(([artigos, quizzes]) => ({
-      artigos,
-      quizzes,
-    }));
+    return Promise.all([listarArtigos(), listarQuizzes(), listarExercicios()]).then(
+      ([artigos, quizzes, exercicios]) => ({ artigos, quizzes, exercicios }),
+    );
   }
 
   return listarQuizzes().then((quizzes) => ({ quizzes }));
@@ -83,7 +90,8 @@ function buscarDados(papel) {
 function numerosDoPapel(papel, dados) {
   if (!dados) return null;
   if (papel === "ADMINISTRADOR") return numerosDoAdministrador(...dados.pendencias);
-  if (papel === "PROFESSOR") return numerosDoProfessor(dados.artigos, dados.quizzes);
+  if (papel === "PROFESSOR")
+    return numerosDoProfessor(dados.artigos, dados.quizzes, dados.exercicios);
   return numerosDoAluno(dados.quizzes);
 }
 
