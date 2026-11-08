@@ -2,6 +2,9 @@ import { Menu, Pencil, Trash2 } from "lucide-react";
 import ImagemExercicio from "./ImagemExercicio";
 import { etiquetaDoArtigo } from "../ArticlesComponents/artigoCampos";
 
+export const ESTILO_CAIXA_CARROSSEL =
+  "w-full md:w-[calc((100%_-_1.5rem)/2)] lp:w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_4.5rem)/4)] h-[26rem] flex-none snap-start";
+
 const ESTILO_ITEM_MENU =
   "flex w-full items-center gap-2 px-3 py-2 text-sm text-red-200 hover:bg-red-500 hover:text-white cursor-pointer";
 
@@ -15,14 +18,15 @@ function CardExercicio({
   aoExcluir,
   aoVerTecnica,
   podeEditar,
+  estiloCaixa = ESTILO_CAIXA_CARROSSEL,
+  alturaImagem,
 }) {
   const { nome, gifUrl, equipamento } = exercicio;
   const etiquetaDaSituacao = etiquetaDoArtigo(exercicio);
 
   return (
     <div
-      className="box-border flex flex-col relative w-full md:w-[calc((100%_-_1.5rem)/2)] lp:w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_4.5rem)/4)] h-[26rem] rounded-xl
-      p-4 snap-start border border-gray-700 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/20 gap-2 flex-none flex-nowrap overflow-hidden"
+      className={`box-border relative flex flex-col flex-nowrap gap-2 overflow-hidden rounded-xl border border-gray-700 bg-white/5 p-4 shadow-lg shadow-black/20 backdrop-blur-xl ${estiloCaixa}`}
     >
       {podeEditar && (
       <div
@@ -72,7 +76,7 @@ function CardExercicio({
       </div>
 
       <div className="relative">
-        <ImagemExercicio src={gifUrl} alt={nome} />
+        <ImagemExercicio src={gifUrl} alt={nome} altura={alturaImagem} />
         {etiquetaDaSituacao && (
           <span className="absolute bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-700 px-2 py-1 text-xs font-medium text-gray-200">
             {etiquetaDaSituacao}

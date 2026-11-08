@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import CardExercicio from "./CardExercicio";
 import CarrosselCards from "./CarrosselCards";
+import SeletorDeColunas from "./SeletorDeColunas";
+import useColunasDaGrade from "../../hooks/useColunasDaGrade";
 import Modal from "../Modal";
 import ExercicioForm from "./ExercicioForm";
 import DetalheExercicio from "./DetalheExercicio";
@@ -16,6 +18,51 @@ import {
   atualizarExercicio,
   excluirExercicio,
 } from "../../services/exercicioService";
+
+const CHAVE_COLUNAS = "forcamente:colunas-da-biblioteca";
+
+const GRADE = {
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+  4: "grid-cols-4",
+};
+
+const ALTURA_DO_CARD = {
+  2: "h-[34rem]",
+  3: "h-[30rem]",
+  4: "h-[26rem]",
+};
+
+const ALTURA_DA_IMAGEM = {
+  2: "h-72",
+  3: "h-56",
+  4: "h-40",
+};
+
+function lerColunas() {
+  try {
+    const guardado = Number(localStorage.getItem(CHAVE_COLUNAS));
+
+    return GRADE[guardado] ? guardado : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function colunasEfetivas(escolhida, maximo) {
+  if (maximo < 2) return 2;
+  if (!escolhida) return maximo >= 4 ? 3 : 2;
+
+  return Math.min(escolhida, maximo);
+}
+
+function gravarColunas(colunas) {
+  try {
+    localStorage.setItem(CHAVE_COLUNAS, String(colunas));
+  } catch {
+    return;
+  }
+}
 
 function Mensagem({ children, variante }) {
   const estilo =
@@ -46,6 +93,8 @@ function CardsLibrary({
   aoDecidir,
   podeEditar,
 }) {
+  const maximoDeColunas = useColunasDaGrade();
+  const [colunaEscolhida, setColunaEscolhida] = useState(lerColunas);
   const [menuAbertoId, setMenuAbertoId] = useState(null);
   const [exercicioEmEdicao, setExercicioEmEdicao] = useState(null);
   const [exercicioParaExcluir, setExercicioParaExcluir] = useState(null);
@@ -54,6 +103,7 @@ function CardsLibrary({
   const [enviando, setEnviando] = useState(false);
   const [erroAcao, setErroAcao] = useState(null);
 
+  const colunas = colunasEfetivas(colunaEscolhida, maximoDeColunas);
   const rotulosGrupos = montarDicionario(gruposMusculares);
   const rotulosNiveis = montarDicionario(niveis);
 
@@ -170,6 +220,32 @@ function CardsLibrary({
     }
   }
 
+  function escolherColunas(valor) {
+    setColunaEscolhida(valor);
+    gravarColunas(valor);
+  }
+
+  function cartao(item, estiloCaixa, alturaImagem) {
+    return (
+      <CardExercicio
+        key={item.id}
+        exercicio={item}
+        rotuloGrupo={rotulosGrupos[item.grupoMuscular] ?? item.grupoMuscular}
+        rotuloNivel={rotulosNiveis[item.nivel] ?? item.nivel}
+        menuAberto={menuAbertoId === item.id}
+        aoAlternarMenu={() =>
+          setMenuAbertoId((atual) => (atual === item.id ? null : item.id))
+        }
+        aoEditar={() => abrirEdicao(item)}
+        aoExcluir={() => abrirExclusao(item)}
+        aoVerTecnica={() => abrirDetalhe(item)}
+        podeEditar={item.podeEditar ?? podeEditar}
+        estiloCaixa={estiloCaixa}
+        alturaImagem={alturaImagem}
+      />
+    );
+  }
+
   if (carregando) return <Mensagem>Carregando exercícios...</Mensagem>;
 
   if (erro) return <Mensagem variante="erro">{erro}</Mensagem>;
@@ -197,24 +273,27 @@ function CardsLibrary({
 
   return (
     <>
-      <CarrosselCards>
-        {exerciciosVisiveis.map((item) => (
-          <CardExercicio
-            key={item.id}
-            exercicio={item}
-            rotuloGrupo={rotulosGrupos[item.grupoMuscular] ?? item.grupoMuscular}
-            rotuloNivel={rotulosNiveis[item.nivel] ?? item.nivel}
-            menuAberto={menuAbertoId === item.id}
-            aoAlternarMenu={() =>
-              setMenuAbertoId((atual) => (atual === item.id ? null : item.id))
-            }
-            aoEditar={() => abrirEdicao(item)}
-            aoExcluir={() => abrirExclusao(item)}
-            aoVerTecnica={() => abrirDetalhe(item)}
-            podeEditar={item.podeEditar ?? podeEditar}
+      {maximoDeColunas > 0 ? (
+        <>
+          <SeletorDeColunas
+            colunas={colunas}
+            aoEscolher={escolherColunas}
+            opcoes={maximoDeColunas >= 4 ? [2, 3, 4] : [2, 3]}
           />
-        ))}
-      </CarrosselCards>
+
+          <div
+            className={`mx-auto grid w-full max-w-[88rem] gap-6 px-10 pb-4 ${GRADE[colunas]}`}
+          >
+            {exerciciosVisiveis.map((item) =>
+              cartao(item, `w-full ${ALTURA_DO_CARD[colunas]}`, ALTURA_DA_IMAGEM[colunas]),
+            )}
+          </div>
+        </>
+      ) : (
+        <CarrosselCards>
+          {exerciciosVisiveis.map((item) => cartao(item))}
+        </CarrosselCards>
+      )}
 
       <Modal
         isOpen={Boolean(exercicioEmDetalhe)}
