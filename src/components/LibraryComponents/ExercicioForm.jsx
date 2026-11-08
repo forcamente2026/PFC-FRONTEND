@@ -6,6 +6,7 @@ import {
   LIMITE_ERROS_COMUNS,
   LIMITE_GIF_URL,
   LIMITE_NOME,
+  LIMITE_VIDEO,
 } from "./exercicioCampos";
 
 const ESTILO_CAMPO = "bg-gray-500 rounded-xl p-1 text-white";
@@ -158,6 +159,18 @@ function ExercicioForm({
           value={valores.gifUrl}
           onChange={aoAlterar}
           placeholder="URL do gif"
+          className={ESTILO_CAMPO}
+        />
+
+        <label htmlFor={campoId("videoYoutubeId")}>Vídeo no YouTube</label>
+        <input
+          type="text"
+          id={campoId("videoYoutubeId")}
+          maxLength={LIMITE_VIDEO}
+          name="videoYoutubeId"
+          value={valores.videoYoutubeId}
+          onChange={aoAlterar}
+          placeholder="Cole o endereço do vídeo"
           className={ESTILO_CAMPO}
         />
       </div>

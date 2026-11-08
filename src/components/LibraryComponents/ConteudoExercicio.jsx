@@ -1,4 +1,5 @@
 import ImagemExercicio from "./ImagemExercicio";
+import VideoExercicio from "./VideoExercicio";
 import { etapasDaDescricao } from "./exercicioCampos";
 import { etiquetaDoArtigo } from "../ArticlesComponents/artigoCampos";
 
@@ -48,6 +49,7 @@ function ConteudoExercicio({ exercicio, rotuloGrupo, rotuloNivel }) {
   const {
     nome,
     gifUrl,
+    videoYoutubeId,
     equipamento,
     autorNome,
     descricaoExecucao,
@@ -69,6 +71,8 @@ function ConteudoExercicio({ exercicio, rotuloGrupo, rotuloNivel }) {
       {gifUrl?.trim() && (
         <ImagemExercicio src={gifUrl} alt={`Demonstração de ${nome}`} altura="h-56 md:h-72" />
       )}
+
+      <VideoExercicio videoYoutubeId={videoYoutubeId} nome={nome} />
 
       <SecaoEtapas descricao={descricaoExecucao} />
       <SecaoTecnica titulo="Erros comuns" texto={errosComuns} />
