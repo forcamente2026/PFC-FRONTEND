@@ -49,6 +49,7 @@ function TrackerAgua({ habilitado, resumo, processando, erro, aoRegistrar }) {
         <div className="grow">
           <CampoNumero
             id="quantidade-agua"
+            digitos={4}
             rotulo="OUTRA QUANTIDADE (ML)"
             valor={quantidadeMl}
             aoAlterar={setQuantidadeMl}

@@ -7,7 +7,6 @@ import FilaDeArtigos from "../components/AdminComponents/FilaDeArtigos";
 import FilaDeQuizzes from "../components/AdminComponents/FilaDeQuizzes";
 import FilaDeExercicios from "../components/AdminComponents/FilaDeExercicios";
 import VerificacoesCref from "../components/AdminComponents/VerificacoesCref";
-import { MODERACAO_DE_EXERCICIOS_SIMULADA } from "../services/exercicioService";
 
 const TIPOS_FILTRADOS = ["artigos", "quizzes", "exercicios", "professores", "exclusoes"];
 
@@ -29,7 +28,7 @@ function ItensPendentesPages() {
       <CabecalhoSecao
         rotulo="Administração"
         titulo="Itens pendentes"
-        descricao="O que espera a decisão do administrador: artigos, quizzes, professores aguardando verificação e pedidos de exclusão de conta."
+        descricao="O que espera a decisão do administrador: artigos, quizzes, exercícios, professores aguardando verificação e pedidos de exclusão de conta."
       />
 
       <AbasAdministracao />
@@ -38,7 +37,7 @@ function ItensPendentesPages() {
       <div className="flex flex-col gap-12">
         {mostrar("artigos") && <FilaDeArtigos />}
         {mostrar("quizzes") && <FilaDeQuizzes />}
-        {MODERACAO_DE_EXERCICIOS_SIMULADA && mostrar("exercicios") && <FilaDeExercicios />}
+        {mostrar("exercicios") && <FilaDeExercicios />}
         {mostrar("professores") && <VerificacoesCref />}
         {mostrar("exclusoes") && <PedidosDeExclusao />}
       </div>

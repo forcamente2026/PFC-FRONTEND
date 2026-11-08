@@ -1,3 +1,5 @@
+import PainelDeFiltros from "../PainelDeFiltros";
+
 const GRUPOS = [
   { codigo: "PEITO", rotulo: "Peito" },
   { codigo: "COSTAS", rotulo: "Costas" },
@@ -9,38 +11,57 @@ const GRUPOS = [
   { codigo: "ABDOMEN", rotulo: "Abdomen" },
 ];
 
+const ESTILO_BASE = "border p-2 rounded-md cursor-pointer";
+const ESTILO_ATIVO = "border-red-500 bg-red-500 text-white";
+const ESTILO_INATIVO =
+  "border-gray-500 text-red-200 hover:bg-red-500 hover:text-white";
+
 function FilterLibrary({ grupoSelecionado, aoSelecionar }) {
-  const estiloBase = "border p-2 rounded-md cursor-pointer";
-  const estiloAtivo = "border-red-500 bg-red-500 text-white";
-  const estiloInativo =
-    "border-gray-500 text-red-200 hover:bg-red-500 hover:text-white";
+  const selecionado = GRUPOS.find((grupo) => grupo.codigo === grupoSelecionado);
 
   function classes(codigo) {
-    return `${estiloBase} ${grupoSelecionado === codigo ? estiloAtivo : estiloInativo}`;
+    return `${ESTILO_BASE} ${
+      grupoSelecionado === codigo ? ESTILO_ATIVO : ESTILO_INATIVO
+    }`;
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 flex flex-wrap items-center justify-center gap-4 mb-15">
-      <h2 className="font-medium text-2xl text-red-200">Grupos Musculares:</h2>
-
-      <button
-        type="button"
-        onClick={() => aoSelecionar("")}
-        className={classes("")}
+    <div className="w-full max-w-6xl mx-auto px-4 mb-15">
+      <PainelDeFiltros
+        id="grupos-musculares"
+        rotulo="Grupos musculares"
+        resumo={selecionado?.rotulo ?? "Todos"}
       >
-        TODOS
-      </button>
+        {({ fechar }) => {
+          function escolher(codigo) {
+            aoSelecionar(codigo);
+            fechar();
+          }
 
-      {GRUPOS.map((grupo) => (
-        <button
-          key={grupo.codigo}
-          type="button"
-          onClick={() => aoSelecionar(grupo.codigo)}
-          className={classes(grupo.codigo)}
-        >
-          {grupo.rotulo}
-        </button>
-      ))}
+          return (
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <h2 className="hidden font-medium text-2xl text-red-200 xl:block">
+                Grupos Musculares:
+              </h2>
+
+              <button type="button" onClick={() => escolher("")} className={classes("")}>
+                TODOS
+              </button>
+
+              {GRUPOS.map((grupo) => (
+                <button
+                  key={grupo.codigo}
+                  type="button"
+                  onClick={() => escolher(grupo.codigo)}
+                  className={classes(grupo.codigo)}
+                >
+                  {grupo.rotulo}
+                </button>
+              ))}
+            </div>
+          );
+        }}
+      </PainelDeFiltros>
     </div>
   );
 }

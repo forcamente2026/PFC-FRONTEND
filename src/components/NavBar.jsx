@@ -4,7 +4,7 @@ import { LogOut, Menu, UserKey, X } from "lucide-react";
 import ModalLogin from "./ModalLogin";
 import Autenticacao from "./Autenticacao";
 import AvisoLogin from "./AvisoLogin";
-import { PAPEIS_VALIDADORES } from "../utils/papeis";
+import { PAPEIS_EDITORES, PAPEIS_VALIDADORES } from "../utils/papeis";
 
 const LINKS = [
   { para: "/", rotulo: "HOME", exato: true },
@@ -12,6 +12,7 @@ const LINKS = [
   { para: "/quiz", rotulo: "QUIZ", protegida: true },
   { para: "/library", rotulo: "BIBLIOTECA", protegida: true },
   { para: "/progress", rotulo: "PROGRESSO", protegida: true },
+  { para: "/meu-acervo", rotulo: "MEU ACERVO", protegida: true, papeis: PAPEIS_EDITORES },
   { para: "/about", rotulo: "QUEM SOMOS" },
   { para: "/admin", rotulo: "ADMINISTRAÇÃO", protegida: true, papeis: PAPEIS_VALIDADORES,},
 ];

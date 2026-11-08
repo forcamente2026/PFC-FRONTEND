@@ -158,6 +158,8 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <CampoNumero
             id="peso-tmb"
+            digitos={3}
+            casas={2}
             rotulo="PESO (KG)"
             valor={pesoKg}
             aoAlterar={aoAlterarPeso}
@@ -166,6 +168,7 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
           />
           <CampoNumero
             id="altura"
+            digitos={3}
             rotulo="ALTURA (CM)"
             valor={alturaCm}
             aoAlterar={setAlturaCm}
@@ -173,6 +176,7 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
           />
           <CampoNumero
             id="idade"
+            digitos={3}
             rotulo="IDADE"
             valor={idade}
             aoAlterar={setIdade}

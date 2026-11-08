@@ -5,6 +5,7 @@ import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroQuizzes from "../components/QuizComponents/FiltroQuizzes";
 import CardQuiz from "../components/QuizComponents/CardQuiz";
 import LimiteDeCriacao from "../components/LimiteDeCriacao";
+import FiltroParaAprovar from "../components/FiltroParaAprovar";
 import { listarCategorias } from "../services/artigoService";
 import { listarNiveisDoQuiz, listarQuizzes } from "../services/quizService";
 import { podeEditar } from "../utils/papeis";
@@ -19,6 +20,7 @@ function QuizzesPages() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
   const [nivelSelecionado, setNivelSelecionado] = useState("");
   const [busca, setBusca] = useState("");
+  const [soParaAprovar, setSoParaAprovar] = useState(false);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const { bloqueado } = limiteDeCriacao(quizzes, usuario);
@@ -53,8 +55,11 @@ function QuizzesPages() {
     const doNivel = !nivelSelecionado || quiz.nivel.codigo === nivelSelecionado;
     const doTitulo =
       !buscaNormalizada || quiz.titulo.toLowerCase().includes(buscaNormalizada);
-    return daCategoria && doNivel && doTitulo;
+    const paraAprovar = !soParaAprovar || quiz.podeAprovar;
+    return daCategoria && doNivel && doTitulo && paraAprovar;
   });
+
+  const aguardandoMinhaAprovacao = quizzes.filter((quiz) => quiz.podeAprovar).length;
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
@@ -90,6 +95,14 @@ function QuizzesPages() {
         </>
       )}
 
+      {usuario?.papel === "PROFESSOR" && (
+        <FiltroParaAprovar
+          ativo={soParaAprovar}
+          aoAlternar={setSoParaAprovar}
+          quantidade={aguardandoMinhaAprovacao}
+        />
+      )}
+
       <FiltroQuizzes
         busca={busca}
         aoBuscar={setBusca}
@@ -106,7 +119,11 @@ function QuizzesPages() {
         mensagemCarregando="Carregando quizzes..."
         erro={erro}
         vazio={quizzesVisiveis.length === 0}
-        mensagemVazio="Nenhum quiz encontrado."
+        mensagemVazio={
+          soParaAprovar
+            ? "Nenhum quiz esperando a sua aprovação."
+            : "Nenhum quiz encontrado."
+        }
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {quizzesVisiveis.map((quiz) => (

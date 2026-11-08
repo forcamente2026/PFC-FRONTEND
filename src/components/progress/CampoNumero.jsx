@@ -1,6 +1,4 @@
-import { somenteDigitos, somenteNumeroDecimal } from "../../utils/formatar";
-
-const LIMITE_CARACTERES = 6;
+import { mascaraDecimal, mascaraInteira } from "../../utils/formatar";
 
 function CampoNumero({
   id,
@@ -8,12 +6,17 @@ function CampoNumero({
   valor,
   aoAlterar,
   decimal,
+  digitos = 6,
+  casas = 1,
   placeholder,
   classeRotulo,
 }) {
   function aoDigitar(evento) {
     const texto = evento.target.value;
-    aoAlterar(decimal ? somenteNumeroDecimal(texto) : somenteDigitos(texto));
+
+    aoAlterar(
+      decimal ? mascaraDecimal(texto, digitos, casas) : mascaraInteira(texto, digitos),
+    );
   }
 
   return (
@@ -28,7 +31,7 @@ function CampoNumero({
         id={id}
         type="text"
         inputMode={decimal ? "decimal" : "numeric"}
-        maxLength={LIMITE_CARACTERES}
+        maxLength={decimal ? digitos + casas + 1 : digitos}
         autoComplete="off"
         value={valor}
         placeholder={placeholder}

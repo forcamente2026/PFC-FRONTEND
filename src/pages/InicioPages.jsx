@@ -9,7 +9,6 @@ import {
   listarExercicios,
   listarExerciciosPendentes,
   listarGruposMusculares,
-  MODERACAO_DE_EXERCICIOS_SIMULADA,
 } from "../services/exercicioService";
 import { listarQuizzes, listarQuizzesPendentes } from "../services/quizService";
 import {
@@ -67,7 +66,7 @@ function buscarDados(papel) {
       listarQuizzesPendentes(),
       listarVerificacoesPendentes(),
       listarAnonimizacoesPendentes(),
-      MODERACAO_DE_EXERCICIOS_SIMULADA ? listarExerciciosPendentes() : null,
+      listarExerciciosPendentes(),
     ]).then(([exercicios, grupos, ...pendencias]) => ({ exercicios, grupos, pendencias }));
   }
 
