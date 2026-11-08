@@ -5,6 +5,21 @@ export const LIMITE_ERROS_COMUNS = 500;
 export const LIMITE_AQUECIMENTO = 500;
 export const LIMITE_EQUIPAMENTO = 100;
 export const LIMITE_GIF_URL = 255;
+export const LIMITE_VIDEO = 120;
+
+const PADRAO_ID_DO_VIDEO = /^[A-Za-z0-9_-]{11}$/;
+const ENDERECOS_DO_VIDEO = /(?:v=|\/shorts\/|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+
+export function idDoVideoYoutube(valor) {
+  const texto = (valor ?? "").trim();
+
+  if (!texto) return "";
+  if (PADRAO_ID_DO_VIDEO.test(texto)) return texto;
+
+  const achado = texto.match(ENDERECOS_DO_VIDEO);
+
+  return achado ? achado[1] : null;
+}
 
 export const EXERCICIO_VAZIO = {
   nome: "",
@@ -15,6 +30,7 @@ export const EXERCICIO_VAZIO = {
   aquecimentoRecomendado: "",
   equipamento: "",
   gifUrl: "",
+  videoYoutubeId: "",
 };
 
 
@@ -51,6 +67,7 @@ export function exercicioParaEnvio(form) {
     ...campos,
     nome: form.nome.trim(),
     descricaoExecucao: etapasPreenchidas(etapas).join("\n"),
+    videoYoutubeId: idDoVideoYoutube(form.videoYoutubeId) ?? "",
   };
 }
 
@@ -74,6 +91,10 @@ export function validarExercicio(form) {
 
   if (etapaLonga >= 0) {
     return `A etapa ${etapaLonga + 1} passou de ${LIMITE_POR_ETAPA} caracteres. Divida o texto em mais etapas.`;
+  }
+
+  if (idDoVideoYoutube(form.videoYoutubeId) === null) {
+    return "O vídeo precisa ser um endereço do YouTube ou o id de 11 caracteres.";
   }
 
   return null;
