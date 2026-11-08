@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import PainelDeFiltros from "../PainelDeFiltros";
 
 const GRUPOS = [
   { codigo: "PEITO", rotulo: "Peito" },
@@ -12,68 +11,57 @@ const GRUPOS = [
   { codigo: "ABDOMEN", rotulo: "Abdomen" },
 ];
 
-function rotuloDoGrupo(codigo) {
-  if (!codigo) return "Todos";
-
-  return GRUPOS.find((grupo) => grupo.codigo === codigo)?.rotulo ?? "Todos";
-}
+const ESTILO_BASE = "border p-2 rounded-md cursor-pointer";
+const ESTILO_ATIVO = "border-red-500 bg-red-500 text-white";
+const ESTILO_INATIVO =
+  "border-gray-500 text-red-200 hover:bg-red-500 hover:text-white";
 
 function FilterLibrary({ grupoSelecionado, aoSelecionar }) {
-  const [aberto, setAberto] = useState(false);
-
-  const estiloBase = "border p-2 rounded-md cursor-pointer";
-  const estiloAtivo = "border-red-500 bg-red-500 text-white";
-  const estiloInativo =
-    "border-gray-500 text-red-200 hover:bg-red-500 hover:text-white";
+  const selecionado = GRUPOS.find((grupo) => grupo.codigo === grupoSelecionado);
 
   function classes(codigo) {
-    return `${estiloBase} ${grupoSelecionado === codigo ? estiloAtivo : estiloInativo}`;
-  }
-
-  function escolher(codigo) {
-    aoSelecionar(codigo);
-    setAberto(false);
+    return `${ESTILO_BASE} ${
+      grupoSelecionado === codigo ? ESTILO_ATIVO : ESTILO_INATIVO
+    }`;
   }
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 mb-15">
-      <button
-        type="button"
-        aria-expanded={aberto}
-        aria-controls="grupos-musculares"
-        onClick={() => setAberto((atual) => !atual)}
-        className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-md border border-gray-500 p-3 text-red-200 hover:bg-red-500 hover:text-white xl:hidden"
-      >
-        <span className="flex items-center gap-2 font-medium">
-          {aberto ? <X size={20} /> : <Menu size={20} />}
-          Grupos musculares
-        </span>
-        <span className="text-sm">{rotuloDoGrupo(grupoSelecionado)}</span>
-      </button>
-
-      <div
+      <PainelDeFiltros
         id="grupos-musculares"
-        className={`${aberto ? "flex" : "hidden"} mt-3 flex-wrap items-center justify-center gap-4 xl:mt-0 xl:flex`}
+        rotulo="Grupos musculares"
+        resumo={selecionado?.rotulo ?? "Todos"}
       >
-        <h2 className="hidden font-medium text-2xl text-red-200 xl:block">
-          Grupos Musculares:
-        </h2>
+        {({ fechar }) => {
+          function escolher(codigo) {
+            aoSelecionar(codigo);
+            fechar();
+          }
 
-        <button type="button" onClick={() => escolher("")} className={classes("")}>
-          TODOS
-        </button>
+          return (
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <h2 className="hidden font-medium text-2xl text-red-200 xl:block">
+                Grupos Musculares:
+              </h2>
 
-        {GRUPOS.map((grupo) => (
-          <button
-            key={grupo.codigo}
-            type="button"
-            onClick={() => escolher(grupo.codigo)}
-            className={classes(grupo.codigo)}
-          >
-            {grupo.rotulo}
-          </button>
-        ))}
-      </div>
+              <button type="button" onClick={() => escolher("")} className={classes("")}>
+                TODOS
+              </button>
+
+              {GRUPOS.map((grupo) => (
+                <button
+                  key={grupo.codigo}
+                  type="button"
+                  onClick={() => escolher(grupo.codigo)}
+                  className={classes(grupo.codigo)}
+                >
+                  {grupo.rotulo}
+                </button>
+              ))}
+            </div>
+          );
+        }}
+      </PainelDeFiltros>
     </div>
   );
 }
