@@ -74,7 +74,11 @@ function TrackerAgua({ habilitado, resumo, processando, erro, aoRegistrar }) {
         <BarraProgresso
           rotulo={`${formatarNumero(resumo.totalConsumidoMl)} ml de ${formatarNumero(resumo.metaMl)} ml`}
           percentual={resumo.percentualDaMeta}
-          mensagem={resumo.mensagem}
+          mensagem={
+            resumo.restanteMl > 0
+              ? `Faltam ${formatarNumero(resumo.restanteMl)} ml para a meta de hoje.`
+              : "Meta de hoje alcançada."
+          }
         />
       ) : null}
     </div>

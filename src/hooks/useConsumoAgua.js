@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  consultarConsumoAgua,
-  registrarConsumoAgua,
-} from "../services/metricasService";
+import { resumirConsumoAgua } from "../services/metricasService";
 import {
   dataDeHoje,
   lerCacheConsumo,
@@ -15,12 +12,16 @@ function useConsumoAgua() {
   const [processando, setProcessando] = useState(false);
   const [erro, setErro] = useState(null);
 
-  async function aplicar(requisicao) {
+  async function enviar(dados, quantidadeMl) {
     setProcessando(true);
     setErro(null);
 
     try {
-      const resposta = await requisicao();
+      const resposta = await resumirConsumoAgua({
+        ...dados,
+        totalConsumidoMl: resumo?.totalConsumidoMl ?? 0,
+        quantidadeMl,
+      });
       setResumo(resposta);
       gravarCacheConsumo(data, resposta);
       return resposta;
@@ -35,11 +36,11 @@ function useConsumoAgua() {
   }
 
   function carregar(dados) {
-    return aplicar(() => consultarConsumoAgua({ ...dados, data }));
+    return enviar(dados, 0);
   }
 
-  function registrar(dados) {
-    return aplicar(() => registrarConsumoAgua({ ...dados, data }));
+  function registrar(dados, quantidadeMl) {
+    return enviar(dados, quantidadeMl);
   }
 
   return { resumo, processando, erro, carregar, registrar };

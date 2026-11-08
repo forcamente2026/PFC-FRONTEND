@@ -25,12 +25,7 @@ export async function listarExerciciosParaVolume() {
   return listarExerciciosPublicados();
 }
 
-export async function consultarConsumoAgua(dados) {
-  const { data } = await api.post("/metricas/hidratacao/consumo/dia", dados);
-  return data;
-}
-
-export async function registrarConsumoAgua(dados) {
+export async function resumirConsumoAgua(dados) {
   const { data } = await api.post("/metricas/hidratacao/consumo", dados);
   return data;
 }

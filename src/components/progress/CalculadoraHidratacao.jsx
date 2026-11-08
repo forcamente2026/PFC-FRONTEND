@@ -13,7 +13,7 @@ import { EXPLICACAO_HIDRATACAO, COMO_CALCULAMOS_HIDRATACAO } from "./explicacoes
 import { formatarNumero, paraNumero } from "../../utils/formatar";
 import ComoCalculamos from "./ComoCalculamos";
 
-const EXIBIR_REGISTRO_DE_AGUA = false;
+const EXIBIR_REGISTRO_DE_AGUA = true;
 
 function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
   const [dadosCalculados, setDadosCalculados] = useState(null); 
@@ -59,7 +59,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
       : null;
 
   function aoRegistrarConsumo(quantidadeMl) {
-    registrar({ ...dadosDoDia(), quantidadeMl });
+    registrar(dadosDoDia(), quantidadeMl);
   }
 
   const blocoResultado = (
