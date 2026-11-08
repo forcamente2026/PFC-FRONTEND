@@ -43,6 +43,7 @@ function LinhaSerie({
 
       <CampoNumero
         id={`series-${linha.id}`}
+        digitos={2}
         rotulo="SÉRIES"
         valor={linha.series}
         aoAlterar={(valor) => aoAlterar("series", valor)}
@@ -52,6 +53,7 @@ function LinhaSerie({
 
       <CampoNumero
         id={`reps-${linha.id}`}
+        digitos={2}
         rotulo="REPS"
         valor={linha.repeticoes}
         aoAlterar={(valor) => aoAlterar("repeticoes", valor)}
@@ -61,6 +63,8 @@ function LinhaSerie({
 
       <CampoNumero
         id={`carga-${linha.id}`}
+        digitos={3}
+        casas={1}
         rotulo="CARGA (KG)"
         valor={linha.cargaKg}
         aoAlterar={(valor) => aoAlterar("cargaKg", valor)}

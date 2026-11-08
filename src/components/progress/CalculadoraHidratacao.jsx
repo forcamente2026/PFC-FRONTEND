@@ -149,6 +149,8 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
             <div className="flex flex-col gap-1">
               <CampoNumero
                 id="peso-hidratacao"
+                digitos={3}
+                casas={2}
                 rotulo="PESO (KG)"
                 valor={pesoKg}
                 aoAlterar={aoAlterarPeso}
@@ -163,6 +165,7 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
             <div className="flex flex-col gap-1">
               <CampoNumero
                 id="minutos-treino"
+                digitos={3}
                 rotulo="TREINO POR DIA (MIN)"
                 valor={minutosTreinoPorDia}
                 aoAlterar={setMinutosTreinoPorDia}
