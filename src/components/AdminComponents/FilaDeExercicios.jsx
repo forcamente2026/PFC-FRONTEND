@@ -10,6 +10,7 @@ import {
   listarExerciciosPendentes,
   listarGruposMusculares,
   listarNiveis,
+  MODERACAO_DE_EXERCICIOS_SIMULADA,
 } from "../../services/exercicioService";
 import { formatarDataCurta } from "../../utils/formatar";
 
@@ -92,7 +93,7 @@ function FilaDeExercicios() {
         </p>
       </div>
 
-      <AvisoDeSimulacao />
+      {MODERACAO_DE_EXERCICIOS_SIMULADA && <AvisoDeSimulacao />}
 
       <EstadoRequisicao
         carregando={carregando}
