@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import FilterLibrary from "../components/LibraryComponents/FilterLibrary";
 import CardsLibrary from "../components/LibraryComponents/CardsLibrary";
 import LibraryHead from "../components/LibraryComponents/LibraryHead";
@@ -52,7 +52,14 @@ function LibraryPages() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const { usuario, avisar } = useOutletContext();
+  const [parametros, setParametros] = useSearchParams();
+  const exercicioNoEndereco = parametros.get("exercicio");
   const podeEditar = PAPEIS_EDITORES.includes(usuario?.papel);
+
+  function limparExercicioDoEndereco() {
+    if (exercicioNoEndereco) setParametros({}, { replace: true });
+  }
+
   const criacaoBloqueada = MODERACAO_DE_EXERCICIOS_SIMULADA && limiteDeCriacao(exercicios, usuario).bloqueado;
 
   useEffect(() => {
@@ -174,6 +181,8 @@ function LibraryPages() {
         aoSelecionar={setGrupoSelecionado}
       />
       <CardsLibrary
+        idParaAbrir={exercicioNoEndereco}
+        aoFecharDetalhe={limparExercicioDoEndereco}
         exercicios={exercicios}
         gruposMusculares={gruposMusculares}
         niveis={niveis}

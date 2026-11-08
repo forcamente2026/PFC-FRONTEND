@@ -31,6 +31,8 @@ function Mensagem({ children, variante }) {
 }
 
 function CardsLibrary({
+  idParaAbrir,
+  aoFecharDetalhe,
   exercicios,
   gruposMusculares,
   niveis,
@@ -46,13 +48,18 @@ function CardsLibrary({
   const [menuAbertoId, setMenuAbertoId] = useState(null);
   const [exercicioEmEdicao, setExercicioEmEdicao] = useState(null);
   const [exercicioParaExcluir, setExercicioParaExcluir] = useState(null);
-  const [exercicioEmDetalhe, setExercicioEmDetalhe] = useState(null);
+  const [idEmDetalhe, setIdEmDetalhe] = useState(null);
   const [form, setForm] = useState(EXERCICIO_VAZIO);
   const [enviando, setEnviando] = useState(false);
   const [erroAcao, setErroAcao] = useState(null);
 
   const rotulosGrupos = montarDicionario(gruposMusculares);
   const rotulosNiveis = montarDicionario(niveis);
+
+  const idDoDetalhe = idEmDetalhe ?? idParaAbrir;
+  const exercicioEmDetalhe = idDoDetalhe
+    ? (exercicios.find((item) => item.id === idDoDetalhe) ?? null)
+    : null;
 
   useEffect(() => {
     if (menuAbertoId === null) return;
@@ -100,11 +107,12 @@ function CardsLibrary({
 
   function abrirDetalhe(exercicio) {
     setMenuAbertoId(null);
-    setExercicioEmDetalhe(exercicio);
+    setIdEmDetalhe(exercicio.id);
   }
 
   function fecharDetalhe() {
-    setExercicioEmDetalhe(null);
+    setIdEmDetalhe(null);
+    if (aoFecharDetalhe) aoFecharDetalhe();
   }
 
   function aprovarNoDetalhe(atualizado) {

@@ -23,6 +23,7 @@ const QuizzesPages = lazy(() => import("./pages/QuizzesPages.jsx"));
 const QuizPages = lazy(() => import("./pages/QuizPages.jsx"));
 const QuizFormPages = lazy(() => import("./pages/QuizFormPages.jsx"));
 const InicioPages = lazy(() => import("./pages/InicioPages.jsx"));
+const MeuAcervoPages = lazy(() => import("./pages/MeuAcervoPages.jsx"));
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,14 @@ const router = createBrowserRouter([
       { path: "/library", element: <RotaProtegida><LibraryPages /></RotaProtegida> },
       { path: "/progress", element: <RotaProtegida><ProgressPages /></RotaProtegida> },
       { path: "/minha-conta", element: <RotaProtegida><MinhaContaPages /></RotaProtegida> },
+      {
+        path: "/meu-acervo",
+        element: (
+          <RotaPorPapel papeis={PAPEIS_EDITORES}>
+            <MeuAcervoPages />
+          </RotaPorPapel>
+        ),
+      },
       {
         path: "/admin/auditoria",
         element: (
