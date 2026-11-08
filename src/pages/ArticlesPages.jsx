@@ -6,6 +6,7 @@ import FilterArticles from "../components/ArticlesComponents/FilterArticles";
 import CardArtigo from "../components/ArticlesComponents/CardArtigo";
 import NovoArtigo from "../components/ArticlesComponents/NovoArtigo";
 import LimiteDeCriacao from "../components/LimiteDeCriacao";
+import FiltroParaAprovar from "../components/FiltroParaAprovar";
 import { listarArtigos, listarCategorias } from "../services/artigoService";
 import { PAPEIS_EDITORES } from "../utils/papeis";
 import { limiteDeCriacao } from "../utils/limiteCriacao";
@@ -17,6 +18,7 @@ function ArticlesPages() {
   const [categorias, setCategorias] = useState([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
   const [busca, setBusca] = useState("");
+  const [soParaAprovar, setSoParaAprovar] = useState(false);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const { bloqueado } = limiteDeCriacao(artigos, usuario);
@@ -66,8 +68,11 @@ function ArticlesPages() {
       !categoriaSelecionada || artigo.categoria.codigo === categoriaSelecionada;
     const doTitulo =
       !buscaNormalizada || artigo.titulo.toLowerCase().includes(buscaNormalizada);
-    return daCategoria && doTitulo;
+    const paraAprovar = !soParaAprovar || artigo.podeAprovar;
+    return daCategoria && doTitulo && paraAprovar;
   });
+
+  const aguardandoMinhaAprovacao = artigos.filter((artigo) => artigo.podeAprovar).length;
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
@@ -92,6 +97,14 @@ function ArticlesPages() {
         </>
       )}
 
+      {usuario?.papel === "PROFESSOR" && (
+        <FiltroParaAprovar
+          ativo={soParaAprovar}
+          aoAlternar={setSoParaAprovar}
+          quantidade={aguardandoMinhaAprovacao}
+        />
+      )}
+
       <FilterArticles
         categorias={categorias}
         categoriaSelecionada={categoriaSelecionada}
@@ -105,7 +118,11 @@ function ArticlesPages() {
         mensagemCarregando="Carregando artigos..."
         erro={erro}
         vazio={artigosVisiveis.length === 0}
-        mensagemVazio="Nenhum artigo encontrado."
+        mensagemVazio={
+          soParaAprovar
+            ? "Nenhum artigo esperando a sua aprovação."
+            : "Nenhum artigo encontrado."
+        }
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {artigosVisiveis.map((artigo) => (

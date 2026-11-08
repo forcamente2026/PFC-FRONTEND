@@ -31,6 +31,7 @@ function Mensagem({ children, variante }) {
 }
 
 function CardsLibrary({
+  soParaAprovar,
   idParaAbrir,
   aoFecharDetalhe,
   exercicios,
@@ -177,12 +178,21 @@ function CardsLibrary({
     return <Mensagem>Nenhum exercício cadastrado ainda.</Mensagem>;
   }
 
-  const exerciciosVisiveis = grupoSelecionado
-    ? exercicios.filter((item) => item.grupoMuscular === grupoSelecionado)
-    : exercicios;
+  const exerciciosVisiveis = exercicios.filter((item) => {
+    const doGrupo = !grupoSelecionado || item.grupoMuscular === grupoSelecionado;
+    const paraAprovar = !soParaAprovar || item.podeAprovar;
+
+    return doGrupo && paraAprovar;
+  });
 
   if (!exerciciosVisiveis.length) {
-    return <Mensagem>Nenhum exercício neste grupo muscular.</Mensagem>;
+    return (
+      <Mensagem>
+        {soParaAprovar
+          ? "Nenhum exercício esperando a sua aprovação."
+          : "Nenhum exercício neste grupo muscular."}
+      </Mensagem>
+    );
   }
 
   return (

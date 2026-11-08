@@ -5,6 +5,7 @@ import CardsLibrary from "../components/LibraryComponents/CardsLibrary";
 import LibraryHead from "../components/LibraryComponents/LibraryHead";
 import AvisoDeSimulacao from "../components/LibraryComponents/AvisoDeSimulacao";
 import LimiteDeCriacao from "../components/LimiteDeCriacao";
+import FiltroParaAprovar from "../components/FiltroParaAprovar";
 import {
   listarExercicios,
   listarGruposMusculares,
@@ -46,6 +47,7 @@ function avisoAoAlterar(exercicio) {
 
 function LibraryPages() {
   const [grupoSelecionado, setGrupoSelecionado] = useState("");
+  const [soParaAprovar, setSoParaAprovar] = useState(false);
   const [exercicios, setExercicios] = useState([]);
   const [gruposMusculares, setGruposMusculares] = useState([]);
   const [niveis, setNiveis] = useState([]);
@@ -176,11 +178,20 @@ function LibraryPages() {
           <AvisoDeSimulacao />
         </div>
       )}
+      {usuario?.papel === "PROFESSOR" && (
+        <FiltroParaAprovar
+          ativo={soParaAprovar}
+          aoAlternar={setSoParaAprovar}
+          quantidade={exercicios.filter((item) => item.podeAprovar).length}
+        />
+      )}
+
       <FilterLibrary
         grupoSelecionado={grupoSelecionado}
         aoSelecionar={setGrupoSelecionado}
       />
       <CardsLibrary
+        soParaAprovar={soParaAprovar}
         idParaAbrir={exercicioNoEndereco}
         aoFecharDetalhe={limparExercicioDoEndereco}
         exercicios={exercicios}
