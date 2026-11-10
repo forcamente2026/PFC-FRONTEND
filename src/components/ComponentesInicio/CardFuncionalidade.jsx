@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import estilos from "./CardFuncionalidade.module.css";
 
 function CardFuncionalidade({ para, icone: Icone, titulo, texto }) {
   return (
     <Link
       to={para}
-      className="group flex flex-col items-center gap-4 rounded-xl border border-gray-700 bg-white/5 p-6 shadow-lg shadow-black/20 backdrop-blur-xl text-center transition-colors hover:border-red-500"
+      className={`${estilos.card} group flex flex-col items-center gap-4 rounded-xl border border-gray-700 bg-white/5 p-6 shadow-lg shadow-black/20 backdrop-blur-xl text-center motion-safe:transition-[translate,border-color,box-shadow] motion-safe:duration-[220ms] motion-safe:hover:-translate-y-[5px] motion-safe:focus-visible:-translate-y-[5px]`}
     >
       <span className="flex h-14 w-14 items-center justify-center rounded-full bg-red-500/15 text-red-400">
         <Icone size={28} aria-hidden="true" />
