@@ -174,7 +174,7 @@ function SecaoGraficos({ papel, dados, carregando, erro, estiloTitulo }) {
 
   return (
     <section className="mb-12">
-      <h2 className={estiloTitulo}>Panorama</h2>
+      <h2 className={estiloTitulo}>Dashboard</h2>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {papel === "ADMINISTRADOR" && (
           <GraficosDoAdministrador
