@@ -76,7 +76,7 @@ function EditarArtigo({ artigo, categorias, carregandoOpcoes, aoEditar }) {
         Editar
       </button>
 
-      <Modal isOpen={modalAberto} setCloseModal={fecharModal}>
+      <Modal isOpen={modalAberto} setCloseModal={fecharModal} largo>
         <ArtigoForm
           titulo="EDITAR ARTIGO"
           valores={form}
