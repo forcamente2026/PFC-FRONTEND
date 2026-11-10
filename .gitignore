@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Environment variables
+.env
+
+# Anotações pessoais
+PONTOS_IMPORTANTES.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

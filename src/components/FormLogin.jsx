@@ -1,0 +1,121 @@
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { login } from "../services/authService";
+import CampoSenha from "./CampoSenha";
+import { LIMITE_EMAIL } from "../utils/limites";
+
+const ESTILO_CAMPO =
+  "text-2xl text-white font-light border p-1 bg-white/5 backdrop-blur-xl border-gray-700 rounded-xl shadow-lg shadow-black/20";
+
+const LOGIN_VAZIO = { email: "", senha: ""};
+const FALHAS_PARA_DICA = 3;
+const STATUS_DE_CREDENCIAL = [401, 429];
+
+function FormLogin({ emailInicial, aoFechar, aoCodigoEnviado, aoEsqueciSenha }) {
+  const [form, setForm] = useState({ ...LOGIN_VAZIO, email: emailInicial ?? "" });
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState(null);
+  const [falhas, setFalhas] = useState(0);
+
+  function handleChange(evento) {
+    const { name, value } = evento.target;
+    setForm((anterior) => ({ ...anterior, [name]: value }));
+  }
+
+  async function entrar(evento) {
+    evento.preventDefault();
+    setEnviando(true);
+    setErro(null);
+
+    try {
+      const resposta = await login(form.email, form.senha);
+      aoCodigoEnviado(form.email, resposta.expiraEmSegundos);
+    } catch (error) {
+      setErro(error.mensagem || "Não foi possivel entrar. Tente novamente");
+      if (STATUS_DE_CREDENCIAL.includes(error.status)) {
+        setFalhas((anterior) => anterior + 1);
+      }
+    } finally {
+      setEnviando(false);
+    }
+  }
+  return (
+    <form onSubmit={entrar} className="flex flex-col gap-3 items-center">
+      <h2 className="font-montserrat text-center text-4xl">LOGIN</h2>
+
+      <div className="flex flex-col self-stretch">
+        <label htmlFor="email" className="text-2xl font-light">
+          E-mail
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          maxLength={LIMITE_EMAIL}
+          placeholder="nome@example.com"
+          className={ESTILO_CAMPO}
+        />
+      </div>
+
+      <div className="flex flex-col self-stretch">
+        <label htmlFor="senha" className="text-2xl font-light">
+          Senha
+        </label>
+        <CampoSenha
+          id="senha"
+          name="senha"
+          valor={form.senha}
+          aoAlterar={handleChange}
+          autoComplete="current-password"
+          required
+          placeholder="Digite a senha"
+          className={ESTILO_CAMPO}
+        />
+      </div>
+
+      <div className="flex text-sm font-medium gap-20">
+        <button
+          type="button"
+          onClick={aoEsqueciSenha}
+          className="hover:underline hover:text-red-300 cursor-pointer"
+        >
+          Esqueceu a senha?
+        </button>
+        <NavLink
+          to="/cadastro"
+          className="font-light hover:underline hover:text-red-300"
+          onClick={aoFechar}
+        >
+          Cadastre-se
+        </NavLink>
+      </div>
+
+      {erro && <p className="text-sm text-center text-red-500">{erro}</p>}
+            {falhas >= FALHAS_PARA_DICA && (
+        <div className="flex flex-col items-center gap-1 text-sm text-center text-red-200">
+          <p>Muitas tentativas? Aguarde alguns minutos ou redefina a senha.</p>
+          <button
+            type="button"
+            onClick={aoEsqueciSenha}
+            className="text-base p-4 my-2 rounded-xl border border-red-500 text-red-200 hover:bg-red-500 hover:text-white cursor-pointer"
+          >
+            Redefinir senha
+          </button>
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled = {enviando}
+        className="hover:text-white p-4 my-2 bg-red-500 text-red-200 rounded-xl hover:bg-red-900 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {enviando ? "Entrando..." : "Entrar"}
+      </button>
+    </form>
+  );
+}
+
+export default FormLogin;

@@ -1,17 +1,33 @@
+import { NavLink } from "react-router-dom";
+
+const ESTILO_LINK = "hover:text-white hover:underline";
+
 function Footer() {
   return (
-    <footer className="bg-slate-950 text-rose-200">
-      <div className="w-full h-px bg-gray-300"></div>
-      <div className="font-montserrat flex gap-5 px-5 py-10">
-        <h1 className="text-3xl flex">FORÇAMENTE</h1>
-        <div className="w-px h-8 bg-gray-300 mx-6"></div>
-        <ul className="flex text-center gap-5 text-2xl">
-          <li>Termos de Uso</li>
-          <li>Metodologia</li>
+    <footer className="relative bg-slate-950 text-rose-200">
+      <div className="h-px w-full bg-gray-300"></div>
+
+      <div className="font-montserrat grid grid-cols-1 items-center gap-6 px-5 py-10 text-center lp:grid-cols-[1fr_auto_1fr] lp:text-left">
+        <p className="text-2xl lg:text-3xl">FORÇAMENTE</p>
+
+        <ul className="flex flex-col items-center gap-3 text-xl md:flex-row md:justify-center md:gap-8 md:text-2xl">
+          <li>
+            <NavLink to="/termos-de-uso" className={ESTILO_LINK}>
+              Termos de Uso
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/politica-de-privacidade" className={ESTILO_LINK}>
+              Política de Privacidade
+            </NavLink>
+          </li>
           <li>Contato</li>
-          <li className="text-left">&copy; 2026 ForçaMente.</li>
         </ul>
       </div>
+
+      <p className="absolute bottom-3 right-5 text-xs text-gray-500">
+        &copy; 2026 ForçaMente.
+      </p>
     </footer>
   );
 }

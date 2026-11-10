@@ -1,0 +1,1 @@
+export const EMAIL_CONTATO = "forcamente2026@gmail.com";

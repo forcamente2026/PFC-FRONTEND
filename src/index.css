@@ -1,5 +1,40 @@
 @import "tailwindcss";
 
+@utility scrollbar-oculta {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility neon-* {
+  box-shadow:
+    0 0 6px --value(--color-*),
+    0 0 14px --value(--color-*);
+}
+
+@utility neon-suave-* {
+  box-shadow: 0 0 6px --alpha(--value(--color-*) / 35%);
+}
+
 @theme {
   --font-montserrat: 'Montserrat', sans-serif;
+  --breakpoint-*: initial;
+  --breakpoint-sm: 25rem;
+  --breakpoint-md: 40rem;
+  --breakpoint-lp: 64rem;
+  --breakpoint-lg: 80rem;
+  --breakpoint-xl: 96rem;
+}
+
+@layer base {
+  body {
+    overflow-wrap: break-word;
+  }
+
+  input[type="password"]::-ms-reveal {
+    display: none;
+  }
 }

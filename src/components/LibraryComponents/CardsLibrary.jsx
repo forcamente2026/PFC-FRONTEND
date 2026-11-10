@@ -1,0 +1,384 @@
+import { useEffect, useState } from "react";
+import CardExercicio from "./CardExercicio";
+import CarrosselCards from "./CarrosselCards";
+import SeletorDeColunas from "./SeletorDeColunas";
+import useColunasDaGrade from "../../hooks/useColunasDaGrade";
+import Modal from "../Modal";
+import ExercicioForm from "./ExercicioForm";
+import DetalheExercicio from "./DetalheExercicio";
+import ModeracaoExercicio from "./ModeracaoExercicio";
+import {
+  EXERCICIO_VAZIO,
+  exercicioParaEnvio,
+  exercicioParaFormulario,
+  montarDicionario,
+  validarExercicio,
+} from "./exercicioCampos";
+import {
+  atualizarExercicio,
+  excluirExercicio,
+} from "../../services/exercicioService";
+
+const CHAVE_COLUNAS = "forcamente:colunas-da-biblioteca";
+
+const GRADE = {
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+  4: "grid-cols-4",
+};
+
+const ALTURA_DO_CARD = {
+  2: "h-[34rem]",
+  3: "h-[30rem]",
+  4: "h-[26rem]",
+};
+
+const ALTURA_DA_IMAGEM = {
+  2: "h-72",
+  3: "h-56",
+  4: "h-40",
+};
+
+function lerColunas() {
+  try {
+    const guardado = Number(localStorage.getItem(CHAVE_COLUNAS));
+
+    return GRADE[guardado] ? guardado : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function colunasEfetivas(escolhida, maximo) {
+  if (maximo < 2) return 2;
+  if (!escolhida) return maximo >= 4 ? 3 : 2;
+
+  return Math.min(escolhida, maximo);
+}
+
+function gravarColunas(colunas) {
+  try {
+    localStorage.setItem(CHAVE_COLUNAS, String(colunas));
+  } catch {
+    return;
+  }
+}
+
+function Mensagem({ children, variante }) {
+  const estilo =
+    variante === "erro"
+      ? "rounded-md border border-red-500 p-3 text-red-200"
+      : "text-gray-300";
+
+  return (
+    <div className="w-full max-w-6xl mx-auto p-4">
+      <p className={`text-center ${estilo}`}>{children}</p>
+    </div>
+  );
+}
+
+function CardsLibrary({
+  soParaAprovar,
+  idParaAbrir,
+  aoFecharDetalhe,
+  exercicios,
+  gruposMusculares,
+  niveis,
+  carregando,
+  erro,
+  grupoSelecionado,
+  aoAtualizar,
+  aoExcluir,
+  aoAprovar,
+  aoDecidir,
+  podeEditar,
+}) {
+  const maximoDeColunas = useColunasDaGrade();
+  const [colunaEscolhida, setColunaEscolhida] = useState(lerColunas);
+  const [menuAbertoId, setMenuAbertoId] = useState(null);
+  const [exercicioEmEdicao, setExercicioEmEdicao] = useState(null);
+  const [exercicioParaExcluir, setExercicioParaExcluir] = useState(null);
+  const [idEmDetalhe, setIdEmDetalhe] = useState(null);
+  const [form, setForm] = useState(EXERCICIO_VAZIO);
+  const [enviando, setEnviando] = useState(false);
+  const [erroAcao, setErroAcao] = useState(null);
+
+  const colunas = colunasEfetivas(colunaEscolhida, maximoDeColunas);
+  const rotulosGrupos = montarDicionario(gruposMusculares);
+  const rotulosNiveis = montarDicionario(niveis);
+
+  const idDoDetalhe = idEmDetalhe ?? idParaAbrir;
+  const exercicioEmDetalhe = idDoDetalhe
+    ? (exercicios.find((item) => item.id === idDoDetalhe) ?? null)
+    : null;
+
+  useEffect(() => {
+    if (menuAbertoId === null) return;
+
+    function fechar() {
+      setMenuAbertoId(null);
+    }
+
+    function aoTeclar(evento) {
+      if (evento.key === "Escape") setMenuAbertoId(null);
+    }
+
+    document.addEventListener("mousedown", fechar);
+    document.addEventListener("keydown", aoTeclar);
+
+    return () => {
+      document.removeEventListener("mousedown", fechar);
+      document.removeEventListener("keydown", aoTeclar);
+    };
+  }, [menuAbertoId]);
+
+  function abrirEdicao(exercicio) {
+    setMenuAbertoId(null);
+    setErroAcao(null);
+    setExercicioEmEdicao(exercicio);
+    setForm(exercicioParaFormulario(exercicio));
+  }
+
+  function fecharEdicao() {
+    setExercicioEmEdicao(null);
+    setForm(EXERCICIO_VAZIO);
+    setErroAcao(null);
+  }
+
+  function abrirExclusao(exercicio) {
+    setMenuAbertoId(null);
+    setErroAcao(null);
+    setExercicioParaExcluir(exercicio);
+  }
+
+  function fecharExclusao() {
+    setExercicioParaExcluir(null);
+    setErroAcao(null);
+  }
+
+  function abrirDetalhe(exercicio) {
+    setMenuAbertoId(null);
+    setIdEmDetalhe(exercicio.id);
+  }
+
+  function fecharDetalhe() {
+    setIdEmDetalhe(null);
+    if (aoFecharDetalhe) aoFecharDetalhe();
+  }
+
+  function aprovarNoDetalhe(atualizado) {
+    fecharDetalhe();
+    aoAprovar(atualizado);
+  }
+
+  function decidirNoDetalhe(atualizado) {
+    fecharDetalhe();
+    aoDecidir(atualizado);
+  }
+
+  function handleChange(evento) {
+    const { name, value } = evento.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function salvarEdicao(evento) {
+    evento.preventDefault();
+
+    const mensagemInvalida = validarExercicio(form);
+    if (mensagemInvalida) {
+      setErroAcao(mensagemInvalida);
+      return;
+    }
+
+    setEnviando(true);
+    setErroAcao(null);
+
+    try {
+      const enviado = exercicioParaEnvio(form);
+      const resposta = await atualizarExercicio(exercicioEmEdicao.id, enviado);
+      aoAtualizar(resposta?.id ? resposta : { ...exercicioEmEdicao, ...enviado });
+      fecharEdicao();
+    } catch (err) {
+      setErroAcao(err.mensagem || "Não foi possível salvar as alterações.");
+    } finally {
+      setEnviando(false);
+    }
+  }
+
+  async function confirmarExclusao() {
+    setEnviando(true);
+    setErroAcao(null);
+
+    try {
+      await excluirExercicio(exercicioParaExcluir.id);
+      aoExcluir(exercicioParaExcluir.id);
+      fecharExclusao();
+    } catch (err) {
+      setErroAcao(err.mensagem || "Não foi possível excluir o exercício.");
+    } finally {
+      setEnviando(false);
+    }
+  }
+
+  function escolherColunas(valor) {
+    setColunaEscolhida(valor);
+    gravarColunas(valor);
+  }
+
+  function cartao(item, estiloCaixa, alturaImagem) {
+    return (
+      <CardExercicio
+        key={item.id}
+        exercicio={item}
+        rotuloGrupo={rotulosGrupos[item.grupoMuscular] ?? item.grupoMuscular}
+        rotuloNivel={rotulosNiveis[item.nivel] ?? item.nivel}
+        menuAberto={menuAbertoId === item.id}
+        aoAlternarMenu={() =>
+          setMenuAbertoId((atual) => (atual === item.id ? null : item.id))
+        }
+        aoEditar={() => abrirEdicao(item)}
+        aoExcluir={() => abrirExclusao(item)}
+        aoVerTecnica={() => abrirDetalhe(item)}
+        podeEditar={item.podeEditar ?? podeEditar}
+        estiloCaixa={estiloCaixa}
+        alturaImagem={alturaImagem}
+      />
+    );
+  }
+
+  if (carregando) return <Mensagem>Carregando exercícios...</Mensagem>;
+
+  if (erro) return <Mensagem variante="erro">{erro}</Mensagem>;
+
+  if (!exercicios.length) {
+    return <Mensagem>Nenhum exercício cadastrado ainda.</Mensagem>;
+  }
+
+  const exerciciosVisiveis = exercicios.filter((item) => {
+    const doGrupo = !grupoSelecionado || item.grupoMuscular === grupoSelecionado;
+    const paraAprovar = !soParaAprovar || item.podeAprovar;
+
+    return doGrupo && paraAprovar;
+  });
+
+  if (!exerciciosVisiveis.length) {
+    return (
+      <Mensagem>
+        {soParaAprovar
+          ? "Nenhum exercício esperando a sua aprovação."
+          : "Nenhum exercício neste grupo muscular."}
+      </Mensagem>
+    );
+  }
+
+  return (
+    <>
+      {maximoDeColunas > 0 ? (
+        <>
+          <SeletorDeColunas
+            colunas={colunas}
+            aoEscolher={escolherColunas}
+            opcoes={maximoDeColunas >= 4 ? [2, 3, 4] : [2, 3]}
+          />
+
+          <div
+            className={`mx-auto grid w-full max-w-[88rem] gap-6 px-10 pb-4 ${GRADE[colunas]}`}
+          >
+            {exerciciosVisiveis.map((item) =>
+              cartao(item, `w-full ${ALTURA_DO_CARD[colunas]}`, ALTURA_DA_IMAGEM[colunas]),
+            )}
+          </div>
+        </>
+      ) : (
+        <CarrosselCards>
+          {exerciciosVisiveis.map((item) => cartao(item))}
+        </CarrosselCards>
+      )}
+
+      <Modal
+        isOpen={Boolean(exercicioEmDetalhe)}
+        setCloseModal={fecharDetalhe}
+        largo
+      >
+        {exercicioEmDetalhe && (
+          <DetalheExercicio
+            exercicio={exercicioEmDetalhe}
+            rotuloGrupo={rotulosGrupos[exercicioEmDetalhe.grupoMuscular] ?? exercicioEmDetalhe.grupoMuscular}
+            rotuloNivel={rotulosNiveis[exercicioEmDetalhe.nivel] ?? exercicioEmDetalhe.nivel}
+            aoFechar={fecharDetalhe}
+          >
+            <ModeracaoExercicio
+              exercicio={exercicioEmDetalhe}
+              aoAprovar={aprovarNoDetalhe}
+              aoDecidir={decidirNoDetalhe}
+            />
+          </DetalheExercicio>
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(exercicioEmEdicao)}
+        setCloseModal={fecharEdicao}
+        largo
+      >
+        <ExercicioForm
+          titulo="EDITAR EXERCICIO"
+          valores={form}
+          aoAlterar={handleChange}
+          aoEnviar={salvarEdicao}
+          gruposMusculares={gruposMusculares}
+          niveis={niveis}
+          carregandoOpcoes={false}
+          grupoMuscularBloqueado
+          enviando={enviando}
+          erro={erroAcao}
+          textoBotao="Salvar alterações"
+          textoBotaoEnviando="Salvando..."
+        />
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(exercicioParaExcluir)}
+        setCloseModal={fecharExclusao}
+      >
+        <div className="p-4 max-w-md space-y-4">
+          <h2 className="text-red-200 text-center font-montserrat text-2xl">
+            EXCLUIR EXERCICIO
+          </h2>
+          <div className="w-full h-px bg-gray-300"></div>
+
+          <p className="text-white">
+            Tem certeza que deseja excluir{" "}
+            <span className="text-red-200">{exercicioParaExcluir?.nome}</span>?
+            Esta ação não pode ser desfeita.
+          </p>
+
+          {erroAcao && (
+            <p className="text-red-500 text-sm text-center">{erroAcao}</p>
+          )}
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={fecharExclusao}
+              disabled={enviando}
+              className="flex-1 rounded-md border border-gray-700 py-2 text-red-200 hover:bg-white/10 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={confirmarExclusao}
+              disabled={enviando}
+              className="flex-1 rounded-md bg-red-500 py-2 text-white hover:bg-red-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {enviando ? "Excluindo..." : "Excluir"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+export default CardsLibrary;
