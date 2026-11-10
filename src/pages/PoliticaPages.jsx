@@ -31,7 +31,7 @@ function TermosPages() {
   }, []);
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-10 lp:py-16">
+    <div className="w-full max-w-4xl mx-auto px-4 pb-10 lp:pb-16">
       <EstadoRequisicao
         carregando={carregando}
         mensagemCarregando="Carregando documento..."
@@ -41,7 +41,6 @@ function TermosPages() {
       >
         {documento && (
           <DocumentoLegal
-            rotulo="Jurídico"
             titulo="Política de Privacidade"
             versao={documento.versao}
             vigencia={formatarDataExtenso(documento.vigenteDesde)}

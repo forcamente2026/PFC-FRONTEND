@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import Modal from "../components/Modal";
 import FiltroUsuarios from "../components/AdminComponents/FiltroUsuarios";
@@ -10,6 +10,8 @@ import ConfirmarAnonimizacao from "../components/AdminComponents/ConfirmarAnonim
 import ConfirmarSituacao from "../components/AdminComponents/ConfirmarSituacao";
 import Paginacao from "../components/AdminComponents/Paginacao";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
+import { SUBTITULOS_DA_ADMINISTRACAO } from "../utils/subtitulosDasPaginas";
 import {
   alterarAtivo,
   anonimizarUsuario,
@@ -174,11 +176,11 @@ function UsuariosPages() {
   const usuarios = resultado?.conteudo ?? [];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Administração"
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Gestão de usuários"
-        descricao="Consulta, correção de dados e bloqueio de acesso das contas da plataforma."
+        subtitulo={SUBTITULOS_DA_ADMINISTRACAO.usuarios}
+        icone={ICONES_DAS_PAGINAS.administracao}
       />
 
       <AbasAdministracao />

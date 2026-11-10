@@ -11,7 +11,7 @@ const LINKS = [
   { para: "/articles", rotulo: "ARTIGOS", protegida: true },
   { para: "/quiz", rotulo: "QUIZ", protegida: true },
   { para: "/library", rotulo: "BIBLIOTECA", protegida: true },
-  { para: "/progress", rotulo: "PROGRESSO", protegida: true },
+  { para: "/progress", rotulo: "CALCULADORAS", protegida: true },
   { para: "/meu-acervo", rotulo: "MEU ACERVO", protegida: true, papeis: PAPEIS_EDITORES },
   { para: "/about", rotulo: "QUEM SOMOS" },
   { para: "/admin", rotulo: "ADMINISTRAÇÃO", protegida: true, papeis: PAPEIS_VALIDADORES,},
@@ -138,7 +138,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
             <div className="flex flex-col items-center gap-3 xl:flex-row xl:gap-2">
               <span
                 title={usuario.nomeCompleto}
-                className="max-w-full text-center font-bold wrap-anywhere xl:max-w-36 xl:truncate xl:text-sm"
+                className="max-w-full text-center font-bold wrap-anywhere xl:max-w-36 xl:truncate xl:text-sm xl:max-[106.25rem]:hidden"
               >
                 <span className="xl:hidden">{usuario.nomeCompleto}</span>
                 <span className="hidden xl:inline">{primeiroEUltimoNome(usuario.nomeCompleto)}</span>

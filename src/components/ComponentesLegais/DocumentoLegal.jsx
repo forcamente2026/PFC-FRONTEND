@@ -1,23 +1,15 @@
 import Cartao from "../ComponentesHome/Cartao";
+import CabecalhoPagina from "../CabecalhoPagina";
 
 const ESTILO_TITULO_SECAO = "font-montserrat text-2xl text-white lp:text-3xl";
 const ESTILO_PARAGRAFO = "text-base leading-relaxed text-gray-300";
 const ESTILO_DESTAQUE =
   "rounded-xl border border-red-500 bg-red-950/30 p-4 space-y-3 neon-suave-red-500";
 
-function DocumentoLegal({ rotulo, titulo, versao, vigencia, secoes }) {
+function DocumentoLegal({ titulo, versao, vigencia, secoes }) {
   return (
     <>
-      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-500">
-        {rotulo}
-      </p>
-      <h1 className="mt-1 font-montserrat text-3xl text-white md:text-4xl">
-        {titulo}
-      </h1>
-
-      <p className="mt-3 mb-8 text-sm text-gray-400">
-        Versão {versao} · em vigor desde {vigencia}
-      </p>
+      <CabecalhoPagina titulo={titulo} subtitulo={`Versão ${versao} · em vigor desde ${vigencia}`} />
 
       <Cartao className="space-y-8">
         {secoes.map((secao) => (

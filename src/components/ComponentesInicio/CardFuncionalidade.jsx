@@ -5,7 +5,7 @@ function CardFuncionalidade({ para, icone: Icone, titulo, texto }) {
   return (
     <Link
       to={para}
-      className="group flex flex-col gap-4 rounded-xl border border-gray-700 bg-white/5 p-6 shadow-lg shadow-black/20 backdrop-blur-xl transition-colors hover:border-red-500"
+      className="group flex flex-col items-center gap-4 rounded-xl border border-gray-700 bg-white/5 p-6 shadow-lg shadow-black/20 backdrop-blur-xl text-center transition-colors hover:border-red-500"
     >
       <span className="flex h-14 w-14 items-center justify-center rounded-full bg-red-500/15 text-red-400">
         <Icone size={28} aria-hidden="true" />

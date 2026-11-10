@@ -12,7 +12,7 @@ function ProgressPages() {
   const [consentiu, setConsentiu] = useState(false);
 
   return (
-    <div className="my-10 flex flex-col">
+    <div className="mb-10 flex flex-col">
       <HeadProgress />
       <AvisoLegal />
       <VolumeTreino />
