@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import FiltroItensPendentes from "../components/AdminComponents/FiltroItensPendentes";
 import PedidosDeExclusao from "../components/AdminComponents/PedidosDeExclusao";
@@ -7,6 +7,8 @@ import FilaDeArtigos from "../components/AdminComponents/FilaDeArtigos";
 import FilaDeQuizzes from "../components/AdminComponents/FilaDeQuizzes";
 import FilaDeExercicios from "../components/AdminComponents/FilaDeExercicios";
 import VerificacoesCref from "../components/AdminComponents/VerificacoesCref";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
+import { SUBTITULOS_DA_ADMINISTRACAO } from "../utils/subtitulosDasPaginas";
 
 const TIPOS_FILTRADOS = ["artigos", "quizzes", "exercicios", "professores", "exclusoes"];
 
@@ -24,11 +26,11 @@ function ItensPendentesPages() {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Administração"
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Itens pendentes"
-        descricao="O que espera a decisão do administrador: artigos, quizzes, exercícios, professores aguardando verificação e pedidos de exclusão de conta."
+        subtitulo={SUBTITULOS_DA_ADMINISTRACAO.pendentes}
+        icone={ICONES_DAS_PAGINAS.administracao}
       />
 
       <AbasAdministracao />

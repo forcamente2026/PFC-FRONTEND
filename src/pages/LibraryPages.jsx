@@ -167,6 +167,7 @@ function LibraryPages() {
         aoCriar={adicionarExercicio}
         aoConferirLimite={setExercicios}
         podeEditar={podeEditar}
+        papel={usuario?.papel}
       />
       {MODERACAO_DE_EXERCICIOS_SIMULADA && !carregando && !erro && (
         <div className="px-4">

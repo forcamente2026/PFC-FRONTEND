@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FilterArticles from "../components/ArticlesComponents/FilterArticles";
 import CardArtigo from "../components/ArticlesComponents/CardArtigo";
@@ -10,6 +10,8 @@ import FiltroParaAprovar from "../components/FiltroParaAprovar";
 import { listarArtigos, listarCategorias } from "../services/artigoService";
 import { PAPEIS_EDITORES } from "../utils/papeis";
 import { limiteDeCriacao } from "../utils/limiteCriacao";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
+import { subtituloPorPapel } from "../utils/subtitulosDasPaginas";
 
 function ArticlesPages() {
   const { usuario, avisar } = useOutletContext();
@@ -75,11 +77,11 @@ function ArticlesPages() {
   const aguardandoMinhaAprovacao = artigos.filter((artigo) => artigo.podeAprovar).length;
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Acervo"
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Artigos e revisões"
-        descricao="Cada texto indica o desenho do estudo e o nível de confiança das conclusões apresentadas."
+        subtitulo={subtituloPorPapel("artigos", usuario?.papel)}
+        icone={ICONES_DAS_PAGINAS.artigos}
       />
 
       {podeEditar && (

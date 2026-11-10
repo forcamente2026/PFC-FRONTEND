@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import { etiquetaDoArtigo, STATUS_ARTIGO } from "../components/ArticlesComponents/artigoCampos";
@@ -8,6 +8,8 @@ import { listarArtigos } from "../services/artigoService";
 import { listarExercicios } from "../services/exercicioService";
 import { listarQuizzes } from "../services/quizService";
 import { formatarDataCurta } from "../utils/formatar";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
+import { subtituloPorPapel } from "../utils/subtitulosDasPaginas";
 
 const GRUPOS = [
   {
@@ -142,11 +144,11 @@ function MeuAcervoPages() {
     : [];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Conta"
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Meu acervo"
-        descricao="Tudo o que você criou, separado por situação: o que espera aprovação, o que está publicado e o que foi recusado, com o motivo."
+        subtitulo={subtituloPorPapel("meuAcervo", usuario?.papel)}
+        icone={ICONES_DAS_PAGINAS.meuAcervo}
       />
 
       <EstadoRequisicao
