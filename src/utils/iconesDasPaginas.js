@@ -6,10 +6,12 @@ import {
   House,
   ListChecks,
   LockKeyhole,
+  Mail,
   ScrollText,
   ShieldCheck,
   UserRound,
   UserRoundPlus,
+  UsersRound,
 } from "lucide-react";
 
 export const ICONES_DAS_PAGINAS = {
@@ -24,4 +26,6 @@ export const ICONES_DAS_PAGINAS = {
   termos: ScrollText,
   politica: LockKeyhole,
   cadastro: UserRoundPlus,
+  quemSomos: UsersRound,
+  contato: Mail,
 };

@@ -8,6 +8,7 @@ import { PAPEIS_EDITORES, PAPEIS_VALIDADORES } from "./utils/papeis.js";
 import { lerSessao } from "./utils/sessao.js";
 
 const AboutPages = lazy(() => import("./pages/AboutPages.jsx"));
+const ContatoPages = lazy(() => import("./pages/ContatoPages.jsx"));
 const LibraryPages = lazy(() => import("./pages/LibraryPages.jsx"));
 const ProgressPages = lazy(() => import("./pages/ProgressPages.jsx"));
 const Cadastro = lazy(() => import("./pages/Cadastro.jsx"));
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
       { path: "/library", element: <RotaProtegida><LibraryPages /></RotaProtegida> },
       { path: "/progress", element: <RotaProtegida><ProgressPages /></RotaProtegida> },
       { path: "/minha-conta", element: <RotaProtegida><MinhaContaPages /></RotaProtegida> },
+      { path: "/contato", element: <ContatoPages /> },
       {
         path: "/meu-acervo",
         element: (
