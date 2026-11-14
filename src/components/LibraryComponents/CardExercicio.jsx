@@ -76,12 +76,18 @@ function CardExercicio({
           )}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span className="rounded-full bg-red-500/10 px-2 py-1 font-semibold text-[#ff4b49]">
-            {rotuloGrupo}
-          </span>
-          <span className="text-gray-300">{rotuloNivel}</span>
-        </div>
+        <dl className="flex items-start justify-between gap-2 text-xs">
+          <div className="flex min-w-0 flex-col items-start gap-1">
+            <dt className="font-montserrat font-black uppercase text-white">Grupo muscular:</dt>
+            <dd className="rounded-full bg-red-500/10 px-2 py-1 font-semibold text-[#ff4b49]">
+              {rotuloGrupo}
+            </dd>
+          </div>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <dt className="font-montserrat font-black uppercase text-white">Nível:</dt>
+            <dd className="py-1 text-gray-300">{rotuloNivel}</dd>
+          </div>
+        </dl>
         <h3 className="line-clamp-2 font-montserrat text-lg leading-tight text-white wrap-anywhere">
           {nome}
         </h3>
