@@ -59,7 +59,7 @@ function LibraryPages() {
   const podeEditar = PAPEIS_EDITORES.includes(usuario?.papel);
 
   function limparExercicioDoEndereco() {
-    if (exercicioNoEndereco) setParametros({}, { replace: true });
+    if (exercicioNoEndereco) setParametros({}, { replace: true, preventScrollReset: true });
   }
 
   const criacaoBloqueada = MODERACAO_DE_EXERCICIOS_SIMULADA && limiteDeCriacao(exercicios, usuario).bloqueado;
