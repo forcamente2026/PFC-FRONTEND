@@ -5,6 +5,7 @@ import CampoSenha from "../CampoSenha";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../CabecalhoPagina";
 import { formatarCref, somenteDigitos } from "../../utils/formatar";
 import { ESTADOS } from "../../utils/estados";
 import { criarUsuario } from "../../services/usuarioService";
@@ -236,8 +237,8 @@ function FormCadastro() {
   return (
     <>
       <form onSubmit={enviarCadastro} className="text-white text-2xl">
-        <section className="py-6">
-          <CabecalhoSecao rotulo="Conta" titulo="Cadastro" />
+        <section className="pb-6">
+          <CabecalhoPagina titulo="Cadastro" />
           <Cartao className="space-y-2">
           <div className="">
             <label htmlFor="nome_completo" className={styleLabel}>

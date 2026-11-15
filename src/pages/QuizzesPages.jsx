@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroQuizzes from "../components/QuizComponents/FiltroQuizzes";
 import CardQuiz from "../components/QuizComponents/CardQuiz";
@@ -10,6 +10,8 @@ import { listarCategorias } from "../services/artigoService";
 import { listarNiveisDoQuiz, listarQuizzes } from "../services/quizService";
 import { podeEditar } from "../utils/papeis";
 import { limiteDeCriacao } from "../utils/limiteCriacao";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
+import { subtituloPorPapel } from "../utils/subtitulosDasPaginas";
 
 function QuizzesPages() {
   const { usuario } = useOutletContext();
@@ -62,11 +64,11 @@ function QuizzesPages() {
   const aguardandoMinhaAprovacao = quizzes.filter((quiz) => quiz.podeAprovar).length;
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Quiz para estudo"
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Teste o que você aprendeu"
-        descricao="Perguntas escritas pelos professores, com a leitura sugerida nos artigos do acervo."
+        subtitulo={subtituloPorPapel("quiz", usuario?.papel)}
+        icone={ICONES_DAS_PAGINAS.quiz}
       />
 
       {podeCriar && (

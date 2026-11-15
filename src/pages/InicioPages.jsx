@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import CardFuncionalidade from "../components/ComponentesInicio/CardFuncionalidade";
 import NumeroRapido from "../components/ComponentesInicio/NumeroRapido";
 import { FUNCIONALIDADES, SAUDACOES } from "../components/ComponentesInicio/dadosInicio";
@@ -16,6 +16,7 @@ import {
   listarVerificacoesPendentes,
 } from "../services/usuarioService";
 import { podeEditar } from "../utils/papeis";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
 
 const SecaoGraficos = lazy(() => import("../components/ComponentesInicio/SecaoGraficos"));
 
@@ -126,12 +127,16 @@ function InicioPages() {
   );
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao rotulo="Início" titulo={`Olá, ${primeiroNome}`} descricao={SAUDACOES[papel]} />
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
+        titulo={`Olá, ${primeiroNome}`}
+        subtitulo={SAUDACOES[papel]}
+        icone={ICONES_DAS_PAGINAS.inicio}
+      />
 
       <section className="mb-12">
         <h2 className={ESTILO_TITULO_SECAO}>
-          {administrador ? "O que espera a sua decisão" : "Seus números"}
+          {administrador ? "Aguardando sua análise" : "Seus números"}
         </h2>
         {numeros ? (
           <div

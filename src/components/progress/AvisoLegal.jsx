@@ -2,7 +2,7 @@ import { TriangleAlert } from "lucide-react";
 
 function AvisoLegal() {
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 mt-8">
+    <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex gap-4 p-5 border border-red-500 bg-red-500/10 rounded-xl">
         <TriangleAlert className="shrink-0 text-red-500" size={22} />
 
