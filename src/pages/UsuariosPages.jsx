@@ -8,6 +8,7 @@ import TabelaUsuarios from "../components/AdminComponents/TabelaUsuarios";
 import FormEdicaoUsuario from "../components/AdminComponents/FormEdicaoUsuario";
 import ConfirmarAnonimizacao from "../components/AdminComponents/ConfirmarAnonimizacao";
 import ConfirmarSituacao from "../components/AdminComponents/ConfirmarSituacao";
+import PedirJustificativa from "../components/AdminComponents/PedirJustificativa";
 import Paginacao from "../components/AdminComponents/Paginacao";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
 import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
@@ -38,6 +39,8 @@ function UsuariosPages() {
   const [consultaConcluida, setConsultaConcluida] = useState(null);
   const [erro, setErro] = useState(null);
   const [usuarioEmEdicao, setUsuarioEmEdicao] = useState(null);
+  const [usuarioAguardandoJustificativa, setUsuarioAguardandoJustificativa] =
+    useState(null);
   const [usuarioEmAnonimizacao, setUsuarioEmAnonimizacao] = useState(null);
   const [usuarioEmAlteracao, setUsuarioEmAlteracao] = useState(null);
   const [idEmOperacao, setIdEmOperacao] = useState(null);
@@ -111,10 +114,15 @@ function UsuariosPages() {
     setPagina(0);
   }
 
-  async function abrirEdicao(usuarioDaLista) {
+  async function abrirEdicao(justificativa) {
+    const usuarioDaLista = usuarioAguardandoJustificativa;
+
     setIdEmOperacao(usuarioDaLista.id);
     try {
-      setUsuarioEmEdicao(await buscarDadosCompletos(usuarioDaLista.id));
+      setUsuarioEmEdicao(
+        await buscarDadosCompletos(usuarioDaLista.id, justificativa),
+      );
+      setUsuarioAguardandoJustificativa(null);
     } catch (err) {
       avisar({
         tipo: "erro",
@@ -207,7 +215,7 @@ function UsuariosPages() {
         <TabelaUsuarios
           usuarios={usuarios}
           formacoes={formacoes}
-          aoEditar={abrirEdicao}
+          aoEditar={setUsuarioAguardandoJustificativa}
           aoAlternarAtivo={setUsuarioEmAlteracao}
           aoAnonimizar={setUsuarioEmAnonimizacao}
           idEmOperacao={idEmOperacao}
@@ -220,6 +228,16 @@ function UsuariosPages() {
           aoMudarPagina={setPagina}
         />
       </EstadoRequisicao>
+
+      {usuarioAguardandoJustificativa && (
+        <PedirJustificativa
+          key={usuarioAguardandoJustificativa.id}
+          nomeDaPessoa={usuarioAguardandoJustificativa.nomeCompleto}
+          enviando={idEmOperacao === usuarioAguardandoJustificativa.id}
+          aoConfirmar={abrirEdicao}
+          aoCancelar={() => setUsuarioAguardandoJustificativa(null)}
+        />
+      )}
 
       <Modal
         isOpen={usuarioEmEdicao !== null}

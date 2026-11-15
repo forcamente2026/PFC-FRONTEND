@@ -23,8 +23,10 @@ export async function buscarUsuarios(parametros) {
   return data;
 }
 
-export async function buscarDadosCompletos(id) {
-  const { data } = await api.get(`/usuarios/${id}/dados-completos`);
+export async function buscarDadosCompletos(id, justificativa) {
+  const { data } = await api.get(`/usuarios/${id}/dados-completos`, {
+    params: { justificativa },
+  });
   return data;
 }
 
