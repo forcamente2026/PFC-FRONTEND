@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Modal from "../components/Modal";
 import AvisoCrefNoLogin from "../components/AvisoCrefNoLogin";
@@ -76,6 +76,7 @@ function Layout () {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950">
+      <ScrollRestoration />
       <NavBar usuario={usuario} aoEntrar={entrar} aoSair={sair} />
       <main className="flex-1">
         <Suspense fallback={<p role="status" className="p-8 text-center text-gray-300">Carregando página...</p>}>

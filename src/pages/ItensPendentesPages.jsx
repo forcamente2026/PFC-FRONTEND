@@ -22,7 +22,7 @@ function ItensPendentesPages() {
   }
 
   function mudarTipo(valor) {
-    setParametros(valor === "todos" ? {} : { tipo: valor }, { replace: true });
+    setParametros(valor === "todos" ? {} : { tipo: valor }, { replace: true, preventScrollReset: true });
   }
 
   return (
