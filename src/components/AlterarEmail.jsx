@@ -99,7 +99,7 @@ function AlterarEmail({ emailAtual, aoSolicitar, aoConfirmar, aoFechar }) {
       <form onSubmit={confirmar} className="w-full max-w-xl pr-8">
         <h2 className="mb-1 text-xl font-bold text-white">Confirme o e-mail novo</h2>
         <p className="mb-5 text-sm text-gray-400">
-          Enviamos um código de 4 dígitos para{" "}
+          Enviamos um código de 6 dígitos para{" "}
           <span className="font-semibold text-red-200">{novoEmail.trim()}</span>. A troca
           só acontece depois da confirmação.
         </p>
@@ -113,10 +113,10 @@ function AlterarEmail({ emailAtual, aoSolicitar, aoConfirmar, aoFechar }) {
             id="email-codigo"
             inputMode="numeric"
             autoComplete="one-time-code"
-            maxLength={4}
+            maxLength={6}
             value={codigo}
-            onChange={(evento) => setCodigo(evento.target.value.replace(/\D/g, "").slice(0, 4))}
-            placeholder="0000"
+            onChange={(evento) => setCodigo(evento.target.value.replace(/\D/g, "").slice(0, 6))}
+            placeholder="000000"
             className={`${ESTILO_CAMPO} text-center tracking-[0.5em]`}
           />
         </div>
@@ -134,7 +134,7 @@ function AlterarEmail({ emailAtual, aoSolicitar, aoConfirmar, aoFechar }) {
           </button>
           <button
             type="submit"
-            disabled={enviando || codigo.length < 4}
+            disabled={enviando || codigo.length < 6}
             className={ESTILO_BOTAO_PRIMARIO}
           >
             {enviando ? "Confirmando..." : "Confirmar"}

@@ -17,7 +17,7 @@ function FormRedefinirSenha({ email, aoConcluir, aoVoltar }) {
   const avaliacao = avaliarSenha(novaSenha);
   const senhasCoincidem = confirmacao.length > 0 && confirmacao === novaSenha;
   const podeEnviar =
-    codigo.length === 4 && avaliacao.valida && senhasCoincidem && !enviando;
+    codigo.length === 6 && avaliacao.valida && senhasCoincidem && !enviando;
 
   async function enviar(evento) {
     evento.preventDefault();
@@ -40,7 +40,7 @@ function FormRedefinirSenha({ email, aoConcluir, aoVoltar }) {
 
       <p className="max-w-sm text-center text-sm text-gray-300">
         Se <span className="font-semibold text-red-200">{email}</span> estiver
-        cadastrado, enviamos um código de 4 dígitos. Ele vale por 15 minutos.
+        cadastrado, enviamos um código de 6 dígitos. Ele vale por 15 minutos.
       </p>
 
       <div className="flex flex-col self-stretch">
@@ -52,12 +52,12 @@ function FormRedefinirSenha({ email, aoConcluir, aoVoltar }) {
           id="codigoRedefinicao"
           name="codigoRedefinicao"
           inputMode="numeric"
-          maxLength={4}
+          maxLength={6}
           value={codigo}
           onChange={(evento) =>
-            setCodigo(evento.target.value.replace(/\D/g, "").slice(0, 4))
+            setCodigo(evento.target.value.replace(/\D/g, "").slice(0, 6))
           }
-          placeholder="0000"
+          placeholder="000000"
           className={`${ESTILO_CAMPO} text-center tracking-[0.5em]`}
         />
       </div>

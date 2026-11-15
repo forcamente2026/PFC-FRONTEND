@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import Modal from "../Modal";
 import EstadoRequisicao from "../progress/EstadoRequisicao";
 import DecidirVerificacaoCref from "./DecidirVerificacaoCref";
+import PedirJustificativa from "./PedirJustificativa";
 import {
   buscarDadosCompletos,
   decidirVerificacaoCref,
@@ -28,6 +29,8 @@ function VerificacoesCref() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [professorEmVerificacao, setProfessorEmVerificacao] = useState(null);
+  const [professorAguardandoJustificativa, setProfessorAguardandoJustificativa] =
+    useState(null);
   const [idEmOperacao, setIdEmOperacao] = useState(null);
 
   useEffect(() => {
@@ -60,10 +63,15 @@ function VerificacoesCref() {
     };
   }, []);
 
-  async function abrirVerificacao(professor) {
+  async function abrirVerificacao(justificativa) {
+    const professor = professorAguardandoJustificativa;
+
     setIdEmOperacao(professor.id);
     try {
-      setProfessorEmVerificacao(await buscarDadosCompletos(professor.id));
+      setProfessorEmVerificacao(
+        await buscarDadosCompletos(professor.id, justificativa),
+      );
+      setProfessorAguardandoJustificativa(null);
     } catch (err) {
       avisar({
         tipo: "erro",
@@ -137,7 +145,7 @@ function VerificacoesCref() {
                   <td className={ESTILO_CELULA}>
                     <button
                       type="button"
-                      onClick={() => abrirVerificacao(professor)}
+                      onClick={() => setProfessorAguardandoJustificativa(professor)}
                       disabled={idEmOperacao === professor.id}
                       className={ESTILO_ACAO}
                     >
@@ -150,6 +158,16 @@ function VerificacoesCref() {
           </table>
         </div>
       </EstadoRequisicao>
+
+      {professorAguardandoJustificativa && (
+        <PedirJustificativa
+          key={professorAguardandoJustificativa.id}
+          nomeDaPessoa={professorAguardandoJustificativa.nomeCompleto}
+          enviando={idEmOperacao === professorAguardandoJustificativa.id}
+          aoConfirmar={abrirVerificacao}
+          aoCancelar={() => setProfessorAguardandoJustificativa(null)}
+        />
+      )}
 
       <Modal
         isOpen={professorEmVerificacao !== null}
