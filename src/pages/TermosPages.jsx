@@ -3,6 +3,7 @@ import DocumentoLegal from "../components/ComponentesLegais/DocumentoLegal";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import { buscarDocumento } from "../services/documentoLegalService";
 import { formatarDataExtenso } from "../utils/formatar";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
 
 function TermosPages() {
   const [documento, setDocumento] = useState(null);
@@ -42,6 +43,7 @@ function TermosPages() {
         {documento && (
           <DocumentoLegal
             titulo="Termos de Uso"
+            icone={ICONES_DAS_PAGINAS.termos}
             versao={documento.versao}
             vigencia={formatarDataExtenso(documento.vigenteDesde)}
             secoes={documento.secoes}

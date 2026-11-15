@@ -6,10 +6,14 @@ const ESTILO_PARAGRAFO = "text-base leading-relaxed text-gray-300";
 const ESTILO_DESTAQUE =
   "rounded-xl border border-red-500 bg-red-950/30 p-4 space-y-3 neon-suave-red-500";
 
-function DocumentoLegal({ titulo, versao, vigencia, secoes }) {
+function DocumentoLegal({ titulo, icone, versao, vigencia, secoes }) {
   return (
     <>
-      <CabecalhoPagina titulo={titulo} subtitulo={`Versão ${versao} · em vigor desde ${vigencia}`} />
+      <CabecalhoPagina
+        titulo={titulo}
+        subtitulo={`Versão ${versao} · em vigor desde ${vigencia}`}
+        icone={icone}
+      />
 
       <Cartao className="space-y-8">
         {secoes.map((secao) => (

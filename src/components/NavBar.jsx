@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LogOut, Menu, UserKey, X } from "lucide-react";
+import { Dumbbell, LogOut, Menu, UserKey, X } from "lucide-react";
 import ModalLogin from "./ModalLogin";
 import Autenticacao from "./Autenticacao";
 import AvisoLogin from "./AvisoLogin";
@@ -97,7 +97,10 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
         className="flex flex-wrap items-center px-6 py-4 xl:flex-nowrap xl:px-4"
         onMouseDown={(evento) => evento.stopPropagation()}
       >
-        <p className="text-3xl p-4 xl:pl-0 xl:pr-2">FORÇAMENTE</p>
+        <p className="flex shrink-0 items-center gap-2.5 whitespace-nowrap py-2 text-[22px] font-black leading-none text-white xl:pr-2">
+          <Dumbbell size={16} className="shrink-0 text-[#df1028]" aria-hidden="true" />
+          FORÇAMENTE
+        </p>
 
         <button
           type="button"

@@ -1,0 +1,11 @@
+.card:focus-visible {
+  border-color: #df1028;
+  box-shadow: 0 15px 31px #df102837;
+}
+
+@media (hover: hover) {
+  .card:hover {
+    border-color: #df1028;
+    box-shadow: 0 15px 31px #df102837;
+  }
+}

@@ -5,8 +5,11 @@ import {
   FolderOpen,
   House,
   ListChecks,
+  LockKeyhole,
+  ScrollText,
   ShieldCheck,
   UserRound,
+  UserRoundPlus,
 } from "lucide-react";
 
 export const ICONES_DAS_PAGINAS = {
@@ -18,4 +21,7 @@ export const ICONES_DAS_PAGINAS = {
   calculadoras: Calculator,
   meusDados: UserRound,
   administracao: ShieldCheck,
+  termos: ScrollText,
+  politica: LockKeyhole,
+  cadastro: UserRoundPlus,
 };
