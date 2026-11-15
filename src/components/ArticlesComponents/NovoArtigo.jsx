@@ -60,7 +60,7 @@ function NovoArtigo({ categorias, carregandoOpcoes, criacaoBloqueada = false, ao
         Novo artigo
       </button>
 
-      <Modal isOpen={modalAberto} setCloseModal={fecharModal}>
+      <Modal isOpen={modalAberto} setCloseModal={fecharModal} largo>
         <ArtigoForm
           titulo="NOVO ARTIGO"
           valores={form}

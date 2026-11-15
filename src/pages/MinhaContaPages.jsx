@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import Modal from "../components/Modal";
@@ -15,6 +15,7 @@ import { formatarCep, formatarDataCurta, formatarNascimento } from "../utils/for
 import { rotuloDoPapel } from "../utils/papeis";
 import { rotuloDaSituacaoCref } from "../utils/cref";
 import { EMAIL_CONTATO } from "../utils/contato";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
 import { alterarMinhaSenha, atualizarMinhaConta, buscarMinhaConta, 
   cancelarExclusaoDaMinhaConta, confirmarTrocaDeEmail, listarFormacoes, renovarCref, 
   solicitarExclusaoDaMinhaConta, solicitarTrocaDeEmail, } from "../services/usuarioService";
@@ -165,11 +166,11 @@ function MinhaContaPages() {
     conta?.formacao;
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Conta"
+    <div className="w-full max-w-4xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Minha conta"
-        descricao="Os dados que a plataforma guarda sobre você, e o que fazer com eles."
+        subtitulo="Os dados que a plataforma guarda sobre você, e o que fazer com eles."
+        icone={ICONES_DAS_PAGINAS.meusDados}
       />
 
       <EstadoRequisicao

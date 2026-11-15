@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import Modal from "../components/Modal";
 import FiltroUsuarios from "../components/AdminComponents/FiltroUsuarios";
@@ -8,8 +8,11 @@ import TabelaUsuarios from "../components/AdminComponents/TabelaUsuarios";
 import FormEdicaoUsuario from "../components/AdminComponents/FormEdicaoUsuario";
 import ConfirmarAnonimizacao from "../components/AdminComponents/ConfirmarAnonimizacao";
 import ConfirmarSituacao from "../components/AdminComponents/ConfirmarSituacao";
+import PedirJustificativa from "../components/AdminComponents/PedirJustificativa";
 import Paginacao from "../components/AdminComponents/Paginacao";
 import AbasAdministracao from "../components/AdminComponents/AbasAdministracao";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
+import { SUBTITULOS_DA_ADMINISTRACAO } from "../utils/subtitulosDasPaginas";
 import {
   alterarAtivo,
   anonimizarUsuario,
@@ -36,6 +39,8 @@ function UsuariosPages() {
   const [consultaConcluida, setConsultaConcluida] = useState(null);
   const [erro, setErro] = useState(null);
   const [usuarioEmEdicao, setUsuarioEmEdicao] = useState(null);
+  const [usuarioAguardandoJustificativa, setUsuarioAguardandoJustificativa] =
+    useState(null);
   const [usuarioEmAnonimizacao, setUsuarioEmAnonimizacao] = useState(null);
   const [usuarioEmAlteracao, setUsuarioEmAlteracao] = useState(null);
   const [idEmOperacao, setIdEmOperacao] = useState(null);
@@ -109,10 +114,15 @@ function UsuariosPages() {
     setPagina(0);
   }
 
-  async function abrirEdicao(usuarioDaLista) {
+  async function abrirEdicao(justificativa) {
+    const usuarioDaLista = usuarioAguardandoJustificativa;
+
     setIdEmOperacao(usuarioDaLista.id);
     try {
-      setUsuarioEmEdicao(await buscarDadosCompletos(usuarioDaLista.id));
+      setUsuarioEmEdicao(
+        await buscarDadosCompletos(usuarioDaLista.id, justificativa),
+      );
+      setUsuarioAguardandoJustificativa(null);
     } catch (err) {
       avisar({
         tipo: "erro",
@@ -174,11 +184,11 @@ function UsuariosPages() {
   const usuarios = resultado?.conteudo ?? [];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Administração"
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Gestão de usuários"
-        descricao="Consulta, correção de dados e bloqueio de acesso das contas da plataforma."
+        subtitulo={SUBTITULOS_DA_ADMINISTRACAO.usuarios}
+        icone={ICONES_DAS_PAGINAS.administracao}
       />
 
       <AbasAdministracao />
@@ -205,7 +215,7 @@ function UsuariosPages() {
         <TabelaUsuarios
           usuarios={usuarios}
           formacoes={formacoes}
-          aoEditar={abrirEdicao}
+          aoEditar={setUsuarioAguardandoJustificativa}
           aoAlternarAtivo={setUsuarioEmAlteracao}
           aoAnonimizar={setUsuarioEmAnonimizacao}
           idEmOperacao={idEmOperacao}
@@ -218,6 +228,16 @@ function UsuariosPages() {
           aoMudarPagina={setPagina}
         />
       </EstadoRequisicao>
+
+      {usuarioAguardandoJustificativa && (
+        <PedirJustificativa
+          key={usuarioAguardandoJustificativa.id}
+          nomeDaPessoa={usuarioAguardandoJustificativa.nomeCompleto}
+          enviando={idEmOperacao === usuarioAguardandoJustificativa.id}
+          aoConfirmar={abrirEdicao}
+          aoCancelar={() => setUsuarioAguardandoJustificativa(null)}
+        />
+      )}
 
       <Modal
         isOpen={usuarioEmEdicao !== null}

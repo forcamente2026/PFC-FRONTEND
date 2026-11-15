@@ -21,7 +21,11 @@ function Footer() {
               Política de Privacidade
             </NavLink>
           </li>
-          <li>Contato</li>
+          <li>
+            <NavLink to="/contato" className={ESTILO_LINK}>
+              Contato
+            </NavLink>
+          </li>
         </ul>
       </div>
 

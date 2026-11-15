@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LogOut, Menu, UserKey, X } from "lucide-react";
+import { Dumbbell, LogOut, Menu, UserKey, X } from "lucide-react";
 import ModalLogin from "./ModalLogin";
 import Autenticacao from "./Autenticacao";
 import AvisoLogin from "./AvisoLogin";
@@ -11,7 +11,7 @@ const LINKS = [
   { para: "/articles", rotulo: "ARTIGOS", protegida: true },
   { para: "/quiz", rotulo: "QUIZ", protegida: true },
   { para: "/library", rotulo: "BIBLIOTECA", protegida: true },
-  { para: "/progress", rotulo: "PROGRESSO", protegida: true },
+  { para: "/progress", rotulo: "CALCULADORAS", protegida: true },
   { para: "/meu-acervo", rotulo: "MEU ACERVO", protegida: true, papeis: PAPEIS_EDITORES },
   { para: "/about", rotulo: "QUEM SOMOS" },
   { para: "/admin", rotulo: "ADMINISTRAÇÃO", protegida: true, papeis: PAPEIS_VALIDADORES,},
@@ -97,7 +97,10 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
         className="flex flex-wrap items-center px-6 py-4 xl:flex-nowrap xl:px-4"
         onMouseDown={(evento) => evento.stopPropagation()}
       >
-        <p className="text-3xl p-4 xl:pl-0 xl:pr-2">FORÇAMENTE</p>
+        <p className="flex shrink-0 items-center gap-2.5 whitespace-nowrap py-2 text-[22px] font-black leading-none text-white xl:pr-2">
+          <Dumbbell size={16} className="shrink-0 text-[#df1028]" aria-hidden="true" />
+          FORÇAMENTE
+        </p>
 
         <button
           type="button"
@@ -138,7 +141,7 @@ function NavBar({ usuario, aoEntrar, aoSair }) {
             <div className="flex flex-col items-center gap-3 xl:flex-row xl:gap-2">
               <span
                 title={usuario.nomeCompleto}
-                className="max-w-full text-center font-bold wrap-anywhere xl:max-w-36 xl:truncate xl:text-sm"
+                className="max-w-full text-center font-bold wrap-anywhere xl:max-w-36 xl:truncate xl:text-sm xl:max-[106.25rem]:hidden"
               >
                 <span className="xl:hidden">{usuario.nomeCompleto}</span>
                 <span className="hidden xl:inline">{primeiroEUltimoNome(usuario.nomeCompleto)}</span>

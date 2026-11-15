@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
 import Cartao from "../components/ComponentesHome/Cartao";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import QuizForm from "../components/QuizComponents/QuizForm";
@@ -138,7 +139,13 @@ function QuizFormPages() {
       : "Enviar quiz";
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-10 lp:py-16">
+    <div className="w-full max-w-4xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
+        titulo={editando ? "Editar quiz" : "Novo quiz"}
+        subtitulo="O quiz de um professor passa pela moderação antes de aparecer no site, como os artigos."
+        icone={ICONES_DAS_PAGINAS.quiz}
+      />
+
       <Link
         to={destinoAoCancelar}
         className="text-sm text-red-200 hover:text-white hover:underline"
@@ -147,12 +154,6 @@ function QuizFormPages() {
       </Link>
 
       <div className="mt-6">
-        <CabecalhoSecao
-          rotulo="Quiz para estudo"
-          titulo={editando ? "Editar quiz" : "Novo quiz"}
-          descricao="O quiz de um professor passa pela moderação antes de aparecer no site, como os artigos."
-        />
-
         <EstadoRequisicao
           carregando={carregando}
           mensagemCarregando="Carregando o formulário..."

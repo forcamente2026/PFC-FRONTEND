@@ -59,7 +59,7 @@ function LibraryPages() {
   const podeEditar = PAPEIS_EDITORES.includes(usuario?.papel);
 
   function limparExercicioDoEndereco() {
-    if (exercicioNoEndereco) setParametros({}, { replace: true });
+    if (exercicioNoEndereco) setParametros({}, { replace: true, preventScrollReset: true });
   }
 
   const criacaoBloqueada = MODERACAO_DE_EXERCICIOS_SIMULADA && limiteDeCriacao(exercicios, usuario).bloqueado;
@@ -167,6 +167,7 @@ function LibraryPages() {
         aoCriar={adicionarExercicio}
         aoConferirLimite={setExercicios}
         podeEditar={podeEditar}
+        papel={usuario?.papel}
       />
       {MODERACAO_DE_EXERCICIOS_SIMULADA && !carregando && !erro && (
         <div className="px-4">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CabecalhoSecao from "../components/ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../components/CabecalhoPagina";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import FiltroAuditoria from "../components/AdminComponents/FiltroAuditoria";
 import TabelaAuditoria from "../components/AdminComponents/TabelaAuditoria";
@@ -11,6 +11,8 @@ import {
   listarAcoes,
 } from "../services/auditoriaService";
 import { baixarArquivo } from "../utils/csv";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
+import { SUBTITULOS_DA_ADMINISTRACAO } from "../utils/subtitulosDasPaginas";
 
 const TAMANHO_PAGINA = 50;
 
@@ -96,11 +98,11 @@ function AuditoriaPages() {
   const registros = resultado?.conteudo ?? [];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-10 lp:py-16">
-      <CabecalhoSecao
-        rotulo="Administração"
+    <div className="w-full max-w-6xl mx-auto px-4 pb-10 lp:pb-16">
+      <CabecalhoPagina
         titulo="Trilha de auditoria"
-        descricao="Registro das ações que tocam dados pessoais e conteúdo da plataforma."
+        subtitulo={SUBTITULOS_DA_ADMINISTRACAO.auditoria}
+        icone={ICONES_DAS_PAGINAS.administracao}
       />
 
       <AbasAdministracao />

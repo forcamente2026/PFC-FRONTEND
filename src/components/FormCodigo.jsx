@@ -46,7 +46,7 @@ function FormCodigo({ email, expiraEmSegundos, aoEntrar, aoVoltar }) {
       <h2 className="font-montserrat text-center text-4xl">VERIFICAÇÃO</h2>
 
       <p className="max-w-sm text-center text-sm text-gray-300">
-        Enviamos um código de 4 dígitos para{" "}
+        Enviamos um código de 6 dígitos para{" "}
         <span className="font-semibold text-red-200">{email}</span>
       </p>
 
@@ -60,12 +60,12 @@ function FormCodigo({ email, expiraEmSegundos, aoEntrar, aoVoltar }) {
           name="codigo"
           inputMode="numeric"
           autoComplete="one-time-code"
-          maxLength={4}
+          maxLength={6}
           value={codigo}
           onChange={(evento) =>
-            setCodigo(evento.target.value.replace(/\D/g, "").slice(0, 4))
+            setCodigo(evento.target.value.replace(/\D/g, "").slice(0, 6))
           }
-          placeholder="0000"
+          placeholder="000000"
           className={`${ESTILO_CAMPO} text-center tracking-[0.5em]`}
         />
       </div>
@@ -88,7 +88,7 @@ function FormCodigo({ email, expiraEmSegundos, aoEntrar, aoVoltar }) {
         </button>
         <button
           type="submit"
-          disabled={enviando || expirou || codigo.length < 4}
+          disabled={enviando || expirou || codigo.length < 6}
           className="hover:text-white p-4 my-2 bg-red-500 text-red-200 rounded-xl hover:bg-red-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {enviando ? "Verificando..." : "Confirmar"}

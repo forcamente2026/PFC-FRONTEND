@@ -5,8 +5,10 @@ import CampoSenha from "../CampoSenha";
 import { avaliarSenha } from "./senhaRegras";
 import Cartao from "../ComponentesHome/Cartao";
 import CabecalhoSecao from "../ComponentesHome/CabecalhoSecao";
+import CabecalhoPagina from "../CabecalhoPagina";
 import { formatarCref, somenteDigitos } from "../../utils/formatar";
 import { ESTADOS } from "../../utils/estados";
+import { ICONES_DAS_PAGINAS } from "../../utils/iconesDasPaginas";
 import { criarUsuario } from "../../services/usuarioService";
 import useConsultaCep from "../../hooks/useConsultaCep";
 import { listarDocumentos } from "../../services/documentoLegalService";
@@ -236,8 +238,8 @@ function FormCadastro() {
   return (
     <>
       <form onSubmit={enviarCadastro} className="text-white text-2xl">
-        <section className="py-6">
-          <CabecalhoSecao rotulo="Conta" titulo="Cadastro" />
+        <section className="pb-6">
+          <CabecalhoPagina titulo="Cadastro" icone={ICONES_DAS_PAGINAS.cadastro} />
           <Cartao className="space-y-2">
           <div className="">
             <label htmlFor="nome_completo" className={styleLabel}>

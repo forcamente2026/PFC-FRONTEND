@@ -3,6 +3,7 @@ import DocumentoLegal from "../components/ComponentesLegais/DocumentoLegal";
 import EstadoRequisicao from "../components/progress/EstadoRequisicao";
 import { buscarDocumento } from "../services/documentoLegalService";
 import { formatarDataExtenso } from "../utils/formatar";
+import { ICONES_DAS_PAGINAS } from "../utils/iconesDasPaginas";
 
 function TermosPages() {
   const [documento, setDocumento] = useState(null);
@@ -31,7 +32,7 @@ function TermosPages() {
   }, []);
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-10 lp:py-16">
+    <div className="w-full max-w-4xl mx-auto px-4 pb-10 lp:pb-16">
       <EstadoRequisicao
         carregando={carregando}
         mensagemCarregando="Carregando documento..."
@@ -41,8 +42,8 @@ function TermosPages() {
       >
         {documento && (
           <DocumentoLegal
-            rotulo="Jurídico"
             titulo="Termos de Uso"
+            icone={ICONES_DAS_PAGINAS.termos}
             versao={documento.versao}
             vigencia={formatarDataExtenso(documento.vigenteDesde)}
             secoes={documento.secoes}
