@@ -122,10 +122,9 @@ function CalculadoraHidratacao({ pesoKg, aoAlterarPeso, consentiu }) {
       conceito={
         <>
           <span className="font-semibold text-white">O que é a meta? </span>É
-          quanta água seu corpo precisa em um dia: uma parte vem do seu peso
-          corporal e outra do tempo que você treina. Água regula a temperatura,
-          transporta nutrientes e sustenta a contração muscular treinar
-          desidratado custa força.
+          uma estimativa de água para o dia: 35 ml por kg de peso corporal,
+          parâmetro usado por Lima, Lima e Braggion (2015), mais um adicional
+          pelo tempo de treino.
         </>
       }
       resultado={blocoResultado}
