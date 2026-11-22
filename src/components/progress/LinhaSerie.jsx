@@ -24,7 +24,7 @@ function LinhaSerie({
           value={linha.exercicioId}
           disabled={carregandoExercicios}
           onChange={(evento) => aoAlterar("exercicioId", evento.target.value)}
-          className="w-full min-w-0 bg-transparent border-b border-gray-500 py-2 text-white outline-none focus:border-red-500 disabled:text-gray-500"
+          className="w-full min-w-0 bg-transparent border-b border-gray-500 py-2 text-lg text-white outline-none focus:border-red-500 disabled:text-gray-500"
         >
           <option value="" className="bg-slate-950">
             {carregandoExercicios ? "Carregando..." : "Selecione"}
@@ -78,9 +78,11 @@ function LinhaSerie({
         onClick={aoRemover}
         disabled={!podeRemover}
         aria-label="Remover exercício"
-        className="self-end py-2 text-gray-300 hover:text-red-200 cursor-pointer disabled:cursor-not-allowed disabled:text-gray-700"
+        className="self-end border-b border-transparent py-2 text-gray-300 hover:text-red-200 cursor-pointer disabled:cursor-not-allowed disabled:text-gray-700"
       >
-        <X size={18} />
+        <span className="flex h-7 items-center">
+          <X size={18} />
+        </span>
       </button>
     </div>
   );

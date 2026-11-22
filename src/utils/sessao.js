@@ -1,3 +1,5 @@
+import { limparCacheConsumo } from "./cacheConsumoAgua";
+
 const CHAVE_TOKEN = "token";
 const CHAVE_USUARIO = "forcamente:usuario";
 export const EVENTO_SESSAO_EXPIRADA = "forcamente:sessao-expirada";
@@ -14,6 +16,7 @@ export function lerSessao() {
 
 export function gravarSessao({ id, token, nomeCompleto, papel }) {
     try {
+        limparCacheConsumo();
         localStorage.setItem(CHAVE_TOKEN, token);
         localStorage.setItem(CHAVE_USUARIO, JSON.stringify({ id, nomeCompleto, papel }));
         return true;
@@ -36,6 +39,7 @@ export function atualizarNomeDaSessao(nomeCompleto) {
 export function limparSessao() {
     localStorage.removeItem(CHAVE_TOKEN);
     localStorage.removeItem(CHAVE_USUARIO);
+    limparCacheConsumo();
 }
 
 export function expirarSessao() {
