@@ -15,7 +15,7 @@ import { formatarNumero, paraNumero } from "../../utils/formatar";
 import ComoCalculamos from "./ComoCalculamos";
 
 
-const GRADE = "grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_1fr_1fr_auto]";
+const GRADE = "grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_1fr_1fr_auto] md:items-end";
 
 function linhaVazia() {
   return {
@@ -173,9 +173,9 @@ function VolumeTreino() {
       conceito={
         <>
           <span className="font-semibold text-white">O que é volume? </span>É o
-          peso total que você moveu na sessão: séries × repetições × carga. É a
-          principal métrica de sobrecarga progressiva subir o volume ao longo
-          das semanas é o que faz o músculo crescer.
+          peso total que você moveu na sessão: séries × repetições × carga,
+          medida definida por McBride et al. (2009) e usada por Uchida et al.
+          (2006).
         </>
       }
       resultado={blocoResultado}

@@ -27,3 +27,7 @@ export function gravarCacheConsumo(data, resumo) {
     return false;
   }
 }
+
+export function limparCacheConsumo() {
+  localStorage.removeItem(CHAVE);
+}
