@@ -15,7 +15,7 @@ import { formatarNumero, paraNumero } from "../../utils/formatar";
 import ComoCalculamos from "./ComoCalculamos";
 
 
-const GRADE = "grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_1fr_1fr_auto]";
+const GRADE = "grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_1fr_1fr_auto] md:items-end";
 
 function linhaVazia() {
   return {
