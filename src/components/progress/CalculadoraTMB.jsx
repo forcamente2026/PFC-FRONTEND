@@ -133,10 +133,10 @@ function CalculadoraTMB({ pesoKg, aoAlterarPeso, consentiu }) {
       titulo="TAXA METABÓLICA BASAL"
       conceito={
         <>
-          <span className="font-semibold text-white">O que é TMB? </span>É a
-          energia que seu corpo consome em repouso, só para manter as funções
-          vitais. Calculamos pela fórmula Mifflin-St Jeor a referência para
-          montar superávit (ganho) ou déficit (perda).
+          <span className="font-semibold text-white">O que é TMB? </span>É uma
+          estimativa da energia que seu corpo gasta em repouso, calculada pela
+          fórmula de Mifflin-St Jeor, publicada por Mifflin et al. (1990).
+          Multiplicada pelo fator de atividade, ela estima o seu gasto do dia.
         </>
       }
       resultado={blocoResultado}
