@@ -174,7 +174,8 @@ function VolumeTreino() {
         <>
           <span className="font-semibold text-white">O que é volume? </span>É o
           peso total que você moveu na sessão: séries × repetições × carga,
-          medida usada por Uchida et al. (2006).
+          medida definida por McBride et al. (2009) e usada por Uchida et al.
+          (2006).
         </>
       }
       resultado={blocoResultado}
